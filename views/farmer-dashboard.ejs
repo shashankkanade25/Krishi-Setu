@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -40,44 +41,44 @@
         
         <nav class="p-4">
             <a href="#" onclick="showSection('dashboardOverview')" class="flex items-center px-4 py-3 mb-2 text-white bg-primary rounded-lg nav-link active" data-section="dashboardOverview">
-                <span class="mr-3">📊</span>
+                <i class="fas fa-chart-line mr-3"></i>
                 <span class="font-medium">Dashboard</span>
             </a>
             <a href="#" onclick="showSection('notifications')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="notifications">
-                <span class="mr-3">🔔</span>
+                <i class="fas fa-bell mr-3"></i>
                 <span class="font-medium">Notifications</span>
                 <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">8</span>
             </a>
             <a href="#" onclick="showSection('addProduct')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="addProduct">
-                <span class="mr-3">➕</span>
+                <i class="fas fa-plus-circle mr-3"></i>
                 <span class="font-medium">Add Product</span>
             </a>
             <a href="#" onclick="showSection('myProducts')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="myProducts">
-                <span class="mr-3">🌾</span>
+                <i class="fas fa-wheat-awn mr-3"></i>
                 <span class="font-medium">My Products</span>
             </a>
             <a href="#" onclick="showSection('stockManagement')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="stockManagement">
-                <span class="mr-3">📦</span>
+                <i class="fas fa-boxes-stacked mr-3"></i>
                 <span class="font-medium">Stock Management</span>
             </a>
             <a href="#" onclick="showSection('orders')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="orders">
-                <span class="mr-3">🚚</span>
+                <i class="fas fa-truck mr-3"></i>
                 <span class="font-medium">Orders & Deliveries</span>
             </a>
             <a href="#" onclick="showSection('ratings')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="ratings">
-                <span class="mr-3">⭐</span>
+                <i class="fas fa-star mr-3"></i>
                 <span class="font-medium">Ratings & Reviews</span>
             </a>
             <a href="#" onclick="showSection('earnings')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="earnings">
-                <span class="mr-3">💰</span>
+                <i class="fas fa-sack-dollar mr-3"></i>
                 <span class="font-medium">Earnings</span>
             </a>
             <a href="#" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">
-                <span class="mr-3">👤</span>
+                <i class="fas fa-user mr-3"></i>
                 <span class="font-medium">Profile</span>
             </a>
             <a href="/logout" class="flex items-center px-4 py-3 mb-2 text-red-600 hover:bg-red-50 rounded-lg transition">
-                <span class="mr-3">🚪</span>
+                <i class="fas fa-right-from-bracket mr-3"></i>
                 <span class="font-medium">Logout</span>
             </a>
         </nav>
@@ -85,7 +86,7 @@
 
     <!-- Mobile Menu Button -->
     <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md">
-        <span class="text-2xl">☰</span>
+        <i class="fas fa-bars text-xl"></i>
     </button>
 
     <!-- Main Content -->
@@ -94,12 +95,12 @@
         <header class="bg-white shadow-sm sticky top-0 z-40">
             <div class="px-6 py-4 flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Welcome, <%= user.name %> 🌾</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Welcome, <%= user.name %> <i class="fas fa-seedling text-primary"></i></h2>
                     <p class="text-sm text-gray-600 mt-1">Manage your farm products and orders</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button onclick="showSection('notifications')" class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-                        🔔
+                        <i class="fas fa-bell text-lg"></i>
                         <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                     </button>
                     <div class="flex items-center space-x-2">
@@ -120,10 +121,10 @@
                         <div>
                             <p class="text-gray-600 text-sm font-medium">Total Products</p>
                             <h3 class="text-3xl font-bold text-gray-800 mt-2">24</h3>
-                            <p class="text-green-600 text-xs mt-1">↑ 12% this month</p>
+                            <p class="text-green-600 text-xs mt-1"><i class="fas fa-arrow-up"></i> 12% this month</p>
                         </div>
                         <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            🌾
+                            <i class="fas fa-wheat-awn text-primary"></i>
                         </div>
                     </div>
                 </div>
@@ -134,10 +135,10 @@
                         <div>
                             <p class="text-gray-600 text-sm font-medium">Active Orders</p>
                             <h3 class="text-3xl font-bold text-gray-800 mt-2">18</h3>
-                            <p class="text-blue-600 text-xs mt-1">↑ 5 new today</p>
+                            <p class="text-blue-600 text-xs mt-1"><i class="fas fa-arrow-up"></i> 5 new today</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            📦
+                            <i class="fas fa-box text-blue-500"></i>
                         </div>
                     </div>
                 </div>
@@ -148,10 +149,10 @@
                         <div>
                             <p class="text-gray-600 text-sm font-medium">Total Earnings</p>
                             <h3 class="text-3xl font-bold text-gray-800 mt-2">₹45,280</h3>
-                            <p class="text-green-600 text-xs mt-1">↑ 23% this month</p>
+                            <p class="text-green-600 text-xs mt-1"><i class="fas fa-arrow-up"></i> 23% this month</p>
                         </div>
                         <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            💰
+                            <i class="fas fa-indian-rupee-sign text-secondary"></i>
                         </div>
                     </div>
                 </div>
@@ -165,7 +166,7 @@
                             <p class="text-orange-600 text-xs mt-1">Needs attention</p>
                         </div>
                         <div class="w-12 h-12 bg-orange-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            ⏳
+                            <i class="fas fa-hourglass-half text-orange-500"></i>
                         </div>
                     </div>
                 </div>
@@ -175,11 +176,11 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-600 text-sm font-medium">Average Rating</p>
-                            <h3 class="text-3xl font-bold text-gray-800 mt-2">4.8 ⭐</h3>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">4.8 <i class="fas fa-star text-yellow-500"></i></h3>
                             <p class="text-yellow-600 text-xs mt-1">Based on 156 reviews</p>
                         </div>
                         <div class="w-12 h-12 bg-yellow-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            ⭐
+                            <i class="fas fa-star text-yellow-500"></i>
                         </div>
                     </div>
                 </div>
@@ -193,7 +194,7 @@
                             <p class="text-red-600 text-xs mt-1">Restock needed</p>
                         </div>
                         <div class="w-12 h-12 bg-red-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            📉
+                            <i class="fas fa-chart-line-down text-red-500"></i>
                         </div>
                     </div>
                 </div>
@@ -207,7 +208,7 @@
                             <p class="text-purple-600 text-xs mt-1">Ready for dispatch</p>
                         </div>
                         <div class="w-12 h-12 bg-purple-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
-                            🚚
+                            <i class="fas fa-truck-fast text-purple-500"></i>
                         </div>
                     </div>
                 </div>
@@ -217,13 +218,13 @@
             <div id="notifications" class="mb-8">
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        🔔 Notifications
+                        <i class="fas fa-bell mr-2"></i> Notifications
                         <span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">8 New</span>
                     </h3>
                     <div class="space-y-3">
                         <!-- Delivery Notification -->
                         <div class="flex items-start p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                            <span class="text-2xl mr-3">🚚</span>
+                            <i class="fas fa-truck text-2xl text-purple-500 mr-3"></i>
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">New delivery request from Amit Sharma</p>
                                 <p class="text-xs text-gray-500">Order #ORD-2023-050 - Fresh Tomatoes (15kg)</p>
@@ -234,7 +235,7 @@
                         
                         <!-- Stock Alert -->
                         <div class="flex items-start p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                            <span class="text-2xl mr-3">📉</span>
+                            <i class="fas fa-chart-line-down text-2xl text-red-500 mr-3"></i>
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">Low stock alert: Fresh Milk</p>
                                 <p class="text-xs text-gray-500">Only 20 liters remaining - Consider restocking</p>
@@ -245,7 +246,7 @@
                         
                         <!-- New Order -->
                         <div class="flex items-start p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
-                            <span class="text-2xl mr-3">🛒</span>
+                            <i class="fas fa-shopping-cart text-2xl text-green-500 mr-3"></i>
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">New order received!</p>
                                 <p class="text-xs text-gray-500">Order #ORD-2023-051 - Organic Spinach (8kg) - ₹240</p>
@@ -256,7 +257,7 @@
                         
                         <!-- Rating Notification -->
                         <div class="flex items-start p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-                            <span class="text-2xl mr-3">⭐</span>
+                            <i class="fas fa-star text-2xl text-yellow-500 mr-3"></i>
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">New 5-star review from Priya Patel</p>
                                 <p class="text-xs text-gray-500">"Excellent quality mangoes! Will order again."</p>
@@ -266,7 +267,7 @@
                         
                         <!-- Stock Alert 2 -->
                         <div class="flex items-start p-3 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                            <span class="text-2xl mr-3">⚠️</span>
+                            <i class="fas fa-exclamation-triangle text-2xl text-orange-500 mr-3"></i>
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">Stock running low: Sweet Mangoes</p>
                                 <p class="text-xs text-gray-500">Only 50kg remaining - High demand product</p>
@@ -287,40 +288,40 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl text-center">
                             <h4 class="text-5xl font-bold text-yellow-700">4.8</h4>
-                            <div class="text-2xl my-2">⭐⭐⭐⭐⭐</div>
+                            <div class="text-2xl my-2"><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i><i class="fas fa-star text-yellow-500"></i></div>
                             <p class="text-gray-600 text-sm">Based on 156 reviews</p>
                         </div>
                         <div class="col-span-2 space-y-2">
                             <div class="flex items-center">
-                                <span class="w-12 text-sm">5 ⭐</span>
+                                <span class="w-12 text-sm">5 <i class="fas fa-star text-yellow-500 text-xs"></i></span>
                                 <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
                                     <div class="h-3 bg-yellow-400 rounded-full" style="width: 75%"></div>
                                 </div>
                                 <span class="w-12 text-sm text-gray-600">117</span>
                             </div>
                             <div class="flex items-center">
-                                <span class="w-12 text-sm">4 ⭐</span>
+                                <span class="w-12 text-sm">4 <i class="fas fa-star text-yellow-500 text-xs"></i></span>
                                 <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
                                     <div class="h-3 bg-yellow-400 rounded-full" style="width: 15%"></div>
                                 </div>
                                 <span class="w-12 text-sm text-gray-600">23</span>
                             </div>
                             <div class="flex items-center">
-                                <span class="w-12 text-sm">3 ⭐</span>
+                                <span class="w-12 text-sm">3 <i class="fas fa-star text-yellow-500 text-xs"></i></span>
                                 <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
                                     <div class="h-3 bg-yellow-400 rounded-full" style="width: 6%"></div>
                                 </div>
                                 <span class="w-12 text-sm text-gray-600">10</span>
                             </div>
                             <div class="flex items-center">
-                                <span class="w-12 text-sm">2 ⭐</span>
+                                <span class="w-12 text-sm">2 <i class="fas fa-star text-yellow-500 text-xs"></i></span>
                                 <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
                                     <div class="h-3 bg-yellow-400 rounded-full" style="width: 3%"></div>
                                 </div>
                                 <span class="w-12 text-sm text-gray-600">4</span>
                             </div>
                             <div class="flex items-center">
-                                <span class="w-12 text-sm">1 ⭐</span>
+                                <span class="w-12 text-sm">1 <i class="fas fa-star text-yellow-500 text-xs"></i></span>
                                 <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
                                     <div class="h-3 bg-yellow-400 rounded-full" style="width: 1%"></div>
                                 </div>
@@ -341,7 +342,9 @@
                                         <p class="text-xs text-gray-500">Purchased: Sweet Mangoes</p>
                                     </div>
                                 </div>
-                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                                <div class="text-yellow-400">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
                             </div>
                             <p class="text-gray-600 text-sm">"Excellent quality mangoes! Fresh, sweet, and perfectly ripe. Will definitely order again!"</p>
                         </div>
@@ -354,7 +357,9 @@
                                         <p class="text-xs text-gray-500">Purchased: Organic Spinach</p>
                                     </div>
                                 </div>
-                                <div class="text-yellow-400">⭐⭐⭐⭐</div>
+                                <div class="text-yellow-400">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
                             </div>
                             <p class="text-gray-600 text-sm">"Good quality spinach. Fresh and clean. Delivery was on time."</p>
                         </div>
@@ -367,7 +372,9 @@
                                         <p class="text-xs text-gray-500">Purchased: Fresh Milk</p>
                                     </div>
                                 </div>
-                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                                <div class="text-yellow-400">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
                             </div>
                             <p class="text-gray-600 text-sm">"Best milk quality I've ever had! Pure and fresh. My family loves it."</p>
                         </div>
@@ -383,12 +390,12 @@
                     <!-- Low Stock Alerts -->
                     <div class="mb-6">
                         <h4 class="text-lg font-semibold text-red-600 mb-4 flex items-center">
-                            ⚠️ Low Stock Alerts
+                            <i class="fas fa-exclamation-triangle mr-2"></i> Low Stock Alerts
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="bg-red-50 border border-red-200 rounded-lg p-4">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-2xl">🥛</span>
+                                    <i class="fas fa-glass-water text-2xl text-red-500"></i>
                                     <span class="px-2 py-1 bg-red-500 text-white text-xs rounded-full">Critical</span>
                                 </div>
                                 <h5 class="font-semibold text-gray-800">Fresh Milk</h5>
@@ -397,7 +404,7 @@
                             </div>
                             <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-2xl">🥭</span>
+                                    <i class="fas fa-apple-whole text-2xl text-orange-500"></i>
                                     <span class="px-2 py-1 bg-orange-500 text-white text-xs rounded-full">Low</span>
                                 </div>
                                 <h5 class="font-semibold text-gray-800">Sweet Mangoes</h5>
@@ -406,7 +413,7 @@
                             </div>
                             <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-2xl">🥬</span>
+                                    <i class="fas fa-leaf text-2xl text-yellow-600"></i>
                                     <span class="px-2 py-1 bg-yellow-500 text-white text-xs rounded-full">Warning</span>
                                 </div>
                                 <h5 class="font-semibold text-gray-800">Organic Spinach</h5>
@@ -431,28 +438,28 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 <tr>
-                                    <td class="px-4 py-3">🍅 Fresh Tomatoes</td>
+                                    <td class="px-4 py-3"><i class="fas fa-tomato text-red-500 mr-2"></i> Fresh Tomatoes</td>
                                     <td class="px-4 py-3">150 kg</td>
                                     <td class="px-4 py-3">50 kg</td>
                                     <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">In Stock</span></td>
                                     <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
                                 </tr>
                                 <tr>
-                                    <td class="px-4 py-3">🥛 Fresh Milk</td>
+                                    <td class="px-4 py-3"><i class="fas fa-glass-water text-blue-500 mr-2"></i> Fresh Milk</td>
                                     <td class="px-4 py-3">20 L</td>
                                     <td class="px-4 py-3">50 L</td>
                                     <td class="px-4 py-3"><span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Critical</span></td>
                                     <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
                                 </tr>
                                 <tr>
-                                    <td class="px-4 py-3">🥭 Sweet Mangoes</td>
+                                    <td class="px-4 py-3"><i class="fas fa-apple-whole text-orange-500 mr-2"></i> Sweet Mangoes</td>
                                     <td class="px-4 py-3">50 kg</td>
                                     <td class="px-4 py-3">30 kg</td>
                                     <td class="px-4 py-3"><span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">Low</span></td>
                                     <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
                                 </tr>
                                 <tr>
-                                    <td class="px-4 py-3">🌾 Wheat Flour</td>
+                                    <td class="px-4 py-3"><i class="fas fa-wheat-awn text-amber-600 mr-2"></i> Wheat Flour</td>
                                     <td class="px-4 py-3">200 kg</td>
                                     <td class="px-4 py-3">50 kg</td>
                                     <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">In Stock</span></td>
@@ -589,21 +596,21 @@
                 <h3 class="text-xl font-bold text-gray-800 mb-6">Recent Activity</h3>
                 <div class="space-y-4">
                     <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
-                        <span class="text-2xl">🛒</span>
+                        <i class="fas fa-shopping-cart text-2xl text-green-500"></i>
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-800">New order received for Fresh Tomatoes</p>
                             <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
-                        <span class="text-2xl">✅</span>
+                        <i class="fas fa-circle-check text-2xl text-green-500"></i>
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-800">Order #ORD-2023-045 delivered successfully</p>
                             <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
                         </div>
                     </div>
                     <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
-                        <span class="text-2xl">💰</span>
+                        <i class="fas fa-indian-rupee-sign text-2xl text-green-600"></i>
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-800">Payment received: ₹1,250</p>
                             <p class="text-xs text-gray-500 mt-1">1 day ago</p>
@@ -617,11 +624,11 @@
     <script>
         // Dummy Data
         const products = [
-            { id: 1, name: 'Fresh Tomatoes', category: 'Vegetables', price: 40, stock: 150, status: 'In Stock', image: '🍅' },
-            { id: 2, name: 'Organic Spinach', category: 'Vegetables', price: 30, stock: 80, status: 'In Stock', image: '🥬' },
-            { id: 3, name: 'Sweet Mangoes', category: 'Fruits', price: 120, stock: 50, status: 'In Stock', image: '🥭' },
-            { id: 4, name: 'Fresh Milk', category: 'Dairy', price: 60, stock: 20, status: 'Low Stock', image: '🥛' },
-            { id: 5, name: 'Wheat Flour', category: 'Grains', price: 35, stock: 200, status: 'In Stock', image: '🌾' }
+            { id: 1, name: 'Fresh Tomatoes', category: 'Vegetables', price: 40, stock: 150, status: 'In Stock', image: '<i class="fas fa-tomato text-red-500"></i>' },
+            { id: 2, name: 'Organic Spinach', category: 'Vegetables', price: 30, stock: 80, status: 'In Stock', image: '<i class="fas fa-leaf text-green-600"></i>' },
+            { id: 3, name: 'Sweet Mangoes', category: 'Fruits', price: 120, stock: 50, status: 'In Stock', image: '<i class="fas fa-apple-whole text-orange-500"></i>' },
+            { id: 4, name: 'Fresh Milk', category: 'Dairy', price: 60, stock: 20, status: 'Low Stock', image: '<i class="fas fa-glass-water text-blue-500"></i>' },
+            { id: 5, name: 'Wheat Flour', category: 'Grains', price: 35, stock: 200, status: 'In Stock', image: '<i class="fas fa-wheat-awn text-amber-600"></i>' }
         ];
 
         const orders = [
