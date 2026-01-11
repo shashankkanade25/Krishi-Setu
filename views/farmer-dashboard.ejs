@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | कृषी-सेतू</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .brand-title {
+            font-family: 'Hind', 'Noto Sans Devanagari', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10b981',
+                        secondary: '#f59e0b',
+                        earth: '#8b4513',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-6 border-b">
+            <img src="/images/krishi-setu-logo.png" alt="कृषी-सेतू" class="h-12 w-auto">
+            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide">Farmer Portal</p>
+        </div>
+        
+        <nav class="p-4">
+            <a href="#" onclick="showSection('dashboardOverview')" class="flex items-center px-4 py-3 mb-2 text-white bg-primary rounded-lg nav-link active" data-section="dashboardOverview">
+                <span class="mr-3">📊</span>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="#" onclick="showSection('notifications')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="notifications">
+                <span class="mr-3">🔔</span>
+                <span class="font-medium">Notifications</span>
+                <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">8</span>
+            </a>
+            <a href="#" onclick="showSection('addProduct')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="addProduct">
+                <span class="mr-3">➕</span>
+                <span class="font-medium">Add Product</span>
+            </a>
+            <a href="#" onclick="showSection('myProducts')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="myProducts">
+                <span class="mr-3">🌾</span>
+                <span class="font-medium">My Products</span>
+            </a>
+            <a href="#" onclick="showSection('stockManagement')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="stockManagement">
+                <span class="mr-3">📦</span>
+                <span class="font-medium">Stock Management</span>
+            </a>
+            <a href="#" onclick="showSection('orders')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="orders">
+                <span class="mr-3">🚚</span>
+                <span class="font-medium">Orders & Deliveries</span>
+            </a>
+            <a href="#" onclick="showSection('ratings')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="ratings">
+                <span class="mr-3">⭐</span>
+                <span class="font-medium">Ratings & Reviews</span>
+            </a>
+            <a href="#" onclick="showSection('earnings')" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition nav-link" data-section="earnings">
+                <span class="mr-3">💰</span>
+                <span class="font-medium">Earnings</span>
+            </a>
+            <a href="#" class="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                <span class="mr-3">👤</span>
+                <span class="font-medium">Profile</span>
+            </a>
+            <a href="/logout" class="flex items-center px-4 py-3 mb-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+                <span class="mr-3">🚪</span>
+                <span class="font-medium">Logout</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md">
+        <span class="text-2xl">☰</span>
+    </button>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Welcome, <%= user.name %> 🌾</h2>
+                    <p class="text-sm text-gray-600 mt-1">Manage your farm products and orders</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showSection('notifications')" class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                        🔔
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=10b981&color=fff" class="w-10 h-10 rounded-full">
+                        <span class="font-medium text-gray-700"><%= user.name %></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+            <!-- Statistics Cards -->
+            <div id="dashboardOverview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Products Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Products</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">24</h3>
+                            <p class="text-green-600 text-xs mt-1">↑ 12% this month</p>
+                        </div>
+                        <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            🌾
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Orders Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Active Orders</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">18</h3>
+                            <p class="text-blue-600 text-xs mt-1">↑ 5 new today</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            📦
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Earnings Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-secondary hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Earnings</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">₹45,280</h3>
+                            <p class="text-green-600 text-xs mt-1">↑ 23% this month</p>
+                        </div>
+                        <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            💰
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Orders Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Pending Orders</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">7</h3>
+                            <p class="text-orange-600 text-xs mt-1">Needs attention</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            ⏳
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Average Rating Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Average Rating</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">4.8 ⭐</h3>
+                            <p class="text-yellow-600 text-xs mt-1">Based on 156 reviews</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            ⭐
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Low Stock Items</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">3</h3>
+                            <p class="text-red-600 text-xs mt-1">Restock needed</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            📉
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Deliveries Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">New Deliveries</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-2">5</h3>
+                            <p class="text-purple-600 text-xs mt-1">Ready for dispatch</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-500 bg-opacity-10 rounded-full flex items-center justify-center text-2xl">
+                            🚚
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Panel -->
+            <div id="notifications" class="mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        🔔 Notifications
+                        <span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">8 New</span>
+                    </h3>
+                    <div class="space-y-3">
+                        <!-- Delivery Notification -->
+                        <div class="flex items-start p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                            <span class="text-2xl mr-3">🚚</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">New delivery request from Amit Sharma</p>
+                                <p class="text-xs text-gray-500">Order #ORD-2023-050 - Fresh Tomatoes (15kg)</p>
+                                <p class="text-xs text-purple-600 mt-1">10 minutes ago</p>
+                            </div>
+                            <button class="px-3 py-1 bg-purple-500 text-white text-xs rounded-lg hover:bg-purple-600">Accept</button>
+                        </div>
+                        
+                        <!-- Stock Alert -->
+                        <div class="flex items-start p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                            <span class="text-2xl mr-3">📉</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">Low stock alert: Fresh Milk</p>
+                                <p class="text-xs text-gray-500">Only 20 liters remaining - Consider restocking</p>
+                                <p class="text-xs text-red-600 mt-1">30 minutes ago</p>
+                            </div>
+                            <button class="px-3 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600">Update Stock</button>
+                        </div>
+                        
+                        <!-- New Order -->
+                        <div class="flex items-start p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <span class="text-2xl mr-3">🛒</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">New order received!</p>
+                                <p class="text-xs text-gray-500">Order #ORD-2023-051 - Organic Spinach (8kg) - ₹240</p>
+                                <p class="text-xs text-green-600 mt-1">1 hour ago</p>
+                            </div>
+                            <button class="px-3 py-1 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600">View</button>
+                        </div>
+                        
+                        <!-- Rating Notification -->
+                        <div class="flex items-start p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                            <span class="text-2xl mr-3">⭐</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">New 5-star review from Priya Patel</p>
+                                <p class="text-xs text-gray-500">"Excellent quality mangoes! Will order again."</p>
+                                <p class="text-xs text-yellow-600 mt-1">2 hours ago</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Stock Alert 2 -->
+                        <div class="flex items-start p-3 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                            <span class="text-2xl mr-3">⚠️</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">Stock running low: Sweet Mangoes</p>
+                                <p class="text-xs text-gray-500">Only 50kg remaining - High demand product</p>
+                                <p class="text-xs text-orange-600 mt-1">3 hours ago</p>
+                            </div>
+                            <button class="px-3 py-1 bg-orange-500 text-white text-xs rounded-lg hover:bg-orange-600">Update Stock</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ratings & Reviews Section -->
+            <div id="ratings" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Customer Ratings & Reviews</h3>
+                    
+                    <!-- Rating Summary -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl text-center">
+                            <h4 class="text-5xl font-bold text-yellow-700">4.8</h4>
+                            <div class="text-2xl my-2">⭐⭐⭐⭐⭐</div>
+                            <p class="text-gray-600 text-sm">Based on 156 reviews</p>
+                        </div>
+                        <div class="col-span-2 space-y-2">
+                            <div class="flex items-center">
+                                <span class="w-12 text-sm">5 ⭐</span>
+                                <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
+                                    <div class="h-3 bg-yellow-400 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <span class="w-12 text-sm text-gray-600">117</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-12 text-sm">4 ⭐</span>
+                                <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
+                                    <div class="h-3 bg-yellow-400 rounded-full" style="width: 15%"></div>
+                                </div>
+                                <span class="w-12 text-sm text-gray-600">23</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-12 text-sm">3 ⭐</span>
+                                <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
+                                    <div class="h-3 bg-yellow-400 rounded-full" style="width: 6%"></div>
+                                </div>
+                                <span class="w-12 text-sm text-gray-600">10</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-12 text-sm">2 ⭐</span>
+                                <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
+                                    <div class="h-3 bg-yellow-400 rounded-full" style="width: 3%"></div>
+                                </div>
+                                <span class="w-12 text-sm text-gray-600">4</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-12 text-sm">1 ⭐</span>
+                                <div class="flex-1 h-3 bg-gray-200 rounded-full mx-2">
+                                    <div class="h-3 bg-yellow-400 rounded-full" style="width: 1%"></div>
+                                </div>
+                                <span class="w-12 text-sm text-gray-600">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Reviews -->
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">Recent Reviews</h4>
+                    <div class="space-y-4">
+                        <div class="border-b pb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Priya+Patel&background=10b981&color=fff" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Priya Patel</p>
+                                        <p class="text-xs text-gray-500">Purchased: Sweet Mangoes</p>
+                                    </div>
+                                </div>
+                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-gray-600 text-sm">"Excellent quality mangoes! Fresh, sweet, and perfectly ripe. Will definitely order again!"</p>
+                        </div>
+                        <div class="border-b pb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Rahul+Verma&background=f59e0b&color=fff" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Rahul Verma</p>
+                                        <p class="text-xs text-gray-500">Purchased: Organic Spinach</p>
+                                    </div>
+                                </div>
+                                <div class="text-yellow-400">⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-gray-600 text-sm">"Good quality spinach. Fresh and clean. Delivery was on time."</p>
+                        </div>
+                        <div class="border-b pb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center">
+                                    <img src="https://ui-avatars.com/api/?name=Sneha+Kumar&background=3b82f6&color=fff" class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Sneha Kumar</p>
+                                        <p class="text-xs text-gray-500">Purchased: Fresh Milk</p>
+                                    </div>
+                                </div>
+                                <div class="text-yellow-400">⭐⭐⭐⭐⭐</div>
+                            </div>
+                            <p class="text-gray-600 text-sm">"Best milk quality I've ever had! Pure and fresh. My family loves it."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Management Section -->
+            <div id="stockManagement" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Stock Management</h3>
+                    
+                    <!-- Low Stock Alerts -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-red-600 mb-4 flex items-center">
+                            ⚠️ Low Stock Alerts
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-2xl">🥛</span>
+                                    <span class="px-2 py-1 bg-red-500 text-white text-xs rounded-full">Critical</span>
+                                </div>
+                                <h5 class="font-semibold text-gray-800">Fresh Milk</h5>
+                                <p class="text-sm text-gray-600">20 L remaining</p>
+                                <button class="mt-2 w-full py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Update Stock</button>
+                            </div>
+                            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-2xl">🥭</span>
+                                    <span class="px-2 py-1 bg-orange-500 text-white text-xs rounded-full">Low</span>
+                                </div>
+                                <h5 class="font-semibold text-gray-800">Sweet Mangoes</h5>
+                                <p class="text-sm text-gray-600">50 kg remaining</p>
+                                <button class="mt-2 w-full py-2 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600">Update Stock</button>
+                            </div>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-2xl">🥬</span>
+                                    <span class="px-2 py-1 bg-yellow-500 text-white text-xs rounded-full">Warning</span>
+                                </div>
+                                <h5 class="font-semibold text-gray-800">Organic Spinach</h5>
+                                <p class="text-sm text-gray-600">80 kg remaining</p>
+                                <button class="mt-2 w-full py-2 bg-yellow-500 text-white rounded-lg text-sm hover:bg-yellow-600">Update Stock</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- All Stock Overview -->
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">All Products Stock</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Stock</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Min Stock</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-4 py-3">🍅 Fresh Tomatoes</td>
+                                    <td class="px-4 py-3">150 kg</td>
+                                    <td class="px-4 py-3">50 kg</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">In Stock</span></td>
+                                    <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3">🥛 Fresh Milk</td>
+                                    <td class="px-4 py-3">20 L</td>
+                                    <td class="px-4 py-3">50 L</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Critical</span></td>
+                                    <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3">🥭 Sweet Mangoes</td>
+                                    <td class="px-4 py-3">50 kg</td>
+                                    <td class="px-4 py-3">30 kg</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">Low</span></td>
+                                    <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3">🌾 Wheat Flour</td>
+                                    <td class="px-4 py-3">200 kg</td>
+                                    <td class="px-4 py-3">50 kg</td>
+                                    <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">In Stock</span></td>
+                                    <td class="px-4 py-3"><button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Product Section -->
+            <div id="addProduct" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Add New Product</h3>
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                            <input type="text" placeholder="e.g., Fresh Tomatoes" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>Vegetables</option>
+                                <option>Fruits</option>
+                                <option>Grains</option>
+                                <option>Dairy</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Price per Unit (₹)</label>
+                            <input type="number" placeholder="50" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Available Quantity (kg)</label>
+                            <input type="number" placeholder="100" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                            <input type="file" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea rows="4" placeholder="Describe your product..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+                                Add Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- My Products Section -->
+            <div id="myProducts" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="p-6 border-b flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800">My Products</h3>
+                        <button onclick="showSection('addProduct')" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-green-700 transition">
+                            + Add New
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="productsTableBody">
+                                <!-- Products will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="p-6 border-b">
+                        <h3 class="text-xl font-bold text-gray-800">Recent Orders</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="ordersTableBody">
+                                <!-- Orders will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings Section -->
+            <div id="earnings" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Earnings Overview</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
+                            <p class="text-green-700 font-medium mb-2">This Month</p>
+                            <h4 class="text-3xl font-bold text-green-900">₹15,420</h4>
+                        </div>
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
+                            <p class="text-blue-700 font-medium mb-2">Last Month</p>
+                            <h4 class="text-3xl font-bold text-blue-900">₹12,580</h4>
+                        </div>
+                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl">
+                            <p class="text-yellow-700 font-medium mb-2">Total Earnings</p>
+                            <h4 class="text-3xl font-bold text-yellow-900">₹45,280</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Recent Activity</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <span class="text-2xl">🛒</span>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-800">New order received for Fresh Tomatoes</p>
+                            <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <span class="text-2xl">✅</span>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-800">Order #ORD-2023-045 delivered successfully</p>
+                            <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <span class="text-2xl">💰</span>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-800">Payment received: ₹1,250</p>
+                            <p class="text-xs text-gray-500 mt-1">1 day ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dummy Data
+        const products = [
+            { id: 1, name: 'Fresh Tomatoes', category: 'Vegetables', price: 40, stock: 150, status: 'In Stock', image: '🍅' },
+            { id: 2, name: 'Organic Spinach', category: 'Vegetables', price: 30, stock: 80, status: 'In Stock', image: '🥬' },
+            { id: 3, name: 'Sweet Mangoes', category: 'Fruits', price: 120, stock: 50, status: 'In Stock', image: '🥭' },
+            { id: 4, name: 'Fresh Milk', category: 'Dairy', price: 60, stock: 20, status: 'Low Stock', image: '🥛' },
+            { id: 5, name: 'Wheat Flour', category: 'Grains', price: 35, stock: 200, status: 'In Stock', image: '🌾' }
+        ];
+
+        const orders = [
+            { id: 'ORD-2023-045', product: 'Fresh Tomatoes', quantity: '10 kg', customer: 'Amit Sharma', amount: 400, status: 'Pending' },
+            { id: 'ORD-2023-044', product: 'Sweet Mangoes', quantity: '5 kg', customer: 'Priya Patel', amount: 600, status: 'Shipped' },
+            { id: 'ORD-2023-043', product: 'Organic Spinach', quantity: '8 kg', customer: 'Rahul Verma', amount: 240, status: 'Delivered' },
+            { id: 'ORD-2023-042', product: 'Fresh Milk', quantity: '15 L', customer: 'Sneha Kumar', amount: 900, status: 'Pending' },
+            { id: 'ORD-2023-041', product: 'Wheat Flour', quantity: '20 kg', customer: 'Vijay Singh', amount: 700, status: 'Shipped' }
+        ];
+
+        // Toggle Sidebar (Mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        // Show Section
+        function showSection(sectionId) {
+            // Hide all sections
+            ['dashboardOverview', 'notifications', 'addProduct', 'myProducts', 'stockManagement', 'orders', 'ratings', 'earnings'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.classList.add('hidden');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(sectionId);
+            if (section) section.classList.remove('hidden');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-white', 'bg-primary');
+                link.classList.add('text-gray-700', 'hover:bg-gray-100');
+            });
+            const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeLink) {
+                activeLink.classList.remove('text-gray-700', 'hover:bg-gray-100');
+                activeLink.classList.add('text-white', 'bg-primary');
+            }
+            
+            // If showing products or orders, render the data
+            if (sectionId === 'myProducts') renderProducts();
+            if (sectionId === 'orders') renderOrders();
+        }
+
+        // Render Products Table
+        function renderProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = products.map(product => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">${product.image}</span>
+                            <span class="font-medium text-gray-900">${product.name}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-600">${product.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">₹${product.price}/kg</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-600">${product.stock} kg</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full ${product.status === 'In Stock' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}">
+                            ${product.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <button class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
+                        <button class="text-red-600 hover:text-red-800">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Orders Table
+        function renderOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = orders.map(order => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm text-gray-900">${order.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-900">${order.product}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-600">${order.quantity}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-900">${order.customer}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">₹${order.amount}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full ${
+                            order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                            order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                        }">
+                            ${order.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <select class="text-sm border border-gray-300 rounded px-2 py-1">
+                            <option ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                            <option ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dashboard is visible by default
+            document.getElementById('dashboardOverview').classList.remove('hidden');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KRISHI-SETU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/home.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Background Carousel -->
+        <div class="hero-carousel">
+            <div class="carousel-slide active" style="background-image: url('/images/Fruit.jpg')"></div>
+            <div class="carousel-slide" style="background-image: url('/images/organic-vegetables-f.jpg')"></div>
+            <div class="carousel-slide" style="background-image: url('/images/dairy-productsNew.jpeg')"></div>
+        </div>
+        <div class="hero-overlay"></div>
+        
+        <!-- Navigation Arrows -->
+        <button class="hero-nav hero-nav-left" onclick="changeSlide(-1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <button class="hero-nav hero-nav-right" onclick="changeSlide(1)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+
+        <!-- Main Content -->
+        <div class="hero-container">
+            <div class="hero-content">
+                <p class="hero-tagline">🌾 Farm Fresh, Direct to You</p>
+                <h1>Welcome, <span><%= user.name %></span>!</h1>
+                <p class="hero-subtitle">We connect you directly with local farmers, bringing fresh produce to your table. Support sustainable farming and enjoy quality at fair prices.</p>
+                <div class="hero-buttons">
+                    <a href="/products?category=all" class="hero-btn">Shop Now</a>
+                    <a href="#how-it-works" class="hero-btn-secondary">How It Works</a>
+                </div>
+                
+                <!-- Slider Dots -->
+                <div class="hero-dots">
+                    <span class="dot active" onclick="goToSlide(0)"></span>
+                    <span class="dot" onclick="goToSlide(1)"></span>
+                    <span class="dot" onclick="goToSlide(2)"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Hero Carousel
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.hero-dots .dot');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                dots[i].classList.remove('active');
+            });
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // Auto-slide every 4 seconds
+        setInterval(() => {
+            changeSlide(1);
+        }, 4000);
+    </script>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-icon-wrapper">
+              <div class="step-number">1</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+                <path d="M11 8v6"/>
+                <path d="M8 11h6"/>
+              </svg>
+            </div>
+            <h3>Browse & Select</h3>
+            <p>Explore fresh produce from local farmers</p>
+          </div>
+          <div class="step-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </div>
+          <div class="step">
+            <div class="step-icon-wrapper">
+              <div class="step-number">2</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="21" r="1"/>
+                <circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
+            </div>
+            <h3>Add to Cart & Pay</h3>
+            <p>Secure checkout with multiple payment options</p>
+          </div>
+          <div class="step-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </div>
+          <div class="step">
+            <div class="step-icon-wrapper">
+              <div class="step-number">3</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                <path d="M15 18H9"/>
+                <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                <circle cx="17" cy="18" r="2"/>
+                <circle cx="7" cy="18" r="2"/>
+              </svg>
+            </div>
+            <h3>Fast Delivery</h3>
+            <p>Fresh produce delivered to your doorstep</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Categories Section -->
+    <section class="product-categories" id="products">
+      <div class="container">
+        <div class="categories-grid">
+          <div class="category-card" onclick="window.location.href='/products?category=fruits'" style="cursor: pointer;">
+            <img
+              src="/images/Fruit.jpg"
+              alt="Fresh Fruits"
+              class="category-image"
+            />
+            <div class="category-content">
+              <h3>FRUITS</h3>
+              <p>Freshly picked fruits from our farm!</p>
+            </div>
+          </div>
+          <div class="category-card" onclick="window.location.href='/products?category=vegetables'" style="cursor: pointer;">
+            <img
+              src="/images/organic-vegetables-f.jpg"
+              alt="Fresh Vegetables"
+              class="category-image"
+            />
+            <div class="category-content">
+              <h3>VEGETABLES</h3>
+              <p>
+                Discover the true taste of freshness with our farm-fresh
+                vegetable!
+              </p>
+            </div>
+          </div>
+          <div class="category-card" onclick="window.location.href='/products?category=pulses'" style="cursor: pointer;">
+            <img
+              src="/images/Pulses.jpg"
+              alt="Pulses"
+              class="category-image"
+            />
+            <div class="category-content">
+              <h3>PULSES</h3>
+              <p>
+                Our farm offers a pulses, including lentils, chickpeas, beans,
+                and more!
+              </p>
+            </div>
+          </div>
+          <div class="category-card" onclick="window.location.href='/products?category=dairy'" style="cursor: pointer;">
+            <img
+              src="images/dairy.jpg"
+              alt="Dairy Products"
+              class="category-image"
+            />
+            <div class="category-content">
+              <h3>DAIRY PRODUCTS</h3>
+              <p>
+                Full range of offerings, including milk, yogurt, cheese, and
+                butter and more!
+              </p>
+            </div>
+          </div>
+          <div class="category-card" onclick="window.location.href='/products?category=pickles'" style="cursor: pointer;">
+            <img src="images/pickle.jpg" alt="Pickles" class="category-image" />
+            <div class="category-content">
+              <h3>PICKELS</h3>
+              <p>
+                Dedicated to growing the freshest, most delicious pickles you've
+                ever tasted!
+              </p>
+            </div>
+          </div>
+          <div class="category-card" onclick="window.location.href='/products?category=masala'" style="cursor: pointer;">
+            <img
+              src="/images/masale.png"
+              alt="Masala Blends"
+              class="category-image"
+            />
+            <div class="category-content">
+              <h3>MASALA BLENDS</h3>
+              <p>
+                Spice up your life with the most flavorful herbs and authentic
+                spices, grown with care and harvested at their peak!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Today's Fresh Produce Section -->
+    <section class="fresh-produce">
+      <div class="container">
+        <div class="fresh-produce-title">
+          <h2>Today’s Farm Deals!!</h2>
+          <p>
+            Discover the freshest fruits, vegetables, and dairy products,
+            delivered straight to your door.
+          </p>
+        </div>
+        <div class="products-scroll-wrapper">
+          <div class="products-scroll">
+            <!-- First set of cards -->
+            <div class="product-card">
+              <img src="/images/banana.png" alt="Banana" class="product-image" />
+              <div class="product-details">
+                <h3>Banana</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹40/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/bhendi.jpg" alt="Bhendi" class="product-image" />
+              <div class="product-details">
+                <h3>Bhendi</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹32/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/amul-buffalo (1).png" alt="Buffalo Milk" class="product-image" />
+              <div class="product-details">
+                <h3>Buffalo Milk</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹65/Ltr</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/toor_dal.jpg" alt="Toor Daal" class="product-image" />
+              <div class="product-details">
+                <h3>Toor Daal</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹249/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/cheese pack.jpg" alt="Amul Cheese" class="product-image" />
+              <div class="product-details">
+                <h3>Amul Cheese</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹69/100gm</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/pickel-1kg.jpg" alt="Mango Pickle" class="product-image" />
+              <div class="product-details">
+                <h3>Mango Pickle</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹319/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/Garam-Masala-Powder.jpg" alt="Garam Masala" class="product-image" />
+              <div class="product-details">
+                <h3>Garam Masala</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹59/100gm</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <!-- Duplicate set for infinite scroll -->
+            <div class="product-card">
+              <img src="/images/banana.png" alt="Banana" class="product-image" />
+              <div class="product-details">
+                <h3>Banana</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹40/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/bhendi.jpg" alt="Bhendi" class="product-image" />
+              <div class="product-details">
+                <h3>Bhendi</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹32/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/amul-buffalo (1).png" alt="Buffalo Milk" class="product-image" />
+              <div class="product-details">
+                <h3>Buffalo Milk</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹65/Ltr</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/toor_dal.jpg" alt="Toor Daal" class="product-image" />
+              <div class="product-details">
+                <h3>Toor Daal</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹249/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/cheese pack.jpg" alt="Amul Cheese" class="product-image" />
+              <div class="product-details">
+                <h3>Amul Cheese</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹69/100gm</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/pickel-1kg.jpg" alt="Mango Pickle" class="product-image" />
+              <div class="product-details">
+                <h3>Mango Pickle</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹319/kg</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <img src="/images/Garam-Masala-Powder.jpg" alt="Garam Masala" class="product-image" />
+              <div class="product-details">
+                <h3>Garam Masala</h3>
+                <div class="product-footer">
+                  <span class="product-price">₹59/100gm</span>
+                  <button class="add-to-cart-btn">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose">
+      <div class="container">
+        <h2 class="section-title">Why Choose Us?</h2>
+        <p class="section-subtitle">Experience the difference of farm-fresh quality</p>
+        <div class="features">
+          <div class="feature">
+            <div class="feature-icon-wrapper">
+              <div class="feature-icon">
+                <svg width="60" height="60" viewBox="0 0 100 100" fill="none">
+                  <!-- Farmer with handshake -->
+                  <circle cx="35" cy="25" r="12" stroke="#4CAF50" stroke-width="3" fill="none"/>
+                  <path d="M15 70 Q15 45 35 45 Q55 45 55 70" stroke="#4CAF50" stroke-width="3" fill="none"/>
+                  <circle cx="70" cy="30" r="10" stroke="#D2691E" stroke-width="3" fill="none"/>
+                  <path d="M55 75 Q55 55 70 55 Q85 55 85 75" stroke="#D2691E" stroke-width="3" fill="none"/>
+                  <path d="M40 55 L60 55" stroke="#2E7D32" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="50" cy="55" r="6" fill="#4CAF50"/>
+                </svg>
+              </div>
+            </div>
+            <div class="feature-content">
+              <h3>No Middlemen</h3>
+              <p>Buy directly from farmers and get the freshest produce at the best prices.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-wrapper">
+              <div class="feature-icon">
+                <svg width="60" height="60" viewBox="0 0 100 100" fill="none">
+                  <!-- Rupee with leaf -->
+                  <circle cx="50" cy="50" r="35" stroke="#4CAF50" stroke-width="3" fill="none"/>
+                  <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="#D2691E">₹</text>
+                  <path d="M70 20 Q85 25 80 40" stroke="#2E7D32" stroke-width="3" fill="none"/>
+                  <ellipse cx="82" cy="18" rx="8" ry="12" fill="#4CAF50" transform="rotate(-30 82 18)"/>
+                  <ellipse cx="88" cy="28" rx="6" ry="10" fill="#66BB6A" transform="rotate(-20 88 28)"/>
+                </svg>
+              </div>
+            </div>
+            <div class="feature-content">
+              <h3>Fair Pricing</h3>
+              <p>Farmers set their own prices, ensuring fair profits and affordable rates for you.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon-wrapper">
+              <div class="feature-icon">
+                <svg width="60" height="60" viewBox="0 0 100 100" fill="none">
+                  <!-- Phone with chat bubbles -->
+                  <rect x="30" y="15" width="40" height="70" rx="8" stroke="#4CAF50" stroke-width="3" fill="none"/>
+                  <rect x="35" y="22" width="30" height="45" rx="3" fill="#E8F5E9"/>
+                  <circle cx="50" cy="77" r="5" stroke="#4CAF50" stroke-width="2" fill="none"/>
+                  <rect x="38" y="28" width="20" height="8" rx="4" fill="#4CAF50"/>
+                  <rect x="42" y="40" width="18" height="8" rx="4" fill="#D2691E"/>
+                  <rect x="38" y="52" width="16" height="8" rx="4" fill="#4CAF50"/>
+                  <circle cx="75" cy="30" r="12" fill="#FFF3E0" stroke="#D2691E" stroke-width="2"/>
+                  <text x="75" y="35" font-size="14" text-anchor="middle" fill="#D2691E">💬</text>
+                </svg>
+              </div>
+            </div>
+            <div class="feature-content">
+              <h3>Direct Communication</h3>
+              <p>Chat directly with farmers about their produce and growing practices.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact">
+      <div class="container">
+        <div class="impact-content">
+          <h2>कृषी-सेतू IMPACT</h2>
+          <p>
+            Our website connects farmers directly with consumers, allowing them
+            to earn fair prices and eliminate middlemen. Customers enjoy fresh,
+            local produce at competitive prices while supporting sustainable
+            farming.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meet the Farmer -->
+    <section class="farmers">
+      <div class="container">
+        <div class="farmers-content">
+          <div class="farmers-text">
+            <h2>Meet the Farmers</h2>
+            <p>
+              We focus on sustainable farming that benefits the land and your
+              family. Our farmer has been growing fresh, chemical-free produce
+              for years, using methods that support soil health and
+              biodiversity. We value transparency and connect you directly to
+              your food source.
+            </p>
+          </div>
+          <div class="farmers-images">
+            <img src="/images/farmer1.jpg" alt="Farmer 1" class="farmer-img" />
+            <img src="/images/farmer2.jpg" alt="Farmer 2" class="farmer-img" />
+            <img src="/images/farmer4.jpg" alt="Farmer 3" class="farmer-img" />
+            <img src="/images/farmer5.jpg" alt="Farmer 4" class="farmer-img" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Customer Reviews -->
+    <section class="reviews">
+      <div class="container">
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-subtitle">Real stories from people who love farm-fresh produce</p>
+        <div class="reviews-grid">
+          <div class="review">
+            <img
+              src="/images/cust1.jpg"
+              alt="Shashank Sanmukh Kanade"
+              class="review-avatar"
+            />
+            <div class="review-content">
+              <p>
+                I was impressed by how smooth the process was and how well they
+                understood our needs. The result exceeded our expectations, and
+                we're very happy.
+              </p>
+              <p class="review-author">Shashank Sanmukh Kanade</p>
+            </div>
+          </div>
+          <div class="review">
+            <img
+              src="/images/cust3.jpg"
+              alt="Atharv Kiran Holsambre"
+              class="review-avatar"
+            />
+            <div class="review-content">
+              <p>
+                From start to finish, their team was responsive, friendly, and
+                genuinely invested in helping us succeed. They go above and
+                beyond, and it shows in the results.
+              </p>
+              <p class="review-author">Atharv Kiran Holsambre</p>
+            </div>
+          </div>
+          <div class="review">
+            <img
+              src="/images/cust4.jpg"
+              alt="Sarang Pradeep Jadhav"
+              class="review-avatar"
+            />
+            <div class="review-content">
+              <p>
+                Professional and reliable service. Easy to work with and highly
+                recommended!
+              </p>
+              <p class="review-author">Sarang Pradeep Jadhav</p>
+            </div>
+          </div>
+          <div class="review">
+            <img
+              src="/images/cust5.jpg"
+              alt="Atharv Rajan Mulik"
+              class="review-avatar"
+            />
+            <div class="review-content">
+              <p>
+                They delivered exactly what we needed. Great quality and on
+                time!
+              </p>
+              <p class="review-author">Atharv Rajan Mulik</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="/js/home.js"></script>
+  </body>
+</html>

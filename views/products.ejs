@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - KRISHI-SETU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/products.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <div class="products-page">
+        <!-- Sidebar Categories -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Filter</h3>
+            </div>
+            <ul class="category-list">
+                <li class="category-item <%= selectedCategory === 'all' ? 'active' : '' %>" data-category="all">All Products</li>
+                <li class="category-item <%= selectedCategory === 'fruits' ? 'active' : '' %>" data-category="fruits">Fruits</li>
+                <li class="category-item <%= selectedCategory === 'vegetables' ? 'active' : '' %>" data-category="vegetables">Vegetables</li>
+                <li class="category-item <%= selectedCategory === 'dairy' ? 'active' : '' %>" data-category="dairy">Dairy Products</li>
+                <li class="category-item <%= selectedCategory === 'pulses' ? 'active' : '' %>" data-category="pulses">Pulses</li>
+                <li class="category-item <%= selectedCategory === 'pickles' ? 'active' : '' %>" data-category="pickles">Pickles</li>
+                <li class="category-item <%= selectedCategory === 'masala' ? 'active' : '' %>" data-category="masala">Masala Blends</li>
+                <li class="category-item <%= selectedCategory === 'grains' ? 'active' : '' %>" data-category="grains">Grains & Cereals</li>
+                <li class="category-item <%= selectedCategory === 'oil' ? 'active' : '' %>" data-category="oil">Cold Pressed Oils</li>
+            </ul>
+        </aside>
+
+        <!-- Products Grid -->
+        <main class="products-main">
+            <div class="products-header">
+                <h1 class="products-title">All Products</h1>
+                <div class="products-sort">
+                    <select id="sortProducts">
+                        <option value="default">Sort by: Default</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="discount">Discount: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Fruits -->
+                <div class="product-item" data-category="fruits" data-price="40" data-discount="27">
+                    <div class="discount-badge">27% Off</div>
+                    <img src="/Product_images/banana.jpg" alt="Banana" class="product-img">
+                    <h3 class="product-name">Banana</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹100</span>
+                        <span class="current-price">₹73</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                
+                <div class="product-item" data-category="fruits" data-price="95" data-discount="37">
+                    <div class="discount-badge">37% Off</div>
+                    <img src="/Product_images/straberry.jpg" alt="Strawberry" class="product-img">
+                    <h3 class="product-name">Strawberry</h3>
+                    <div class="product-weight">160g to 180g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹150</span>
+                        <span class="current-price">₹95</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="110" data-discount="25">
+                    <div class="discount-badge">25% Off</div>
+                    <img src="/Product_images/guava.jpg" alt="Guava" class="product-img">
+                    <h3 class="product-name">Guava</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹147</span>
+                        <span class="current-price">₹110</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="85" data-discount="28">
+                    <div class="discount-badge">28% Off</div>
+                    <img src="/Product_images/orange.jpg" alt="Orange" class="product-img">
+                    <h3 class="product-name">Orange</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹118</span>
+                        <span class="current-price">₹85</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="45" data-discount="33">
+                    <div class="discount-badge">33% Off</div>
+                    <img src="/Product_images/dates.png" alt="Dates" class="product-img">
+                    <h3 class="product-name">Dates</h3>
+                    <div class="product-weight">400g to 500g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹67</span>
+                        <span class="current-price">₹45</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="120" data-discount="20">
+                    <div class="discount-badge">20% Off</div>
+                    <img src="/Product_images/apple.jpg" alt="Apple" class="product-img">
+                    <h3 class="product-name">Apple</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹150</span>
+                        <span class="current-price">₹120</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="70" data-discount="30">
+                    <div class="discount-badge">30% Off</div>
+                    <img src="/Product_images/pomegranate.png" alt="Pomegranate" class="product-img">
+                    <h3 class="product-name">Pomegranate</h3>
+                    <div class="product-weight">4 pieces</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹100</span>
+                        <span class="current-price">₹70</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="55" data-discount="26">
+                    <div class="discount-badge">26% Off</div>
+                    <img src="/Product_images/papaya.jpg" alt="Papaya" class="product-img">
+                    <h3 class="product-name">Papaya</h3>
+                    <div class="product-weight">1 piece</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹74</span>
+                        <span class="current-price">₹55</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="fruits" data-price="90" data-discount="25">
+                    <div class="discount-badge">25% Off</div>
+                    <img src="/Product_images/grapes.jpg" alt="Grapes" class="product-img">
+                    <h3 class="product-name">Grapes</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹120</span>
+                        <span class="current-price">₹90</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <!-- Vegetables -->
+                <div class="product-item" data-category="vegetables" data-price="32" data-discount="20">
+                    <div class="discount-badge">20% Off</div>
+                    <img src="/images/bhendi.jpg" alt="Bhendi (Okra)" class="product-img">
+                    <h3 class="product-name">Bhendi (Okra)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹40</span>
+                        <span class="current-price">₹32</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="25" data-discount="17">
+                    <div class="discount-badge">17% Off</div>
+                    <img src="/Product_images/tomato.jpg" alt="Tomato" class="product-img">
+                    <h3 class="product-name">Tomato</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹30</span>
+                        <span class="current-price">₹25</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="18" data-discount="25">
+                    <div class="discount-badge">25% Off</div>
+                    <img src="/Product_images/onion.jpg" alt="Onion" class="product-img">
+                    <h3 class="product-name">Onion</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹24</span>
+                        <span class="current-price">₹18</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="22" data-discount="15">
+                    <div class="discount-badge">15% Off</div>
+                    <img src="/Product_images/potato.jpg" alt="Potato" class="product-img">
+                    <h3 class="product-name">Potato</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹26</span>
+                        <span class="current-price">₹22</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="40" data-discount="20">
+                    <div class="discount-badge">20% Off</div>
+                    <img src="/Product_images/capcicum.png" alt="Capsicum" class="product-img">
+                    <h3 class="product-name">Capsicum (Green)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹50</span>
+                        <span class="current-price">₹40</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="35" data-discount="22">
+                    <div class="discount-badge">22% Off</div>
+                    <img src="/Product_images/cauliflower.jpg" alt="Cauliflower" class="product-img">
+                    <h3 class="product-name">Cauliflower</h3>
+                    <div class="product-weight">1 piece</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹45</span>
+                        <span class="current-price">₹35</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="28" data-discount="18">
+                    <div class="discount-badge">18% Off</div>
+                    <img src="/Product_images/carrot(orange).jpg" alt="Carrot" class="product-img">
+                    <h3 class="product-name">Carrot (Orange)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹34</span>
+                        <span class="current-price">₹28</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="30" data-discount="25">
+                    <div class="discount-badge">25% Off</div>
+                    <img src="/Product_images/Spinach-Palak.jpg" alt="Spinach" class="product-img">
+                    <h3 class="product-name">Spinach (Palak)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹40</span>
+                        <span class="current-price">₹30</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="45" data-discount="19">
+                    <div class="discount-badge">19% Off</div>
+                    <img src="/Product_images/brinjal.jpg" alt="Brinjal" class="product-img">
+                    <h3 class="product-name">Brinjal (Eggplant)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹56</span>
+                        <span class="current-price">₹45</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="vegetables" data-price="38" data-discount="21">
+                    <div class="discount-badge">21% Off</div>
+                    <img src="/Product_images/cabbage.png" alt="Cabbage" class="product-img">
+                    <h3 class="product-name">Cabbage</h3>
+                    <div class="product-weight">1 piece</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹48</span>
+                        <span class="current-price">₹38</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <!-- Dairy Products -->
+                <div class="product-item" data-category="dairy" data-price="65" data-discount="0">
+                    <img src="/images/amul-buffalo (1).png" alt="Buffalo Milk" class="product-img">
+                    <h3 class="product-name">Buffalo Milk</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="current-price">₹65</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="69" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/cheese pack.jpg" alt="Amul Cheese" class="product-img">
+                    <h3 class="product-name">Amul Cheese</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹77</span>
+                        <span class="current-price">₹69</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="52" data-discount="0">
+                    <img src="/Product_images/milk.jpg" alt="Cow Milk" class="product-img">
+                    <h3 class="product-name">Fresh Cow Milk</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="current-price">₹52</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="35" data-discount="12">
+                    <div class="discount-badge">12% Off</div>
+                    <img src="/Product_images/curd.jpg" alt="Curd" class="product-img">
+                    <h3 class="product-name">Fresh Curd (Dahi)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹40</span>
+                        <span class="current-price">₹35</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="450" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/Product_images/ghee.jpg" alt="Pure Ghee" class="product-img">
+                    <h3 class="product-name">Pure Cow Ghee</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹500</span>
+                        <span class="current-price">₹450</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="120" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/Product_images/panner.jpg" alt="Paneer" class="product-img">
+                    <h3 class="product-name">Fresh Paneer</h3>
+                    <div class="product-weight">200 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹130</span>
+                        <span class="current-price">₹120</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="45" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/Product_images/butter.jpg" alt="Butter" class="product-img">
+                    <h3 class="product-name">Fresh Butter</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹50</span>
+                        <span class="current-price">₹45</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="dairy" data-price="25" data-discount="0">
+                    <img src="/Product_images/Buttermilk.jpg" alt="Buttermilk" class="product-img">
+                    <h3 class="product-name">Fresh Buttermilk</h3>
+                    <div class="product-weight">500 ml</div>
+                    <div class="product-pricing">
+                        <span class="current-price">₹25</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                
+
+            
+
+                <!-- Pulses -->
+                <div class="product-item" data-category="pulses" data-price="249" data-discount="0">
+                    <img src="/images/toor_dal.jpg" alt="Toor Dal" class="product-img">
+                    <h3 class="product-name">Toor Dal</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="current-price">₹249</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="140" data-discount="12">
+                    <div class="discount-badge">12% Off</div>
+                    <img src="/images/products/moong-dal.jpg" alt="Moong Dal" class="product-img">
+                    <h3 class="product-name">Moong Dal (Yellow)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹159</span>
+                        <span class="current-price">₹140</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="95" data-discount="5">
+                    <div class="discount-badge">5% Off</div>
+                    <img src="/images/products/chana-dal.jpg" alt="Chana Dal" class="product-img">
+                    <h3 class="product-name">Chana Dal</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹100</span>
+                        <span class="current-price">₹95</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="135" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/urad-dal.jpg" alt="Urad Dal" class="product-img">
+                    <h3 class="product-name">Urad Dal (Black)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹150</span>
+                        <span class="current-price">₹135</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="105" data-discount="13">
+                    <div class="discount-badge">13% Off</div>
+                    <img src="/images/products/masoor-dal.jpg" alt="Masoor Dal" class="product-img">
+                    <h3 class="product-name">Masoor Dal (Red)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹121</span>
+                        <span class="current-price">₹105</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="160" data-discount="11">
+                    <div class="discount-badge">11% Off</div>
+                    <img src="/images/products/rajma.jpg" alt="Rajma" class="product-img">
+                    <h3 class="product-name">Rajma (Red Kidney Beans)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹180</span>
+                        <span class="current-price">₹160</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="85" data-discount="15">
+                    <div class="discount-badge">15% Off</div>
+                    <img src="/images/products/kabuli-chana.jpg" alt="Kabuli Chana" class="product-img">
+                    <h3 class="product-name">Kabuli Chana (Chickpeas)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹100</span>
+                        <span class="current-price">₹85</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pulses" data-price="75" data-discount="16">
+                    <div class="discount-badge">16% Off</div>
+                    <img src="/images/products/black-chana.jpg" alt="Black Chana" class="product-img">
+                    <h3 class="product-name">Kala Chana (Black Chickpeas)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹89</span>
+                        <span class="current-price">₹75</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                
+
+                <!-- Pickles -->
+                <div class="product-item" data-category="pickles" data-price="319" data-discount="0">
+                    <img src="/images/pickel-1kg.jpg" alt="Mango Pickle" class="product-img">
+                    <h3 class="product-name">Mango Pickle</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="current-price">₹319</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="280" data-discount="12">
+                    <div class="discount-badge">12% Off</div>
+                    <img src="/images/products/lemon-pickle.jpg" alt="Lemon Pickle" class="product-img">
+                    <h3 class="product-name">Lemon Pickle</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹318</span>
+                        <span class="current-price">₹280</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="295" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/images/products/mixed-pickle.jpg" alt="Mixed Pickle" class="product-img">
+                    <h3 class="product-name">Mixed Vegetable Pickle</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹321</span>
+                        <span class="current-price">₹295</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="265" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/garlic-pickle.jpg" alt="Garlic Pickle" class="product-img">
+                    <h3 class="product-name">Garlic Pickle (Lehsun)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹294</span>
+                        <span class="current-price">₹265</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="240" data-discount="15">
+                    <div class="discount-badge">15% Off</div>
+                    <img src="/images/products/chilli-pickle.jpg" alt="Green Chilli Pickle" class="product-img">
+                    <h3 class="product-name">Green Chilli Pickle</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹282</span>
+                        <span class="current-price">₹240</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="310" data-discount="6">
+                    <div class="discount-badge">6% Off</div>
+                    <img src="/images/products/ginger-pickle.jpg" alt="Ginger Pickle" class="product-img">
+                    <h3 class="product-name">Ginger Pickle (Adrak)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹330</span>
+                        <span class="current-price">₹310</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="275" data-discount="11">
+                    <div class="discount-badge">11% Off</div>
+                    <img src="/images/products/amla-pickle.jpg" alt="Amla Pickle" class="product-img">
+                    <h3 class="product-name">Amla Pickle</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹309</span>
+                        <span class="current-price">₹275</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="290" data-discount="9">
+                    <div class="discount-badge">9% Off</div>
+                    <img src="/images/products/carrot-pickle.jpg" alt="Carrot Pickle" class="product-img">
+                    <h3 class="product-name">Carrot Pickle (Gajar)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹319</span>
+                        <span class="current-price">₹290</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="255" data-discount="13">
+                    <div class="discount-badge">13% Off</div>
+                    <img src="/images/products/radish-pickle.jpg" alt="Radish Pickle" class="product-img">
+                    <h3 class="product-name">Radish Pickle (Mooli)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹293</span>
+                        <span class="current-price">₹255</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="pickles" data-price="285" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/cauliflower-pickle.jpg" alt="Cauliflower Pickle" class="product-img">
+                    <h3 class="product-name">Cauliflower Pickle (Gobi)</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹317</span>
+                        <span class="current-price">₹285</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <!-- Masala Blends -->
+                <div class="product-item" data-category="masala" data-price="59" data-discount="0">
+                    <img src="/images/Garam-Masala-Powder.jpg" alt="Garam Masala" class="product-img">
+                    <h3 class="product-name">Garam Masala</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="current-price">₹59</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="45" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/turmeric-powder.jpg" alt="Turmeric Powder" class="product-img">
+                    <h3 class="product-name">Turmeric Powder (Haldi)</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹50</span>
+                        <span class="current-price">₹45</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="65" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/images/products/chilli-powder.jpg" alt="Red Chilli Powder" class="product-img">
+                    <h3 class="product-name">Red Chilli Powder</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹71</span>
+                        <span class="current-price">₹65</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="55" data-discount="12">
+                    <div class="discount-badge">12% Off</div>
+                    <img src="/images/products/coriander-powder.jpg" alt="Coriander Powder" class="product-img">
+                    <h3 class="product-name">Coriander Powder (Dhania)</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹62</span>
+                        <span class="current-price">₹55</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="48" data-discount="11">
+                    <div class="discount-badge">11% Off</div>
+                    <img src="/images/products/cumin-powder.jpg" alt="Cumin Powder" class="product-img">
+                    <h3 class="product-name">Cumin Powder (Jeera)</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹54</span>
+                        <span class="current-price">₹48</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="70" data-discount="9">
+                    <div class="discount-badge">9% Off</div>
+                    <img src="/images/products/biryani-masala.jpg" alt="Biryani Masala" class="product-img">
+                    <h3 class="product-name">Biryani Masala</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹77</span>
+                        <span class="current-price">₹70</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="62" data-discount="7">
+                    <div class="discount-badge">7% Off</div>
+                    <img src="/images/products/sambhar-masala.jpg" alt="Sambhar Masala" class="product-img">
+                    <h3 class="product-name">Sambhar Masala</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹67</span>
+                        <span class="current-price">₹62</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="58" data-discount="13">
+                    <div class="discount-badge">13% Off</div>
+                    <img src="/images/products/kitchen-king.jpg" alt="Kitchen King Masala" class="product-img">
+                    <h3 class="product-name">Kitchen King Masala</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹67</span>
+                        <span class="current-price">₹58</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="75" data-discount="6">
+                    <div class="discount-badge">6% Off</div>
+                    <img src="/images/products/chat-masala.jpg" alt="Chat Masala" class="product-img">
+                    <h3 class="product-name">Chat Masala</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹80</span>
+                        <span class="current-price">₹75</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="masala" data-price="68" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/pav-bhaji.jpg" alt="Pav Bhaji Masala" class="product-img">
+                    <h3 class="product-name">Pav Bhaji Masala</h3>
+                    <div class="product-weight">100 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹76</span>
+                        <span class="current-price">₹68</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <!-- Grains & Cereals -->
+                <div class="product-item" data-category="grains" data-price="55" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/images/products/rice-basmati.jpg" alt="Basmati Rice" class="product-img">
+                    <h3 class="product-name">Basmati Rice</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹60</span>
+                        <span class="current-price">₹55</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="42" data-discount="7">
+                    <div class="discount-badge">7% Off</div>
+                    <img src="/images/products/wheat-flour.jpg" alt="Wheat Flour" class="product-img">
+                    <h3 class="product-name">Whole Wheat Flour (Atta)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹45</span>
+                        <span class="current-price">₹42</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="38" data-discount="5">
+                    <div class="discount-badge">5% Off</div>
+                    <img src="/images/products/rice-sona.jpg" alt="Sona Masoori Rice" class="product-img">
+                    <h3 class="product-name">Sona Masoori Rice</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹40</span>
+                        <span class="current-price">₹38</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="65" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/jowar.jpg" alt="Jowar" class="product-img">
+                    <h3 class="product-name">Jowar (Sorghum)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹72</span>
+                        <span class="current-price">₹65</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="58" data-discount="12">
+                    <div class="discount-badge">12% Off</div>
+                    <img src="/images/products/bajra.jpg" alt="Bajra" class="product-img">
+                    <h3 class="product-name">Bajra (Pearl Millet)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹66</span>
+                        <span class="current-price">₹58</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="48" data-discount="9">
+                    <div class="discount-badge">9% Off</div>
+                    <img src="/images/products/ragi.jpg" alt="Ragi" class="product-img">
+                    <h3 class="product-name">Ragi (Finger Millet)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹53</span>
+                        <span class="current-price">₹48</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="75" data-discount="6">
+                    <div class="discount-badge">6% Off</div>
+                    <img src="/images/products/oats.jpg" alt="Oats" class="product-img">
+                    <h3 class="product-name">Rolled Oats</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹80</span>
+                        <span class="current-price">₹75</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="52" data-discount="11">
+                    <div class="discount-badge">11% Off</div>
+                    <img src="/images/products/maize.jpg" alt="Maize" class="product-img">
+                    <h3 class="product-name">Maize (Corn)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹58</span>
+                        <span class="current-price">₹52</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="68" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/images/products/besan.jpg" alt="Besan" class="product-img">
+                    <h3 class="product-name">Besan (Gram Flour)</h3>
+                    <div class="product-weight">1 kg</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹74</span>
+                        <span class="current-price">₹68</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="grains" data-price="85" data-discount="7">
+                    <div class="discount-badge">7% Off</div>
+                    <img src="/images/products/quinoa.jpg" alt="Quinoa" class="product-img">
+                    <h3 class="product-name">Quinoa</h3>
+                    <div class="product-weight">500 g</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹91</span>
+                        <span class="current-price">₹85</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <!-- Cold Pressed Oils -->
+                <div class="product-item" data-category="oil" data-price="320" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/mustard-oil.jpg" alt="Mustard Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Mustard Oil</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹356</span>
+                        <span class="current-price">₹320</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="280" data-discount="12">
+                    <div class="discount-badge">12% Off</div>
+                    <img src="/images/products/coconut-oil.jpg" alt="Coconut Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Coconut Oil</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹318</span>
+                        <span class="current-price">₹280</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="295" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/images/products/groundnut-oil.jpg" alt="Groundnut Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Groundnut Oil</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹321</span>
+                        <span class="current-price">₹295</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="310" data-discount="9">
+                    <div class="discount-badge">9% Off</div>
+                    <img src="/images/products/sesame-oil.jpg" alt="Sesame Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Sesame Oil</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹341</span>
+                        <span class="current-price">₹310</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="275" data-discount="11">
+                    <div class="discount-badge">11% Off</div>
+                    <img src="/images/products/sunflower-oil.jpg" alt="Sunflower Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Sunflower Oil</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹309</span>
+                        <span class="current-price">₹275</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="340" data-discount="7">
+                    <div class="discount-badge">7% Off</div>
+                    <img src="/images/products/olive-oil.jpg" alt="Olive Oil" class="product-img">
+                    <h3 class="product-name">Extra Virgin Olive Oil</h3>
+                    <div class="product-weight">500 ml</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹366</span>
+                        <span class="current-price">₹340</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="290" data-discount="13">
+                    <div class="discount-badge">13% Off</div>
+                    <img src="/images/products/flaxseed-oil.jpg" alt="Flaxseed Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Flaxseed Oil</h3>
+                    <div class="product-weight">500 ml</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹333</span>
+                        <span class="current-price">₹290</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="265" data-discount="10">
+                    <div class="discount-badge">10% Off</div>
+                    <img src="/images/products/safflower-oil.jpg" alt="Safflower Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Safflower Oil</h3>
+                    <div class="product-weight">1 Liter</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹294</span>
+                        <span class="current-price">₹265</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="305" data-discount="8">
+                    <div class="discount-badge">8% Off</div>
+                    <img src="/images/products/almond-oil.jpg" alt="Almond Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Almond Oil</h3>
+                    <div class="product-weight">250 ml</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹332</span>
+                        <span class="current-price">₹305</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+
+                <div class="product-item" data-category="oil" data-price="315" data-discount="6">
+                    <div class="discount-badge">6% Off</div>
+                    <img src="/images/products/walnut-oil.jpg" alt="Walnut Oil" class="product-img">
+                    <h3 class="product-name">Cold Pressed Walnut Oil</h3>
+                    <div class="product-weight">250 ml</div>
+                    <div class="product-pricing">
+                        <span class="original-price">₹335</span>
+                        <span class="current-price">₹315</span>
+                    </div>
+                    <button class="add-btn">Add</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <script src="/js/products.js"></script>
+</body>
+</html>

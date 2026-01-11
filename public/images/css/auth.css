@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f9fafb;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MAIN CONTAINER */
+.auth-container {
+    display: flex;
+    width: 900px;
+    height: 500px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* LEFT IMAGE */
+.auth-image {
+    width: 50%;
+    background: #facc15;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.auth-image img {
+    width: 90%;
+    max-width: 320px;
+}
+
+.auth-image h2 {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #111827;
+}
+
+.auth-image p {
+    margin-top: 10px;
+    color: #374151;
+}
+
+/* RIGHT FORM */
+.auth-form {
+    width: 50%;
+    padding: 40px;
+}
+
+.auth-form h1 {
+    font-size: 28px;
+    color: #111827;
+}
+
+.subtitle {
+    margin: 10px 0 30px;
+    color: #6b7280;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 15px;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #16a34a;
+}
+
+/* BUTTON */
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: #16a34a;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #15803d;
+}
+
+.switch {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.switch a {
+    color: #16a34a;
+    font-weight: 600;
+    text-decoration: none;
+}

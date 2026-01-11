@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRISHI-SETU - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5dc;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #f5f5dc;
+            padding: 15px 0;
+            border-bottom: 2px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2e7d32;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 2px solid #8bc34a;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: #689f38;
+            box-shadow: 0 0 5px rgba(139, 195, 74, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8bc34a;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: #689f38;
+        }
+
+        .icon-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .icon-link:hover {
+            color: #689f38;
+        }
+
+        .icon-link .icon {
+            font-size: 24px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #ff5252;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 180px;
+            margin-top: 10px;
+            z-index: 1001;
+        }
+
+        .profile-dropdown:hover .profile-menu {
+            display: block;
+        }
+
+        .profile-menu a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        .profile-menu a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .profile-menu a:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .profile-menu a:last-child {
+            border-radius: 0 0 8px 8px;
+            color: #ff5252;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            font-weight: bold;
+        }
+
+        /* Product Categories Section */
+        .product-categories {
+            padding: 80px 20px;
+            background-color: #d4c896;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .category-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .category-content {
+            padding: 25px;
+            text-align: left;
+        }
+
+        .category-content h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .category-content p {
+            font-size: 16px;
+            color: white;
+            line-height: 1.6;
+        }
+
+        /* Today's Fresh Produce Section */
+        .fresh-produce {
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+        }
+
+        .fresh-produce-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .fresh-produce-title h2 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .fresh-produce-title p {
+            font-size: 20px;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 60px auto 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-card:nth-child(1) .product-image-container {
+            background: linear-gradient(135deg, #ffd54f 0%, #ffeb3b 100%);
+        }
+
+        .product-card:nth-child(2) .product-image-container {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        .product-card:nth-child(3) .product-image-container {
+            background: linear-gradient(135deg, #f5f5dc 0%, #ede7d4 100%);
+        }
+
+        .product-image {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .product-details {
+            padding: 25px;
+        }
+
+        .product-details h3 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .product-details p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #000;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .add-to-cart-btn {
+            background-color: white;
+            color: #000;
+            border: 2px solid #000;
+            padding: 8px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #000;
+            color: white;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .step-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .arrow {
+            font-size: 40px;
+            color: #333;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            margin-top: 15px;
+        }
+
+        /* Why Choose Us Section */
+        .why-choose {
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+        }
+
+        .features {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            font-size: 50px;
+            min-width: 60px;
+        }
+
+        .feature-content h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .feature-content p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Impact Section */
+        .impact {
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+            text-align: center;
+        }
+
+        .impact-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .impact h2 {
+            font-size: 42px;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .impact p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        /* Meet the Farmer Section */
+        .farmers {
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+        }
+
+        .farmers-content {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .farmers-text {
+            flex: 1;
+        }
+
+        .farmers-text h2 {
+            font-size: 42px;
+            margin-bottom: 30px;
+        }
+
+        .farmers-text p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .farmers-images {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .farmer-img {
+            width: 100%;
+            height: 250px;
+            background-color: #8bc34a;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+
+        /* Reviews Section */
+        .reviews {
+            padding: 80px 20px;
+            background-color: #f5f5dc;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .review {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .review-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #8bc34a;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .review-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .review-author {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Join Community Section */
+        .join-community {
+            padding: 80px 20px;
+            background-color: #8bc34a;
+            text-align: center;
+            color: #000;
+        }
+
+        .join-community h2 {
+            font-size: 42px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .join-community p {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .join-community .role {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .join-btn {
+            background-color: #9ec158;
+            color: #000;
+            padding: 15px 40px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .join-btn:hover {
+            background-color: #b5d17b;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f5f5dc;
+            padding: 60px 20px 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-content h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .footer-content h3 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .contact-info {
+            margin: 30px 0;
+        }
+
+        .contact-info p {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background-color: #8bc34a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .copyright {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            color: #555;
+        }
+
+        .back-to-top {
+            color: #555;
+            text-decoration: none;
+        }
+
+        @media (max-width: 1024px) {
+            .search-container {
+                max-width: 300px;
+            }
+
+            .nav-right {
+                gap: 15px;
+            }
+
+            .icon-link span:not(.icon) {
+                display: none;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-wrap: wrap;
+            }
+
+            .search-container {
+                order: 3;
+                max-width: 100%;
+                flex: 1 1 100%;
+                margin-top: 10px;
+            }
+
+            .nav-right {
+                gap: 15px;
+            }
+
+            .nav-link:not(.icon-link) {
+                display: none;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fresh-produce-title h2 {
+                font-size: 36px;
+            }
+
+            .steps {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .farmers-content {
+                flex-direction: column;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .copyright {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="/home" class="logo">कृषी-सेतू</a>
+                
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="Search for fresh produce...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                
+                <div class="nav-right">
+                    <a href="#contact" class="nav-link">Contact Us</a>
+                    
+                    <a href="/cart" class="icon-link">
+                        <span class="icon">🛒</span>
+                        <span>My Cart</span>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    
+                    <div class="profile-dropdown">
+                        <a href="#" class="icon-link">
+                            <span class="icon">👤</span>
+                            <span>Account</span>
+                        </a>
+                        <div class="profile-menu">
+                            <a href="/farmer-dashboard">Dashboard</a>
+                            <a href="/profile">My Profile</a>
+                            <a href="/orders">My Orders</a>
+                            <a href="/settings">Settings</a>
+                            <a href="/logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>How It Works: Simple & Fresh</h1>
+            <p>Our simple process: Farmers list fresh produce. Customers browse and buy what they need. Enjoy secure payment and direct delivery.</p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <Product Categories Section -->
+    <section class="product-categories">
+        <div class="container">
+            <div class="categories-grid">
+                <div class="category-card">
+                    <img src="/images/Fruit-HD-Images-03481.jpg" alt="Fresh Fruits" class="category-image">
+                    <div class="category-content">
+                        <h3>FRUITS</h3>
+                        <p>Freshly picked fruits from our farm!</p>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <img src="/images/organic-vegetables-f.jpg" alt="Fresh Vegetables" class="category-image">
+                    <div class="category-content">
+                        <h3>VEGETABLES</h3>
+                        <p>Discover the true taste of freshness with our farm-fresh vegetable!</p>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <img src="/images/Different-types-of-Pulses.jpg" alt="Pulses" class="category-image">
+                    <div class="category-content">
+                        <h3>PULSES</h3>
+                        <p>Our farm offers a pulses, including lentils, chickpeas, beans, and more!</p>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <img src="/images/img2.jpg" alt="Dairy Products" class="category-image">
+                    <div class="category-content">
+                        <h3>DAIRY PRODUCTS</h3>
+                        <p>Full range of offerings, including milk, yogurt, cheese, and butter and more!</p>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <img src="/images/img3.jpg" alt="Pickles" class="category-image">
+                    <div class="category-content">
+                        <h3>PICKELS</h3>
+                        <p>Dedicated to growing the freshest, most delicious pickles you've ever tasted!</p>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <img src="/images/masale.png" alt="Masala Blends" class="category-image">
+                    <div class="category-content">
+                        <h3>MASALA BLENDS</h3>
+                        <p>Spice up your life with the most flavorful herbs and authentic spices, grown with care and harvested at their peak!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Today's Fresh Produce Section -->
+    <section class="fresh-produce">
+        <div class="container">
+            <div class="fresh-produce-title">
+                <h2>Today's Fresh Produce!!</h2>
+                <p>Discover the freshest fruits, vegetables, and dairy products, delivered straight to your door.</p>
+            </div>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="/images/banana.png" alt="Banana" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3>Banana</h3>
+                        <p>Seasonal fruits bursting with flavor.</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹50/kg</span>
+                            <button class="add-to-cart-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="/images/1183Bhendi2 (1).webp" alt="Bhendi" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3>Bhendi</h3>
+                        <p>Seasonal and flavorful vegetables for healthy meals.</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹32/kg</span>
+                            <button class="add-to-cart-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="/images/image.png" alt="Buffalo Milk" class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h3>Buffalo Milk</h3>
+                        <p>Fresh dairy products for your daily needs.</p>
+                        <div class="product-footer">
+                            <span class="product-price">₹36/kg</span>
+                            <button class="add-to-cart-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- div class="container">
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">🔍</div>
+                    <h3>Browse & Select</h3>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step">
+                    <div class="step-icon">🛒</div>
+                    <h3>Order & Pay</h3>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step">
+                    <div class="step-icon">📦</div>
+                    <h3>Delivery</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose">
+        <div class="container">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">👤</div>
+                    <div class="feature-content">
+                        <h3>No Middlemen</h3>
+                        <p>Cut out the middleman and buy directly from the farmers, ensuring you get the best prices.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-content">
+                        <h3>Fair Pricing</h3>
+                        <p>Farmers set their own prices, ensuring they receive a fair share of the profits.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-content">
+                        <h3>Direct Communication</h3>
+                        <p>Connect directly with the farmers to ask questions about their produce and growing practices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact">
+        <div class="container">
+            <div class="impact-content">
+                <h2>KRISHI-SETU's IMPACT</h2>
+                <p>Our website connects farmers directly with consumers, allowing them to earn fair prices and eliminate middlemen. Customers enjoy fresh, local produce at competitive prices while supporting sustainable farming.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meet the Farmer -->
+    <section class="farmers">
+        <div class="container">
+            <div class="farmers-content">
+                <div class="farmers-text">
+                    <h2>Meet the Farmer</h2>
+                    <p>We focus on sustainable farming that benefits the land and your family. Our farmer has been growing fresh, chemical-free produce for years, using methods that support soil health and biodiversity. We value transparency and connect you directly to your food source.</p>
+                </div>
+                <div class="farmers-images">
+                    <div class="farmer-img" style="background: linear-gradient(135deg, #8bc34a, #689f38);"></div>
+                    <div class="farmer-img" style="background: linear-gradient(135deg, #9ccc65, #7cb342);"></div>
+                    <div class="farmer-img" style="background: linear-gradient(135deg, #aed581, #8bc34a);"></div>
+                    <div class="farmer-img" style="background: linear-gradient(135deg, #c5e1a5, #9ccc65);"></div>
+                </div>
+            </div>
+
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productName = this.closest('.product-details').querySelector('h3').textContent;
+                const badge = document.querySelector('.cart-badge');
+                let currentCount = parseInt(badge.textContent);
+                badge.textContent = currentCount + 1;
+                
+                // Show feedback
+                this.textContent = 'Added!';
+                this.style.backgroundColor = '#8bc34a';
+                this.style.color = 'white';
+                this.style.borderColor = '#8bc34a';
+                
+                setTimeout(() => {
+                    this.textContent = 'Add';
+                    this.style.backgroundColor = 'white';
+                    this.style.color = '#000';
+                    this.style.borderColor = '#000';
+                }, 1000);
+                
+                console.log('Added to cart:', productName);
+            });
+        });
+        </div>
+    </section>
+
+    <!-- Customer Reviews -->
+    <section class="reviews">
+        <div class="container">
+            <h2 class="section-title">Customer Reviews</h2>
+            <div class="reviews-grid">
+                <div class="review">
+                    <div class="review-avatar"></div>
+                    <div class="review-content">
+                        <p>I was impressed by how smooth the process was and how well they understood our needs. The result exceeded our expectations, and we're very happy.</p>
+                        <p class="review-author">Shashank Sanmukh Kanade</p>
+                    </div>
+                </div>
+                <div class="review">
+                    <div class="review-avatar"></div>
+                    <div class="review-content">
+                        <p>From start to finish, their team was responsive, friendly, and genuinely invested in helping us succeed. They go above and beyond, and it shows in the results.</p>
+                        <p class="review-author">Sarang Pradeep Jadhav</p>
+                    </div>
+                </div>
+                <div class="review">
+                    <div class="review-avatar"></div>
+                    <div class="review-content">
+                        <p>Professional and reliable service. Easy to work with and highly recommended!</p>
+                        <p class="review-author">Atharv Kiran Holsambre</p>
+                    </div>
+            id="contact"     </div>
+                <div class="review">
+                    <div class="review-avatar"></div>
+                    <div class="review-content">
+                        <p>They delivered exactly what we needed. Great quality and on time!</p>
+                        <p class="review-author">Atharv Rajan Mulik</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Community -->
+    <section class="join-community">
+        <div class="container">
+            <h2>Join the KRISHI-SETU Community</h2>
+            <p>Ready to connect with fresh, local produce? Join us today!</p>
+            <p class="role"><strong>Farmers</strong>: Start selling your delicious produce.</p>
+            <p class="role"><strong>Customers</strong>: Explore a world of fresh, seasonal goodness.</p>
+            <a href="/farmer-dashboard" class="join-btn">Join Community</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h2>Connect with Us:</h2>
+                <h3>We'd love to hear from you! Get in touch via phone, email, or social media.</h3>
+                <div class="contact-info">
+                    <p>Email: info@krishisetu.com</p>
+                    <p>Phone: +91 9087654321</p>
+                    <p>Facebook: facebook.com/krishisetu</p>
+                    <p>Instagram: instagram.com/krishisetu</p>
+                    <p>Twitter: twitter.com/krishisetu</p>
+                </div>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">𝕏</a>
+                    <a href="#" class="social-icon">✈</a>
+                    <a href="#" class="social-icon">V</a>
+                </div>
+                <div class="copyright">
+                    <span>© JAZZ 2023</span>
+                    <a href="#" class="back-to-top">Back to top ↑</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Back to top functionality
+        document.querySelector('.back-to-top').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Search functionality
+        const searchBar = document.querySelector('.search-bar');
+        const searchIcon = document.querySelector('.search-icon');
+        
+        searchIcon.addEventListener('click', () => {
+            if (searchBar.value.trim()) {
+                console.log('Searching for:', searchBar.value);
+                // Add your search functionality here
+            }
+        });
+
+        searchBar.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && searchBar.value.trim()) {
+                console.log('Searching for:', searchBar.value);
+                // Add your search functionality here
+            }
+        });
+    </script>
+</body>
+</html>

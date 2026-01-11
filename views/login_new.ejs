@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Krishi-Setu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+
+<div class="auth-container">
+
+    <!-- LEFT SIDE - FULL SCREEN IMAGE -->
+    <div class="auth-image">
+        <img src="/images/cart.jpg" alt="Krishi-Setu Fresh Produce">
+        
+    </div>
+
+    <!-- RIGHT SIDE - LOGIN FORM -->
+    <div class="auth-form">
+        <div class="brand-logo">
+            <img src="/images/krishi-setu-logo.png" alt="कृषी-सेतू" class="brand-logo-img">
+            <p class="brand-tagline">Farm to Table, Naturally</p>
+        </div>
+
+        <div class="role-selector">
+            <button type="button" class="role-btn active" data-role="farmer" onclick="selectRole('farmer')">
+                🌾 Farmer
+            </button>
+            <button type="button" class="role-btn" data-role="customer" onclick="selectRole('customer')">
+                🛒 Customer
+            </button>
+        </div>
+
+        <div class="welcome-text">
+            <h2>Welcome Back! 👋</h2>
+            <p>Login to access your account</p>
+        </div>
+
+        <form action="/login" method="POST">
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <input type="hidden" id="role" name="role" value="farmer">
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+
+        <p class="switch">
+            Don't have an account?
+            <a href="/register">Create one now</a>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function selectRole(role) {
+        // Update hidden input
+        document.getElementById('role').value = role;
+        
+        // Update button styles
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-role="${role}"]`).classList.add('active');
+    }
+</script>
+
+<style>
+    .role-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        justify-content: center;
+    }
+    
+    .role-btn {
+        padding: 0.8rem 1.5rem;
+        border: 2px solid #e0e0e0;
+        background: #fff;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .role-btn:hover {
+        border-color: #4CAF50;
+        background: #f8fff8;
+    }
+    
+    .role-btn.active {
+        border-color: #4CAF50;
+        background: #4CAF50;
+        color: white;
+    }
+</style>
+
+</body>
+</html>

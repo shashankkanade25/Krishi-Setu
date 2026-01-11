@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | कृषी-सेतू</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/auth.css">
+    <style>
+        .brand-title {
+            font-family: 'Hind', 'Noto Sans Devanagari', sans-serif;
+            font-size: 3.5rem !important;
+            font-weight: 700 !important;
+            color: #1a1a1a !important;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+
+    <!-- LEFT SIDE - CART IMAGE WITH YELLOW BACKGROUND -->
+    <div class="auth-image">
+        <img src="/images/cart.jpg" alt="Fresh Farm Produce">
+    </div>
+
+    <!-- RIGHT SIDE - REGISTER FORM -->
+    <div class="auth-form">
+        <div class="brand-logo">
+            <img src="/images/krishi-setu-logo.png" alt="कृषी-सेतू" class="brand-logo-img">
+            <p class="brand-tagline">A BRIDGE BETWEEN FARMERS AND CUSTOMERS</p>
+        </div>
+
+        <div class="role-selector">
+            <button type="button" class="role-btn active" data-role="farmer" onclick="selectRole('farmer')">
+                🌾 Farmer
+            </button>
+            <button type="button" class="role-btn" data-role="customer" onclick="selectRole('customer')">
+                🛒 Customer
+            </button>
+        </div>
+
+        <div class="welcome-text">
+            <h2>Create Your Account</h2>
+            <p>Join us in supporting local agriculture</p>
+        </div>
+
+        <form action="/register" method="POST">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" name="password" required placeholder="Create a strong password" minlength="6">
+                    <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+                </div>
+            </div>
+
+            <input type="hidden" id="role" name="role" value="farmer">
+            <button type="submit" class="btn">Create Account →</button>
+        </form>
+
+        <p class="switch">
+            Already have an account? 
+            <a href="/login">Sign In</a>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        const toggle = event.currentTarget;
+        if (input.type === 'password') {
+            input.type = 'text';
+            toggle.textContent = '👁️‍🗨️';
+        } else {
+            input.type = 'password';
+            toggle.textContent = '👁️';
+        }
+    }
+    
+    function selectRole(role) {
+        // Update hidden input
+        document.getElementById('role').value = role;
+        
+        // Update button styles
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-role="${role}"]`).classList.add('active');
+    }
+</script>
+
+<style>
+    .role-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        justify-content: center;
+    }
+    
+    .role-btn {
+        padding: 0.8rem 1.5rem;
+        border: 2px solid #e0e0e0;
+        background: #fff;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .role-btn:hover {
+        border-color: #4CAF50;
+        background: #f8fff8;
+    }
+    
+    .role-btn.active {
+        border-color: #4CAF50;
+        background: #4CAF50;
+        color: white;
+    }
+</style>
+
+</body>
+</html>
