@@ -30,16 +30,31 @@ app.use(session({
 app.set('view engine', 'ejs');
 
 // Routes
+// Landing page - first page for new visitors
 app.get('/', (req, res) => {
     if (req.session.userId) {
-        // Redirect based on role
+        // Redirect based on role for authenticated users
         if (req.session.userRole === 'farmer') {
             return res.redirect('/farmer-home');
         } else {
             return res.redirect('/customer-home');
         }
     }
-    res.redirect('/login');
+    // Show landing page for non-authenticated users
+    res.render('landing');
+});
+
+// Customer reviews page
+app.get('/reviews', (req, res) => {
+    res.render('customer-reviews');
+});
+
+// Home route - redirect to appropriate dashboard
+app.get('/home', isAuthenticated, (req, res) => {
+    if (req.session.userRole === 'farmer') {
+        return res.redirect('/farmer-home');
+    }
+    res.redirect('/customer-home');
 });
 
 // Customer Home page
@@ -167,14 +182,6 @@ app.get('/farmer-home', isAuthenticated, (req, res) => {
             role: req.session.userRole
         }
     });
-});
-
-// Legacy home route - redirect based on role
-app.get('/home', isAuthenticated, (req, res) => {
-    if (req.session.userRole === 'farmer') {
-        return res.redirect('/farmer-home');
-    }
-    res.redirect('/customer-home');
 });
 
 // Login page
