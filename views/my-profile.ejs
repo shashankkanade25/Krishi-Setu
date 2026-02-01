@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - कृषी-सेतू</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-header">
+                <h1>My Profile</h1>
+                <p>Manage your account information</p>
+            </div>
+
+            <div class="profile-container">
+                <!-- Profile Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-avatar-section">
+                        <div class="avatar-wrapper">
+                            <div class="avatar-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <button class="change-avatar-btn" onclick="changeAvatar()">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <h2><%= user.name %></h2>
+                        <p class="user-role">
+                            <i class="fas fa-<%= user.role === 'farmer' ? 'tractor' : 'shopping-bag' %>"></i>
+                            <%= user.role === 'farmer' ? 'Farmer' : 'Customer' %>
+                        </p>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-box">
+                            <i class="fas fa-shopping-cart"></i>
+                            <div>
+                                <strong id="totalOrders">0</strong>
+                                <span>Total Orders</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-heart"></i>
+                            <div>
+                                <strong id="wishlistCount">0</strong>
+                                <span>Wishlist Items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="profile-content">
+                    <div class="profile-tabs">
+                        <button class="tab-btn active" onclick="switchTab('personal')">
+                            <i class="fas fa-user"></i> Personal Information
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('address')">
+                            <i class="fas fa-map-marker-alt"></i> Address
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('security')">
+                            <i class="fas fa-lock"></i> Security
+                        </button>
+                    </div>
+
+                    <!-- Personal Information Tab -->
+                    <div id="personal-tab" class="tab-content active">
+                        <div class="content-header">
+                            <h3>Personal Information</h3>
+                            <button class="btn-edit" onclick="toggleEdit('personal')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                        
+                        <form id="personalForm" class="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Full Name</label>
+                                    <input type="text" id="name" value="<%= user.name %>" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                                    <input type="email" id="email" value="<%= user.email %>" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                                    <input type="tel" id="phone" placeholder="Enter your phone number" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar"></i> Date of Birth</label>
+                                    <input type="date" id="dob" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-actions" style="display: none;">
+                                <button type="button" class="btn-cancel" onclick="cancelEdit('personal')">Cancel</button>
+                                <button type="submit" class="btn-save">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Address Tab -->
+                    <div id="address-tab" class="tab-content">
+                        <div class="content-header">
+                            <h3>Delivery Address</h3>
+                            <button class="btn-edit" onclick="toggleEdit('address')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                        
+                        <form id="addressForm" class="profile-form">
+                            <div class="form-group">
+                                <label><i class="fas fa-home"></i> Street Address</label>
+                                <input type="text" id="address" placeholder="House no, Building name, Street" disabled>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-city"></i> City</label>
+                                    <input type="text" id="city" placeholder="City" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-map"></i> State</label>
+                                    <input type="text" id="state" placeholder="State" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-mail-bulk"></i> Pincode</label>
+                                    <input type="text" id="pincode" placeholder="Pincode" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-globe"></i> Country</label>
+                                    <input type="text" id="country" value="India" disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-actions" style="display: none;">
+                                <button type="button" class="btn-cancel" onclick="cancelEdit('address')">Cancel</button>
+                                <button type="submit" class="btn-save">
+                                    <i class="fas fa-save"></i> Save Address
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div id="security-tab" class="tab-content">
+                        <div class="content-header">
+                            <h3>Change Password</h3>
+                        </div>
+                        
+                        <form id="passwordForm" class="profile-form">
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-key"></i> New Password</label>
+                                <input type="password" id="newPassword" placeholder="Enter new password">
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-check-circle"></i> Confirm New Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+
+                            <div class="password-requirements">
+                                <p><i class="fas fa-info-circle"></i> Password must contain:</p>
+                                <ul>
+                                    <li>At least 8 characters</li>
+                                    <li>One uppercase letter</li>
+                                    <li>One lowercase letter</li>
+                                    <li>One number</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-save">
+                                    <i class="fas fa-shield-alt"></i> Update Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        // Tab Switching
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab
+            event.target.closest('.tab-btn').classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // Toggle Edit Mode
+        function toggleEdit(formName) {
+            const form = document.getElementById(`${formName}Form`);
+            const inputs = form.querySelectorAll('input:not([type="submit"])');
+            const actions = form.querySelector('.form-actions');
+            
+            inputs.forEach(input => {
+                if (input.id !== 'email') { // Keep email always disabled
+                    input.disabled = false;
+                }
+            });
+            
+            actions.style.display = 'flex';
+        }
+
+        // Cancel Edit
+        function cancelEdit(formName) {
+            const form = document.getElementById(`${formName}Form`);
+            const inputs = form.querySelectorAll('input');
+            const actions = form.querySelector('.form-actions');
+            
+            inputs.forEach(input => input.disabled = true);
+            actions.style.display = 'none';
+            form.reset();
+        }
+
+        // Handle Personal Form Submit
+        document.getElementById('personalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                dob: document.getElementById('dob').value
+            };
+
+            try {
+                const response = await fetch('/profile/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    cancelEdit('personal');
+                } else {
+                    alert('Error updating profile: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error updating profile');
+                console.error(error);
+            }
+        });
+
+        // Handle Address Form Submit
+        document.getElementById('addressForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                pincode: document.getElementById('pincode').value,
+                country: document.getElementById('country').value
+            };
+
+            try {
+                const response = await fetch('/profile/address', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Address updated successfully!');
+                    cancelEdit('address');
+                } else {
+                    alert('Error updating address: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error updating address');
+                console.error(error);
+            }
+        });
+
+        // Handle Password Form Submit
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showModal('New passwords do not match!', { type: 'warning' });
+                return;
+            }
+
+            try {
+                const response = await fetch('/profile/password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showModal('Password updated successfully!', { type: 'success' });
+                    passwordForm.reset();
+                } else {
+                    showModal('Error updating password: ' + data.message, { type: 'error' });
+                }
+            } catch (error) {
+                showModal('Error updating password', { type: 'error' });
+                console.error(error);
+            }
+        });
+
+        function changeAvatar() {
+            alert('Avatar upload feature coming soon!');
+        }
+
+        // Load user stats
+        async function loadStats() {
+            try {
+                const response = await fetch('/profile/stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalOrders').textContent = data.totalOrders || 0;
+                    document.getElementById('wishlistCount').textContent = data.wishlistCount || 0;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        loadStats();
+    </script>
+
+    <script src="/js/home.js"></script>
+</body>
+</html>

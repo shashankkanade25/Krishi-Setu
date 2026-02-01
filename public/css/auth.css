@@ -21,7 +21,7 @@ body {
 .auth-image {
     flex: 1;
     position: relative;
-    background: transparent;
+    background: linear-gradient(135deg, #FDB813 0%, #FFA500 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,6 +33,13 @@ body {
     height: 100%;
     object-fit: cover;
     object-position: 35% center;
+}
+
+/* SVG Cart Styling */
+#cart-svg {
+    width: 85%;
+    height: 85%;
+    pointer-events: none;
 }
 
 @keyframes floatCart {

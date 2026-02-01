@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - कृषी-सेतू</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/my-orders.css">
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <section class="orders-section">
+        <div class="container">
+            <div class="orders-header">
+                <h1>My Orders</h1>
+                <p>Track and manage your orders</p>
+            </div>
+
+            <% if (orders && orders.length > 0) { %>
+                <div class="orders-list">
+                    <% orders.forEach(order => { %>
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <h3>Order #<%= order.orderNumber %></h3>
+                                    <span class="order-date">
+                                        <i class="far fa-calendar"></i>
+                                        <%= new Date(order.orderDate).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                                    </span>
+                                </div>
+                                <div class="order-status-badge status-<%= order.status %>">
+                                    <i class="fas fa-circle"></i>
+                                    <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
+                                </div>
+                            </div>
+
+                            <div class="order-items">
+                                <% order.items.forEach(item => { %>
+                                    <div class="order-item">
+                                        <img src="<%= item.image %>" alt="<%= item.productName %>" class="item-image">
+                                        <div class="item-details">
+                                            <h4><%= item.productName %></h4>
+                                            <p class="item-weight"><%= item.weight %></p>
+                                            <p class="item-quantity">Quantity: <%= item.quantity %></p>
+                                        </div>
+                                        <div class="item-price">
+                                            ₹<%= (item.price * item.quantity).toFixed(2) %>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+
+                            <div class="order-footer">
+                                <div class="order-total">
+                                    <span>Total Amount:</span>
+                                    <strong>₹<%= order.totalAmount.toFixed(2) %></strong>
+                                </div>
+                                <div class="order-actions">
+                                    <button class="btn-view-details" onclick="viewOrderDetails('<%= order._id %>')">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                    <% if (order.status === 'pending' || order.status === 'processing') { %>
+                                        <button class="btn-track-order" onclick="trackOrder('<%= order.orderNumber %>')">
+                                            <i class="fas fa-truck"></i> Track Order
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <% if (order.shippingAddress) { %>
+                                <div class="shipping-address">
+                                    <h5><i class="fas fa-map-marker-alt"></i> Shipping Address</h5>
+                                    <p><%= order.shippingAddress.fullName %></p>
+                                    <p><%= order.shippingAddress.phone %></p>
+                                    <p><%= order.shippingAddress.address %>, <%= order.shippingAddress.city %></p>
+                                    <p><%= order.shippingAddress.state %> - <%= order.shippingAddress.pincode %></p>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="empty-orders">
+                    <div class="empty-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h2>No Orders Yet</h2>
+                    <p>Start shopping and place your first order!</p>
+                    <a href="/products?category=all" class="btn-shop-now">
+                        <i class="fas fa-shopping-cart"></i> Shop Now
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        function viewOrderDetails(orderId) {
+            const modal = document.getElementById('orderModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            // Show loading
+            modalBody.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+            modal.style.display = 'block';
+            
+            // Fetch order details
+            fetch(`/orders/${orderId}`)
+                .then(response => response.json())
+                .then(order => {
+                    modalBody.innerHTML = `
+                        <h2>Order Details</h2>
+                        <div class="modal-order-info">
+                            <p><strong>Order Number:</strong> ${order.orderNumber}</p>
+                            <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleString('en-IN')}</p>
+                            <p><strong>Status:</strong> <span class="status-${order.status}">${order.status.toUpperCase()}</span></p>
+                            <p><strong>Payment Method:</strong> ${order.paymentMethod.toUpperCase()}</p>
+                            <p><strong>Payment Status:</strong> ${order.paymentStatus.toUpperCase()}</p>
+                        </div>
+                        <h3>Items</h3>
+                        <div class="modal-items">
+                            ${order.items.map(item => `
+                                <div class="modal-item">
+                                    <img src="${item.image}" alt="${item.productName}">
+                                    <div>
+                                        <p><strong>${item.productName}</strong></p>
+                                        <p>${item.weight} × ${item.quantity}</p>
+                                        <p>₹${(item.price * item.quantity).toFixed(2)}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="modal-total">
+                            <strong>Total: ₹${order.totalAmount.toFixed(2)}</strong>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    modalBody.innerHTML = '<p class="error">Error loading order details. Please try again.</p>';
+                    console.error('Error:', error);
+                });
+        }
+
+        function trackOrder(orderNumber) {
+            showModal(`Tracking information for Order #${orderNumber} will be available soon!`, { type: 'info' });
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('orderModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+    <script src="/js/home.js"></script>
+</body>
+</html>

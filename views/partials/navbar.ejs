@@ -7,13 +7,14 @@
             </a>
             
             <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Search for fresh produce...">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search for fresh produce..." autocomplete="off">
                 <span class="search-icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/>
                         <path d="m21 21-4.35-4.35"/>
                     </svg>
                 </span>
+                <div id="searchResults" class="search-results"></div>
             </div>
             
             <div class="nav-right">
@@ -97,4 +98,78 @@
     
     // Update on page load
     updateCartCount();
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    let searchTimeout;
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+
+            if (query.length < 2) {
+                searchResults.innerHTML = '';
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`/api/search?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResults(data.results);
+                    })
+                    .catch(error => console.error('Search error:', error));
+            }, 300);
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        searchInput.addEventListener('focus', function() {
+            if (searchResults.innerHTML) {
+                searchResults.style.display = 'block';
+            }
+        });
+    }
+
+    function displaySearchResults(results) {
+        if (!results || results.length === 0) {
+            searchResults.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><p>No products found</p></div>';
+            searchResults.style.display = 'block';
+            return;
+        }
+
+        const html = results.map(product => `
+            <div class="search-result-item" onclick="goToProduct('${product.category}', '${product.name.replace(/'/g, "\\'")}')">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="result-info">
+                    <h4>${highlightQuery(product.name, searchInput.value)}</h4>
+                    <p class="result-category">${product.category}</p>
+                    <p class="result-price">₹${product.price}</p>
+                </div>
+            </div>
+        `).join('');
+
+        searchResults.innerHTML = html;
+        searchResults.style.display = 'block';
+    }
+
+    function highlightQuery(text, query) {
+        if (!query) return text;
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function goToProduct(category, productName) {
+        // Redirect to products page with category and search for the product
+        window.location.href = `/products?category=${category}&search=${encodeURIComponent(productName)}`;
+    }
+
 </script>

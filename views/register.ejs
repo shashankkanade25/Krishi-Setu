@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/auth.css">
     <style>
         .brand-title {
@@ -38,11 +39,11 @@
         </div>
 
         <div class="role-selector">
-            <button type="button" class="role-btn active" data-role="farmer" onclick="selectRole('farmer')">
-                🌾 Farmer
+            <button type="button" class="role-btn" data-role="farmer" onclick="selectRole('farmer')">
+                <img src="/icons/icons8-farmer-80.png" alt="Farmer" style="width: 20px; height: 20px;"> Farmer
             </button>
-            <button type="button" class="role-btn" data-role="customer" onclick="selectRole('customer')">
-                🛒 Customer
+            <button type="button" class="role-btn active" data-role="customer" onclick="selectRole('customer')">
+                <img src="/icons/icons8-cart-50.png" alt="Customer" style="width: 20px; height: 20px;"> Customer
             </button>
         </div>
 
@@ -55,7 +56,7 @@
             <div class="input-group">
                 <label for="name">Full Name</label>
                 <div class="input-wrapper">
-                    <span class="input-icon">👤</span>
+                    <span class="input-icon"><img src="/icons/icons8-name-48.png" alt="Name" style="width: 20px; height: 20px;"></span>
                     <input type="text" id="name" name="name" required placeholder="Enter your full name">
                 </div>
             </div>
@@ -63,7 +64,7 @@
             <div class="input-group">
                 <label for="email">Email Address</label>
                 <div class="input-wrapper">
-                    <span class="input-icon">📧</span>
+                    <span class="input-icon"><img src="/icons/icons8-email-50.png" alt="Email" style="width: 20px; height: 20px;"></span>
                     <input type="email" id="email" name="email" required placeholder="your.email@example.com">
                 </div>
             </div>
@@ -71,9 +72,9 @@
             <div class="input-group">
                 <label for="password">Password</label>
                 <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
+                    <span class="input-icon"><img src="/icons/icons8-lock-50.png" alt="Lock" style="width: 20px; height: 20px;"></span>
                     <input type="password" id="password" name="password" required placeholder="Create a strong password" minlength="6">
-                    <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+                    <span class="password-toggle" onclick="togglePassword('password')" id="toggleIcon-password"><img src="/icons/icons8-eye-50.png" alt="Show" style="width: 20px; height: 20px;"></span>
                 </div>
             </div>
 
@@ -90,15 +91,25 @@
 </div>
 
 <script>
+    // Check URL parameter for role
+    const urlParams = new URLSearchParams(window.location.search);
+    const roleParam = urlParams.get('role');
+    
+    if (roleParam && (roleParam === 'customer' || roleParam === 'farmer')) {
+        selectRole(roleParam);
+    }
+    
     function togglePassword(id) {
         const input = document.getElementById(id);
-        const toggle = event.currentTarget;
+        const toggle = document.getElementById('toggleIcon-' + id).querySelector('img');
         if (input.type === 'password') {
             input.type = 'text';
-            toggle.textContent = '👁️‍🗨️';
+            toggle.src = '/icons/icons8-blind-50.png';
+            toggle.alt = 'Hide';
         } else {
             input.type = 'password';
-            toggle.textContent = '👁️';
+            toggle.src = '/icons/icons8-eye-50.png';
+            toggle.alt = 'Show';
         }
     }
     
@@ -111,6 +122,49 @@
             btn.classList.remove('active');
         });
         document.querySelector(`[data-role="${role}"]`).classList.add('active');
+    }
+    
+    // Cart Animation on Form Submit
+    const cartSvgObj = document.getElementById('cart-svg');
+    const registerForm = document.querySelector('form');
+    
+    function animateCart() {
+        if (!cartSvgObj) return;
+        
+        // Access SVG document
+        const svgDoc = cartSvgObj.contentDocument;
+        if (!svgDoc) return;
+        
+        const cartGroup = svgDoc.getElementById('cart');
+        const wheelLeft = svgDoc.getElementById('wheel-left');
+        const wheelRight = svgDoc.getElementById('wheel-right');
+        
+        if (cartGroup && wheelLeft && wheelRight) {
+            // Animate cart body - move 250px to the right
+            cartGroup.style.transition = 'transform 2.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            cartGroup.style.transform = 'translateX(250px)';
+            
+            // Animate left wheel - rotate with realistic motion
+            wheelLeft.style.transition = 'transform 2.5s linear';
+            wheelLeft.style.transformOrigin = '300px 520px';
+            wheelLeft.style.transform = 'rotate(720deg)';
+            
+            // Animate right wheel - rotate with realistic motion
+            wheelRight.style.transition = 'transform 2.5s linear';
+            wheelRight.style.transformOrigin = '900px 520px';
+            wheelRight.style.transform = 'rotate(720deg)';
+        }
+    }
+    
+    // Wait for SVG to load, then attach form submit listener
+    if (cartSvgObj) {
+        cartSvgObj.addEventListener('load', function() {
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    animateCart();
+                });
+            }
+        });
     }
 </script>
 

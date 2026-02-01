@@ -9,6 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/landing.css">
+    <style>
+        /* Hide search bar on landing page */
+        nav .search-container {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
@@ -62,10 +68,10 @@
                 <h1 class="hero-title">Fresh from <span class="highlight">Farm</span> to Your <span class="highlight">Table</span></h1>
                 <p class="hero-description">कृषी-सेतू connects you directly with local farmers. Get fresh, organic produce at fair prices while supporting sustainable farming communities.</p>
                 <div class="hero-buttons">
-                    <a href="/register" class="hero-btn primary">
+                    <a href="/register?role=customer" class="hero-btn primary">
                         <i class="fas fa-rocket"></i> Get Started
                     </a>
-                    <a href="/login" class="hero-btn secondary">
+                    <a href="/login?role=customer" class="hero-btn secondary">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </a>
                 </div>
@@ -98,62 +104,62 @@
 
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-header" data-animate="fade-in-up">
-                <h2 class="section-title">How It Works</h2>
-                <p class="section-subtitle">Simple steps to get fresh produce from farm to your table</p>
+      <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-icon-wrapper">
+              <div class="step-number">1</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+                <path d="M11 8v6"/>
+                <path d="M8 11h6"/>
+              </svg>
             </div>
-            <div class="steps">
-                <div class="step" data-animate="fade-in-up" data-delay="100">
-                    <div class="step-number">01</div>
-                    <div class="step-icon">
-                        <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="25" y="15" width="50" height="40" rx="3" />
-                            <line x1="35" y1="55" x2="35" y2="70" />
-                            <line x1="65" y1="55" x2="65" y2="70" />
-                            <line x1="25" y1="70" x2="75" y2="70" />
-                            <circle cx="30" cy="60" r="15" stroke-width="3" />
-                            <line x1="40" y1="70" x2="50" y2="80" stroke-width="3" />
-                            <circle cx="31" cy="18" r="1.5" fill="currentColor" />
-                        </svg>
-                    </div>
-                    <h3>Browse & Select</h3>
-                    <p>Browse fresh produce directly from local farmers</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="step" data-animate="fade-in-up" data-delay="200">
-                    <div class="step-number">02</div>
-                    <div class="step-icon">
-                        <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20,30 30,30 40,50 70,50 80,30" stroke-width="2.5"/>
-                            <line x1="40" y1="50" x2="35" y2="70" stroke-width="2.5"/>
-                            <line x1="70" y1="50" x2="65" y2="70" stroke-width="2.5"/>
-                            <line x1="35" y1="70" x2="65" y2="70" stroke-width="2.5"/>
-                            <circle cx="42" cy="78" r="5" fill="currentColor"/>
-                            <circle cx="63" cy="78" r="5" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <h3>Order & Pay</h3>
-                    <p>Add to cart and complete your secure payment</p>
-                </div>
-                <div class="arrow">→</div>
-                <div class="step" data-animate="fade-in-up" data-delay="300">
-                    <div class="step-number">03</div>
-                    <div class="step-icon">
-                        <svg width="80" height="80" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="25" y="30" width="50" height="45" rx="2" />
-                            <line x1="25" y1="45" x2="75" y2="45" />
-                            <line x1="50" y1="30" x2="50" y2="45" />
-                            <circle cx="70" cy="65" r="12" fill="white" stroke-width="2.5"/>
-                            <circle cx="70" cy="65" r="4" fill="currentColor"/>
-                            <line x1="70" y1="61" x2="70" y2="53" stroke-width="2.5"/>
-                        </svg>
-                    </div>
-                    <h3>Delivery</h3>
-                    <p>Get fresh produce delivered to your doorstep</p>
-                </div>
+            <h3>Browse & Select</h3>
+            <p>Explore fresh produce from local farmers</p>
+          </div>
+          <div class="step-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </div>
+          <div class="step">
+            <div class="step-icon-wrapper">
+              <div class="step-number">2</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="21" r="1"/>
+                <circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+              </svg>
             </div>
+            <h3>Add to Cart & Pay</h3>
+            <p>Secure checkout with multiple payment options</p>
+          </div>
+          <div class="step-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </div>
+          <div class="step">
+            <div class="step-icon-wrapper">
+              <div class="step-number">3</div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                <path d="M15 18H9"/>
+                <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                <circle cx="17" cy="18" r="2"/>
+                <circle cx="7" cy="18" r="2"/>
+              </svg>
+            </div>
+            <h3>Fast Delivery</h3>
+            <p>Fresh produce delivered to your doorstep</p>
+          </div>
         </div>
+      </div>
     </section>
 
         <!-- Why Choose Us -->
@@ -263,10 +269,9 @@
                     <div class="farmer-avatar">
                         <img src="/images/farmer1.jpg" alt="Suraj Kailas Mulay" />
                     </div>
-                    <h3 class="farmer-name">SURAJ KAILAS MULAY</h3>
-                    <p class="farm-name">Mulay Farms</p>
+                    <h3 class="farmer-name">SURAJ KAILAS MULE</h3>
+                    <p class="farm-name">Mule Farms</p>
                     <p class="farmer-location">(Pune, Maharashtra)</p>
-                    <a href="#" class="farmer-btn">View My Story</a>
                 </div>
 
                 <div class="farmer-card" data-animate="fade-in-up" data-delay="200">
@@ -276,37 +281,33 @@
                     <h3 class="farmer-name">WALE KIRAN ARJUN</h3>
                     <p class="farm-name">Wale Farms</p>
                     <p class="farmer-location">(Ahilyanagar, Maharashtra)</p>
-                    <a href="#" class="farmer-btn">View My Story</a>
                 </div>
 
                 <div class="farmer-card" data-animate="fade-in-up" data-delay="300">
                     <div class="farmer-avatar">
                         <img src="/images/farmer4.jpg" alt="Santosh Shivaji Gadakh" />
                     </div>
-                    <h3 class="farmer-name">SANTOSH SHIVAJI GADAKH</h3>
-                    <p class="farm-name">Athave Rasta</p>
+                    <h3 class="farmer-name">SANTOSH SHIVAJI GITE</h3>
+                    <p class="farm-name">GITE FOODS AND FARMS</p>
                     <p class="farmer-location">(NASHIK, Maharashtra)</p>
-                    <a href="#" class="farmer-btn">View My Story</a>
                 </div>
 
                 <div class="farmer-card" data-animate="fade-in-up" data-delay="400">
                     <div class="farmer-avatar">
                         <img src="/images/farmer5.jpg" alt="Satish Chandrabhan Ikhe" />
                     </div>
-                    <h3 class="farmer-name">SATISH CHANDRABHAN IKHE</h3>
+                    <h3 class="farmer-name">SATISH CHANDRABHAN VIKHE</h3>
                     <p class="farm-name">Karevasti Farms</p>
-                    <p class="farmer-location">(LATUR, Maharashtra)</p>
-                    <a href="#" class="farmer-btn">View My Story</a>
+                    <p class="farmer-location">(Pune, Maharashtra)</p>
                 </div>
 
                 <div class="farmer-card" data-animate="fade-in-up" data-delay="500">
                     <div class="farmer-avatar">
                         <img src="/images/farmer1.jpg" alt="Pavitrak Farmer Producer" />
                     </div>
-                    <h3 class="farmer-name">PAVITRAK FARMER PRODUCER COMAPANY</h3>
+                    <h3 class="farmer-name">PRAVIN KALE</h3>
                     <p class="farm-name">Samir Dombe</p>
                     <p class="farmer-location">(Pune, Maharashtra)</p>
-                    <a href="#" class="farmer-btn">View My Story</a>
                 </div>
             </div>
         </div>
@@ -316,140 +317,48 @@
     <section class="reviews" id="reviews">
         <div class="container">
             <div class="section-header" data-animate="fade-in-up">
-               
                 <h2 class="section-title">What Our Customers Say</h2>
                 <p class="section-subtitle">Trusted by thousands of happy customers across India</p>
             </div>
             <div class="reviews-grid">
-                <div class="review" data-animate="fade-in-up" data-delay="100">
-                    <div class="review-quote-icon">
-                        <i class="fas fa-quote-left"></i>
+                <div class="review-card" data-animate="fade-in-up" data-delay="100">
+                    <div class="review-avatar">
+                        <img src="/images/Customer2.jpeg" alt="Shashank Sanmukh Kanade"/>
                     </div>
-                    <div class="review-content">
-                        <p class="review-text">I was impressed by how smooth the process was and how well they understood our needs. The result exceeded our expectations, and we're very happy.</p>
+                    <div class="review-text">
+                        <p><em>I was impressed by how smooth the process was and how well they understood our needs. The result exceeded our expectations, and we're very happy.</em></p>
                     </div>
-                    <div class="review-footer">
-                        <img src="/images/cust1.jpg" alt="Shashank Sanmukh Kanade" class="review-avatar"/>
-                        <div class="review-author-info">
-                            <p class="review-author">Shashank Sanmukh Kanade</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="review-author">Shashank Sanmukh Kanade</h3>
                 </div>
 
-                <div class="review" data-animate="fade-in-up" data-delay="500">
-                    <div class="review-quote-icon">
-                        <i class="fas fa-quote-left"></i>
+                <div class="review-card" data-animate="fade-in-up" data-delay="200">
+                    <div class="review-avatar">
+                        <img src="/images/Customer1.jpeg" alt="Soham Appasaheb Thopate"/>
                     </div>
-                    <div class="review-content">
-                        <p class="review-text">Handled everything efficiently and met expectations without issues. Solid service, responsive, and easy to coordinate with. Highly recommended!</p>
+                    <div class="review-text">
+                        <p><em>From start to finish, their team was responsive, friendly, and genuinely invested in helping us succeed. They go above and beyond, and it shows in the results.</em></p>
                     </div>
-                    <div class="review-footer">
-                        <img src="/images/cust2.jpg" alt="Soham Appasaheb Thopate" class="review-avatar"/>
-                        <div class="review-author-info">
-                            <p class="review-author">Soham Appasaheb Thopate</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="review-author">Soham Appasaheb Thopate</h3>
                 </div>
 
-                <div class="review" data-animate="fade-in-up" data-delay="300">
-                    <div class="review-quote-icon">
-                        <i class="fas fa-quote-left"></i>
+                <div class="review-card" data-animate="fade-in-up" data-delay="300">
+                    <div class="review-avatar">
+                        <img src="/images/customer4.jpeg" alt="Sarang Pradeep Jadhav"/>
                     </div>
-                    <div class="review-content">
-                        <p class="review-text">Professional and reliable service. Easy to work with and highly recommended! The fresh produce quality is outstanding.</p>
+                    <div class="review-text">
+                        <p><em>Professional and reliable service. Easy to work with and highly recommended!</em></p>
                     </div>
-                    <div class="review-footer">
-                        <img src="/images/cust4.jpg" alt="Sarang Pradeep Jadhav" class="review-avatar"/>
-                        <div class="review-author-info">
-                            <p class="review-author">Sarang Pradeep Jadhav</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="review-author">Sarang Pradeep Jadhav</h3>
                 </div>
 
-                <div class="review" data-animate="fade-in-up" data-delay="400">
-                    <div class="review-quote-icon">
-                        <i class="fas fa-quote-left"></i>
+                <div class="review-card" data-animate="fade-in-up" data-delay="400">
+                    <div class="review-avatar">
+                        <img src="/images/customer3.jpeg" alt="Atharv Rajan Mulik"/>
                     </div>
-                    <div class="review-content">
-                        <p class="review-text">They delivered exactly what we needed. Great quality and on time! Love the direct connection with farmers.</p>
+                    <div class="review-text">
+                        <p><em>They delivered exactly what we needed. Great quality and on time!</em></p>
                     </div>
-                    <div class="review-footer">
-                        <img src="/images/cust5.jpg" alt="Atharv Rajan Mulik" class="review-avatar"/>
-                        <div class="review-author-info">
-                            <p class="review-author">Atharv Rajan Mulik</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="review" data-animate="fade-in-up" data-delay="200">
-                    <div class="review-quote-icon">
-                        <i class="fas fa-quote-left"></i>
-                    </div>
-                    <div class="review-content">
-                        <p class="review-text">From start to finish, their team was responsive, friendly, and genuinely invested in helping us succeed. They go above and beyond, and it shows in the results.</p>
-                    </div>
-                    <div class="review-footer">
-                        <img src="/images/cust3.jpg" alt="Atharv Kiran Holsambre" class="review-avatar"/>
-                        <div class="review-author-info">
-                            <p class="review-author">Atharv Kiran Holsambre</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="review" data-animate="fade-in-up" data-delay="600">
-                    <div class="review-quote-icon">
-                        <i class="fas fa-quote-left"></i>
-                    </div>
-                    <div class="review-content">
-                        <p class="review-text">Amazing platform! Fresh vegetables delivered right to my doorstep. Supporting local farmers has never been this easy. Absolutely love it!</p>
-                    </div>
-                    <div class="review-footer">
-                        <img src="/images/cust1.jpg" alt="Priya Sharma" class="review-avatar"/>
-                        <div class="review-author-info">
-                            <p class="review-author">Om Sherikar</p>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="review-author">Atharv Rajan Mulik</h3>
                 </div>
             </div>
 
@@ -461,59 +370,7 @@
         </div>
     </section>
 
-    <!-- Contact Us -->
-    <section class="contact" id="contact">
-        <svg class="contact-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
-            <path fill="#4a7c4e" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,90.7C672,85,768,107,864,122.7C960,139,1056,149,1152,138.7C1248,128,1344,96,1392,80L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-        </svg>
-        <div class="contact-footer-style">
-            <div class="container">
-                <div class="contact-grid">
-                    <div class="contact-brand">
-                        <div class="footer-logo">
-                            <img src="/images/krishi-setu-logo.png" alt="कृषी-सेतू Logo" class="footer-logo-img">
-                        </div>
-                        <p class="footer-tagline">Connecting farmers directly with you for fresh, organic produce</p>
-                    </div>
-                    
-                    <div class="contact-menu">
-                        <h3>MENU</h3>
-                        <ul>
-                            <li><a href="#home">Home</a></li>
-                            <li><a href="#how-it-works">About Us</a></li>
-                            <li><a href="#contact">Contact Us</a></li>
-                            <li><a href="#reviews">FAQs</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="contact-info-footer">
-                        <h3>CONTACTS</h3>
-                        <p class="contact-address">MIDC, Udgir, Latur,<br>Maharashtra - 413517</p>
-                        <p class="contact-phone">+91 9087654321</p>
-                        <p class="contact-email">info@krishisetu.com</p>
-                    </div>
-                    
-                    <div class="contact-social">
-                        <a href="https://facebook.com/krishisetu" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://instagram.com/krishisetu" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://linkedin.com/company/krishisetu" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://twitter.com/krishisetu" target="_blank" rel="noopener noreferrer" class="footer-social-link" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>© 2026 KrishiSetu | <a href="#">Privacy</a> | <a href="#">Terms</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <%- include('partials/footer') %>
 
     <script src="/js/home.js"></script>
     <script src="/js/landing.js"></script>

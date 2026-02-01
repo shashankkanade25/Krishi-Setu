@@ -78,7 +78,7 @@
                             <span>Total Amount</span>
                             <span>₹<%= subtotal.toFixed(2) %></span>
                         </div>
-                        <button class="checkout-btn">Proceed to Checkout</button>
+                        <button class="checkout-btn" onclick="window.location.href='/checkout'">Proceed to Checkout</button>
                         <a href="/products?category=all" class="continue-link">Continue Shopping</a>
                         
                         <div class="cart-benefits">
@@ -107,8 +107,9 @@
         </div>
     </div>
 
-    <%- include('partials/footer') %>
 
+    <%- include('partials/footer') %>
+    <%- include('partials/global-modal') %>
     <script src="/js/cart.js"></script>
 </body>
 </html>

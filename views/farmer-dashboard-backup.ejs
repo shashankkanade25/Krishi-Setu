@@ -226,7 +226,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
 
             <!-- Notifications Section -->
@@ -329,7 +328,7 @@
                                 <option value="">Select Category</option>
                                 <option value="vegetables">🥬 Vegetables</option>
                                 <option value="fruits">🍎 Fruits</option>
-                                <option value="grains"><i class="fas fa-wheat"></i> Grains & Cereals</option>
+                                <option value="grains">🌾 Grains & Cereals</option>
                                 <option value="dairy">🥛 Dairy Products</option>
                                 <option value="pulses">🫘 Pulses</option>
                                 <option value="pickles">🥒 Pickles</option>
@@ -560,15 +559,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
                                         <img src="${product.image}" alt="${product.name}" class="w-16 h-16 rounded-xl object-cover mr-4 border-2 border-gray-200">
-                                        <div>
-                                            <div class="font-semibold text-gray-900 mb-1">${product.name}</div>
-                                            <div style="display: flex; justify-content: space-between; align-items: center; background-color: #fef3c7; padding: 6px 10px; border-radius: 6px; min-width: 200px;">
-                                                <span style="font-size: 12px; font-weight: 500;">1 ${product.unit}</span>
-                                                <span style="font-size: 11px; color: #10b981; display: flex; align-items: center; gap: 4px;">
-                                                    <span style="font-size: 14px;">🌾</span> By: ${product.farmerName || 'You'}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <span class="font-semibold text-gray-900">${product.name}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">

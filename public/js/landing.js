@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = contactForm.querySelector('input[type="text"]').value;
             
             // Show success message (you can customize this)
-            alert(`Thank you, ${name}! We'll get back to you soon.`);
+            showModal(`Thank you, ${name}! We'll get back to you soon.`);
             
             // Reset form
             contactForm.reset();

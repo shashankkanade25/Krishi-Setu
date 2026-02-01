@@ -76,8 +76,66 @@
         
         .all-reviews-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        /* Use same review card style as landing page */
+        .all-reviews-grid .review {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .all-reviews-grid .review:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .review-header .review-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e8f5e9;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rating {
+            color: #ffa726;
+            font-size: 14px;
+            display: flex;
+            gap: 3px;
+        }
+        
+        .review-content {
+            flex: 1;
+        }
+        
+        .review-content p:first-child {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        
+        .review-content .review-author {
+            font-size: 15px;
+            color: #333;
+            font-weight: 700;
+            margin: 0;
         }
         
         .back-link {
@@ -154,7 +212,7 @@
 
                 <div class="review">
                     <div class="review-header">
-                        <img src="/images/cust3.jpg" alt="Atharv Kiran Holsambre" class="review-avatar"/>
+                        <img src="/images/cust3.jpg" alt="Soham Thopate" class="review-avatar"/>
                         <div class="rating">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
@@ -165,7 +223,7 @@
                     </div>
                     <div class="review-content">
                         <p>From start to finish, their team was responsive, friendly, and genuinely invested in helping us succeed. They go above and beyond, and it shows in the results.</p>
-                        <p class="review-author">Atharv Kiran Holsambre</p>
+                        <p class="review-author">Soham Thopate</p>
                     </div>
                 </div>
 
@@ -182,7 +240,7 @@
                     </div>
                     <div class="review-content">
                         <p>Professional and reliable service. Easy to work with and highly recommended!</p>
-                        <p class="review-author">Sarang Pradeep Jadhav</p>
+                        <p class="review-author">Sarang Jadhav</p>
                     </div>
                 </div>
 
@@ -199,13 +257,13 @@
                     </div>
                     <div class="review-content">
                         <p>They delivered exactly what we needed. Great quality and on time!</p>
-                        <p class="review-author">Atharv Rajan Mulik</p>
+                        <p class="review-author">Atharv Mulik</p>
                     </div>
                 </div>
 
                 <div class="review">
                     <div class="review-header">
-                        <img src="/images/cust2.jpg" alt="Soham Appasaheb Thopate" class="review-avatar"/>
+                        <img src="/images/cust2.jpg" alt="Atharva Holsambre" class="review-avatar"/>
                         <div class="rating">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
@@ -216,7 +274,7 @@
                     </div>
                     <div class="review-content">
                         <p>Handled everything efficiently and met expectations without issues. Solid service, responsive, and easy to coordinate with. Highly recommended!</p>
-                        <p class="review-author">Soham Appasaheb Thopate</p>
+                        <p class="review-author">Atharva Holsambre</p>
                     </div>
                 </div>
 
@@ -228,12 +286,12 @@
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
                         </div>
                     </div>
                     <div class="review-content">
                         <p>The freshness and quality of the vegetables are unmatched. I love supporting local farmers through this platform!</p>
-                        <p class="review-author">Priya Sharma</p>
+                        <p class="review-author">Akshada Sangale</p>
                     </div>
                 </div>
 
@@ -245,18 +303,19 @@
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            
                         </div>
                     </div>
                     <div class="review-content">
                         <p>Best decision I made was joining Krishi Setu. Direct connection with farmers means better prices and fresher produce!</p>
-                        <p class="review-author">Rajesh Patil</p>
+                        <p class="review-author">Bunty Thalkar</p>
                     </div>
                 </div>
 
                 <div class="review">
                     <div class="review-header">
-                        <img src="/images/cust8.jpg" alt="Sneha Deshmukh" class="review-avatar"/>
+                        <img src="/images/cust8.jpg" alt="Akshata kanade" class="review-avatar"/>
                         <div class="rating">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
@@ -267,7 +326,7 @@
                     </div>
                     <div class="review-content">
                         <p>Amazing platform! The organic vegetables taste so much better than store-bought ones. Will definitely order again!</p>
-                        <p class="review-author">Sneha Deshmukh</p>
+                        <p class="review-author">Akshata kanade</p>
                     </div>
                 </div>
             </div>

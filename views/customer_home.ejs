@@ -37,7 +37,7 @@
         <!-- Main Content -->
         <div class="hero-container">
             <div class="hero-content">
-                <p class="hero-tagline">🌾 Farm Fresh, Direct to You</p>
+                <p class="hero-tagline"><i class="fas fa-leaf"></i> Farm Fresh, Direct to You</p>
                 <h1>Welcome, <span><%= user.name %></span>!</h1>
                 <p class="hero-subtitle">We connect you directly with local farmers, bringing fresh produce to your table. Support sustainable farming and enjoy quality at fair prices.</p>
                 <div class="hero-buttons">
@@ -247,144 +247,144 @@
         <div class="products-scroll-wrapper">
           <div class="products-scroll">
             <!-- First set of cards -->
-            <div class="product-card">
+            <div class="product-card" data-product="Banana" data-price="40" data-weight="500g" data-image="/images/banana.png" data-category="fruits">
               <img src="/images/banana.png" alt="Banana" class="product-image" />
               <div class="product-details">
                 <h3>Banana</h3>
                 <div class="product-footer">
                   <span class="product-price">₹40/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Bhendi" data-price="32" data-weight="500g" data-image="/images/bhendi.jpg" data-category="vegetables">
               <img src="/images/bhendi.jpg" alt="Bhendi" class="product-image" />
               <div class="product-details">
                 <h3>Bhendi</h3>
                 <div class="product-footer">
                   <span class="product-price">₹32/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Buffalo Milk" data-price="65" data-weight="1 Ltr" data-image="/images/amul-buffalo (1).png" data-category="dairy">
               <img src="/images/amul-buffalo (1).png" alt="Buffalo Milk" class="product-image" />
               <div class="product-details">
                 <h3>Buffalo Milk</h3>
                 <div class="product-footer">
                   <span class="product-price">₹65/Ltr</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Toor Daal" data-price="249" data-weight="1 kg" data-image="/images/toor_dal.jpg" data-category="pulses">
               <img src="/images/toor_dal.jpg" alt="Toor Daal" class="product-image" />
               <div class="product-details">
                 <h3>Toor Daal</h3>
                 <div class="product-footer">
                   <span class="product-price">₹249/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Amul Cheese" data-price="69" data-weight="100gm" data-image="/images/cheese pack.jpg" data-category="dairy">
               <img src="/images/cheese pack.jpg" alt="Amul Cheese" class="product-image" />
               <div class="product-details">
                 <h3>Amul Cheese</h3>
                 <div class="product-footer">
                   <span class="product-price">₹69/100gm</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Mango Pickle" data-price="319" data-weight="1 kg" data-image="/images/pickel-1kg.jpg" data-category="pickles">
               <img src="/images/pickel-1kg.jpg" alt="Mango Pickle" class="product-image" />
               <div class="product-details">
                 <h3>Mango Pickle</h3>
                 <div class="product-footer">
                   <span class="product-price">₹319/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Garam Masala" data-price="59" data-weight="100gm" data-image="/images/Garam-Masala-Powder.jpg" data-category="masala">
               <img src="/images/Garam-Masala-Powder.jpg" alt="Garam Masala" class="product-image" />
               <div class="product-details">
                 <h3>Garam Masala</h3>
                 <div class="product-footer">
                   <span class="product-price">₹59/100gm</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
             <!-- Duplicate set for infinite scroll -->
-            <div class="product-card">
+            <div class="product-card" data-product="Banana" data-price="40" data-weight="500g" data-image="/images/banana.png" data-category="fruits">
               <img src="/images/banana.png" alt="Banana" class="product-image" />
               <div class="product-details">
                 <h3>Banana</h3>
                 <div class="product-footer">
                   <span class="product-price">₹40/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Bhendi" data-price="32" data-weight="500g" data-image="/images/bhendi.jpg" data-category="vegetables">
               <img src="/images/bhendi.jpg" alt="Bhendi" class="product-image" />
               <div class="product-details">
                 <h3>Bhendi</h3>
                 <div class="product-footer">
                   <span class="product-price">₹32/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Buffalo Milk" data-price="65" data-weight="1 Ltr" data-image="/images/amul-buffalo (1).png" data-category="dairy">
               <img src="/images/amul-buffalo (1).png" alt="Buffalo Milk" class="product-image" />
               <div class="product-details">
                 <h3>Buffalo Milk</h3>
                 <div class="product-footer">
                   <span class="product-price">₹65/Ltr</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Toor Daal" data-price="249" data-weight="1 kg" data-image="/images/toor_dal.jpg" data-category="pulses">
               <img src="/images/toor_dal.jpg" alt="Toor Daal" class="product-image" />
               <div class="product-details">
                 <h3>Toor Daal</h3>
                 <div class="product-footer">
                   <span class="product-price">₹249/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Amul Cheese" data-price="69" data-weight="100gm" data-image="/images/cheese pack.jpg" data-category="dairy">
               <img src="/images/cheese pack.jpg" alt="Amul Cheese" class="product-image" />
               <div class="product-details">
                 <h3>Amul Cheese</h3>
                 <div class="product-footer">
                   <span class="product-price">₹69/100gm</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Mango Pickle" data-price="319" data-weight="1 kg" data-image="/images/pickel-1kg.jpg" data-category="pickles">
               <img src="/images/pickel-1kg.jpg" alt="Mango Pickle" class="product-image" />
               <div class="product-details">
                 <h3>Mango Pickle</h3>
                 <div class="product-footer">
                   <span class="product-price">₹319/kg</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
-            <div class="product-card">
+            <div class="product-card" data-product="Garam Masala" data-price="59" data-weight="100gm" data-image="/images/Garam-Masala-Powder.jpg" data-category="masala">
               <img src="/images/Garam-Masala-Powder.jpg" alt="Garam Masala" class="product-image" />
               <div class="product-details">
                 <h3>Garam Masala</h3>
                 <div class="product-footer">
                   <span class="product-price">₹59/100gm</span>
-                  <button class="add-to-cart-btn">Add</button>
+                  <button class="add-to-cart-btn" onclick="addToCartFromHome(this)">Add</button>
                 </div>
               </div>
             </div>
@@ -459,7 +459,7 @@
           <div class="review">
             <img
               src="/images/cust3.jpg"
-              alt="Atharv Kiran Holsambre"
+              alt="Soham Appasaheb Thopate"
               class="review-avatar"
             />
             <div class="review-content">
@@ -468,7 +468,7 @@
                 genuinely invested in helping us succeed. They go above and
                 beyond, and it shows in the results.
               </p>
-              <p class="review-author">Atharv Kiran Holsambre</p>
+              <p class="review-author">Soham Appasaheb Thopate</p>
             </div>
           </div>
           <div class="review">
@@ -505,6 +505,101 @@
 
     <%- include('partials/footer') %>
 
+    <script>
+        // Function to add products to cart from home page
+        function addToCartFromHome(button) {
+            const productCard = button.closest('.product-card');
+            const productName = productCard.getAttribute('data-product');
+            const price = parseFloat(productCard.getAttribute('data-price'));
+            const weight = productCard.getAttribute('data-weight');
+            const image = productCard.getAttribute('data-image');
+            const category = productCard.getAttribute('data-category');
+
+            // Disable button and show loading
+            button.disabled = true;
+            button.textContent = 'Adding...';
+
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productName: productName,
+                    price: price,
+                    weight: weight,
+                    image: image,
+                    category: category
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update cart count in navbar
+                    const cartBadge = document.querySelector('.cart-count');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.cartCount;
+                        cartBadge.style.display = 'flex';
+                    }
+
+                    // Change button text and style
+                    button.innerHTML = '<i class="fas fa-check"></i> Added';
+                    button.style.background = '#4caf50';
+                    
+                    // Show success message
+                    showNotification(`${productName} added to cart!`, 'success');
+
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        button.textContent = 'Add';
+                        button.style.background = '';
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    button.textContent = 'Add';
+                    button.disabled = false;
+                    showNotification('Failed to add to cart', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                button.textContent = 'Add';
+                button.disabled = false;
+                showNotification('Error adding to cart', 'error');
+            });
+        }
+
+        // Notification function
+        function showNotification(message, type) {
+            // Remove existing notification
+            const existingNotif = document.querySelector('.notification-toast');
+            if (existingNotif) {
+                existingNotif.remove();
+            }
+
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `notification-toast ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Hide and remove notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
     <script src="/js/home.js"></script>
   </body>
 </html>
