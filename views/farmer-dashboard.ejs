@@ -728,28 +728,49 @@
         }
 
         function editProduct(productId) {
+            console.log('Editing product:', productId);
+            
+            // Show loading notification
+            showNotification('Loading product details...', 'info');
+            
             // Fetch product details
             fetch(`/api/products/${productId}`)
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Product data received:', data);
+                    
                     if (data.success && data.product) {
                         const product = data.product;
                         
                         // Show edit section and populate form
                         showSection('addProduct');
                         
+                        // Scroll to top of form
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        
                         // Change form title and button text
                         document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-edit mr-3" style="color: #b89f7e;"></i> Edit Product';
                         
                         // Populate form fields
-                        document.getElementById('productName').value = product.name;
-                        document.getElementById('category').value = product.category;
-                        document.getElementById('originalPrice').value = product.originalPrice || product.price;
-                        document.getElementById('price').value = product.price;
-                        document.getElementById('unit').value = product.unit;
-                        document.getElementById('stock').value = product.stock;
-                        document.getElementById('description').value = product.description;
-                        document.getElementById('farmLocation').value = product.farmLocation || '';
+                        document.getElementById('productName').value = product.name || '';
+                        document.getElementById('category').value = product.category || 'vegetables';
+                        document.getElementById('originalPrice').value = product.originalPrice || product.price || '';
+                        document.getElementById('price').value = product.price || '';
+                        document.getElementById('unit').value = product.unit || 'kg';
+                        document.getElementById('stock').value = product.stock || '';
+                        document.getElementById('description').value = product.description || '';
+                        
+                        // Farm location might not exist in older products
+                        const farmLocationField = document.getElementById('farmLocation');
+                        if (farmLocationField) {
+                            farmLocationField.value = product.farmLocation || '';
+                        }
                         
                         // Store product ID for update
                         document.getElementById('addProductForm').dataset.editId = productId;
@@ -780,13 +801,16 @@
                                 submitBtn.parentElement.appendChild(cancelBtn);
                             }
                         }
+                        
+                        showNotification('Product loaded successfully!', 'success');
                     } else {
-                        showNotification('Failed to load product details', 'error');
+                        console.error('Invalid response data:', data);
+                        showNotification(data.message || 'Failed to load product details', 'error');
                     }
                 })
                 .catch(error => {
                     console.error('Error loading product:', error);
-                    showNotification('Failed to load product details', 'error');
+                    showNotification('Failed to load product details: ' + error.message, 'error');
                 });
         }
 

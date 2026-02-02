@@ -819,37 +819,56 @@ app.delete('/api/products/delete/:id', isAuthenticated, async (req, res) => {
 
 app.get('/api/products/:id', isAuthenticated, async (req, res) => {
     try {
+        console.log('GET /api/products/:id - User:', req.session.userId, 'Role:', req.session.userRole, 'Product ID:', req.params.id);
+        
         if (req.session.userRole !== 'farmer') {
-            return res.status(403).json({ success: false, message: 'Access denied' });
+            console.log('Access denied - not a farmer');
+            return res.status(403).json({ success: false, message: 'Access denied - Farmer role required' });
         }
 
-        const product = await Product.findOne({ _id: req.params.id, farmerId: req.session.userId });
+        const product = await Product.findById(req.params.id);
         
         if (!product) {
+            console.log('Product not found:', req.params.id);
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
+        
+        // Check if product belongs to this farmer
+        if (product.farmerId && product.farmerId.toString() !== req.session.userId.toString()) {
+            console.log('Product belongs to different farmer');
+            return res.status(403).json({ success: false, message: 'You can only edit your own products' });
+        }
 
+        console.log('Product found successfully:', product.name);
         res.json({ success: true, product: product });
     } catch (error) {
         console.error('Get product error:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch product' });
+        res.status(500).json({ success: false, message: 'Failed to fetch product: ' + error.message });
     }
 });
 
 app.put('/api/products/update/:id', isAuthenticated, upload.single('productImage'), async (req, res) => {
     try {
+        console.log('PUT /api/products/update/:id - User:', req.session.userId, 'Product ID:', req.params.id);
+        console.log('Request body:', req.body);
+        
         if (req.session.userRole !== 'farmer') {
             return res.status(403).json({ success: false, message: 'Only farmers can update products' });
         }
 
         const { productName, category, price, originalPrice, stock, unit, description } = req.body;
 
+        // Validate required fields
+        if (!productName || !category || !price || !stock || !unit) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+
         const updateData = {
             name: productName,
             category: category.toLowerCase(),
             price: parseFloat(price),
-            originalPrice: parseFloat(originalPrice),
-            discount: Math.round(((originalPrice - price) / originalPrice) * 100),
+            originalPrice: parseFloat(originalPrice || price),
+            discount: originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0,
             stock: parseInt(stock),
             unit: unit || 'kg',
             description: description || '',
@@ -860,16 +879,24 @@ app.put('/api/products/update/:id', isAuthenticated, upload.single('productImage
             updateData.image = `/Product_images/${req.file.filename}`;
         }
 
-        const product = await Product.findOneAndUpdate(
-            { _id: req.params.id, farmerId: req.session.userId },
-            updateData,
-            { new: true }
-        );
+        console.log('Update data:', updateData);
 
+        const product = await Product.findById(req.params.id);
+        
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
+        
+        // Check ownership
+        if (product.farmerId && product.farmerId.toString() !== req.session.userId.toString()) {
+            return res.status(403).json({ success: false, message: 'You can only update your own products' });
+        }
 
+        // Update the product
+        Object.assign(product, updateData);
+        await product.save();
+
+        console.log('Product updated successfully:', product.name);
         res.json({ success: true, message: 'Product updated successfully', product: product });
     } catch (error) {
         console.error('Update product error:', error);
