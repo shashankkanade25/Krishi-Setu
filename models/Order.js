@@ -30,7 +30,6 @@ const orderSchema = new mongoose.Schema({
     },
     orderNumber: {
         type: String,
-        required: true,
         unique: true
     },
     items: [orderItemSchema],
@@ -93,12 +92,11 @@ const orderSchema = new mongoose.Schema({
 });
 
 // Generate order number
-orderSchema.pre('save', async function(next) {
+orderSchema.pre('save', async function() {
     if (this.isNew && !this.orderNumber) {
         const count = await mongoose.model('Order').countDocuments();
         this.orderNumber = `ORD${Date.now()}${String(count + 1).padStart(4, '0')}`;
     }
-    next();
 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -858,6 +858,85 @@ app.put('/api/products/update/:id', isAuthenticated, upload.single('productImage
     }
 });
 
+// ==================== FARMER ORDER MANAGEMENT ROUTES ====================
+
+// Get all orders for farmer's products
+app.get('/api/orders/farmer', isAuthenticated, async (req, res) => {
+    try {
+        if (req.session.userRole !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        // Get all products belonging to this farmer
+        const farmerProducts = await Product.find({ farmerId: req.session.userId }).select('_id name');
+        const farmerProductIds = farmerProducts.map(p => p._id.toString());
+        const farmerProductNames = farmerProducts.map(p => p.name);
+
+        // Find all orders that contain at least one of the farmer's products
+        const orders = await Order.find({
+            'items.productName': { $in: farmerProductNames }
+        }).sort({ orderDate: -1 }).lean();
+
+        // Filter orders to only include items from this farmer and calculate correct totals
+        const filteredOrders = orders.map(order => {
+            const farmerItems = order.items.filter(item => 
+                farmerProductNames.includes(item.productName)
+            );
+            
+            // Recalculate totals for farmer's items only
+            const farmerSubtotal = farmerItems.reduce((sum, item) => 
+                sum + (item.price * item.quantity), 0
+            );
+            
+            return {
+                ...order,
+                items: farmerItems,
+                subtotal: farmerSubtotal,
+                totalAmount: farmerSubtotal + (order.deliveryCharges || 0)
+            };
+        }).filter(order => order.items.length > 0); // Remove orders with no farmer items
+
+        res.json({ success: true, orders: filteredOrders });
+    } catch (error) {
+        console.error('Get farmer orders error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch orders' });
+    }
+});
+
+// Update order status
+app.put('/api/orders/:orderId/status', isAuthenticated, async (req, res) => {
+    try {
+        if (req.session.userRole !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        const { status } = req.body;
+        const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+        
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ success: false, message: 'Invalid status' });
+        }
+
+        const order = await Order.findByIdAndUpdate(
+            req.params.orderId,
+            { 
+                status: status,
+                ...(status === 'delivered' && { deliveryDate: new Date() })
+            },
+            { new: true }
+        );
+
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        res.json({ success: true, message: 'Order status updated successfully', order: order });
+    } catch (error) {
+        console.error('Update order status error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update order status' });
+    }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
