@@ -744,6 +744,7 @@
                         // Populate form fields
                         document.getElementById('productName').value = product.name;
                         document.getElementById('category').value = product.category;
+                        document.getElementById('originalPrice').value = product.originalPrice || product.price;
                         document.getElementById('price').value = product.price;
                         document.getElementById('unit').value = product.unit;
                         document.getElementById('stock').value = product.stock;
@@ -754,7 +755,7 @@
                         document.getElementById('addProductForm').dataset.editId = productId;
                         
                         // Change submit button
-                        const submitBtn = document.getElementById('addProductSubmit');
+                        const submitBtn = document.getElementById('submitBtn');
                         submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Update Product';
                         
                         // Show cancel button if not exists
@@ -762,7 +763,7 @@
                             const cancelBtn = document.createElement('button');
                             cancelBtn.type = 'button';
                             cancelBtn.id = 'cancelEditBtn';
-                            cancelBtn.className = 'w-full py-4 bg-gray-500 text-white rounded-lg font-bold text-lg hover:bg-gray-600 transition';
+                            cancelBtn.className = 'w-full py-4 bg-gray-500 text-white rounded-lg font-bold text-lg hover:bg-gray-600 transition mt-3';
                             cancelBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
                             cancelBtn.onclick = () => {
                                 document.getElementById('addProductForm').reset();
@@ -772,7 +773,12 @@
                                 cancelBtn.remove();
                                 showSection('myProducts');
                             };
-                            submitBtn.parentElement.appendChild(cancelBtn);
+                            const buttonContainer = submitBtn.closest('.md\\:col-span-2');
+                            if (buttonContainer) {
+                                buttonContainer.parentElement.insertBefore(cancelBtn, buttonContainer.nextSibling);
+                            } else {
+                                submitBtn.parentElement.appendChild(cancelBtn);
+                            }
                         }
                     } else {
                         showNotification('Failed to load product details', 'error');
@@ -880,6 +886,11 @@
                             document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
                             const cancelBtn = document.getElementById('cancelEditBtn');
                             if (cancelBtn) cancelBtn.remove();
+                            
+                            // Reload dashboard stats if it was an edit
+                            if (isEdit) {
+                                loadDashboardStats();
+                            }
                             
                             setTimeout(() => {
                                 messageDiv.classList.add('hidden');
