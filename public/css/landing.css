@@ -963,33 +963,129 @@ nav {
     position: relative;
 }
 
-.reviews-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+/* Carousel Wrapper */
+.reviews-carousel-wrapper {
+    position: relative;
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 60px;
 }
 
-@media (max-width: 968px) {
-    .reviews-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
+.reviews-carousel {
+    overflow: hidden;
+    position: relative;
+}
+
+.reviews-grid {
+    display: flex;
+    gap: 30px;
+    transition: transform 0.5s ease-in-out;
+}
+
+.reviews-grid .review-card {
+    flex: 0 0 calc(33.333% - 20px);
+}
+
+@media (max-width: 1200px) {
+    .reviews-grid .review-card {
+        flex: 0 0 calc(50% - 15px);
     }
 }
 
-/* Review Card */
+@media (max-width: 768px) {
+    .reviews-grid .review-card {
+        flex: 0 0 100%;
+    }
+    
+    .reviews-carousel-wrapper {
+        padding: 0 50px;
+    }
+}
+
+/* Navigation Buttons */
+.carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #8bc34a;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-nav-btn:hover {
+    background: #689f38;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav-btn.prev {
+    left: 0;
+}
+
+.carousel-nav-btn.next {
+    right: 0;
+}
+
+@media (max-width: 768px) {
+    .carousel-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+}
+
+/* Carousel Dots */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: #8bc34a;
+    width: 30px;
+    border-radius: 6px;
+}
+
+.carousel-dot:hover {
+    background: #689f38;
+}
+
+/* Review Card - SCOPED UPDATES ONLY */
 .review-card {
     background: white;
-    padding: 20px;
-    border-radius: 15px;
+    padding: 25px 20px;
+    border-radius: 12px;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    /* CHANGED: Center-aligned vertical layout */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    max-height: 280px;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    position: relative; /* For quote icon positioning */
+    min-height: 320px; /* Prevent layout shift */
 }
 
 .review-card:hover {
@@ -997,14 +1093,25 @@ nav {
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* Review Avatar */
+/* Quote Icon - New Element */
+.review-quote-icon {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 24px;
+    color: #8bc34a;
+    opacity: 0.25;
+}
+
+/* Review Avatar - Updated for centered layout */
 .review-avatar {
-    width: 90px;
-    height: 90px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid #e8f5e9;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    border: 3px solid #8bc34a;
+    box-shadow: 0 3px 10px rgba(139, 195, 74, 0.3);
+    margin-top: 5px;
 }
 
 .review-avatar img {
@@ -1013,34 +1120,57 @@ nav {
     object-fit: cover;
 }
 
-/* Review Text */
+/* Review Text - Updated for centered layout */
 .review-text {
     flex: 1;
     overflow: hidden;
+    margin-top: 5px;
 }
 
 .review-text p {
-    font-size: 14px;
+    font-size: 13px;
     color: #666;
     line-height: 1.6;
     margin: 0;
-    font-style: italic;
+    /* REMOVED: italic and em styling for cleaner look */
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Review Author */
+/* Review Author - No change needed */
 .review-author {
     font-size: 15px;
     color: #333;
     font-weight: 700;
-    margin: 0;
+    margin: 5px 0 0 0;
 }
 
+/* Review Role - New Element */
+.review-role {
+    font-size: 12px;
+    color: #8bc34a;
+    font-weight: 500;
+    margin: 0;
+    text-transform: capitalize;
+}
 
+/* Star Rating - New Component */
+.review-rating {
+    display: flex;
+    gap: 3px;
+    margin-top: 5px;
+    justify-content: center;
+}
+
+.review-rating i {
+    font-size: 14px;
+    color: #ffc107; /* Gold color for stars */
+}
+
+/* Maintain existing duplicate avatar styles (if needed elsewhere) */
 .review-avatar {
     width: 90px;
     height: 90px;

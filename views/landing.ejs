@@ -320,59 +320,348 @@
                 <h2 class="section-title">What Our Customers Say</h2>
                 <p class="section-subtitle">Trusted by thousands of happy customers across India</p>
             </div>
-            <div class="reviews-grid">
-                <div class="review-card" data-animate="fade-in-up" data-delay="100">
-                    <div class="review-avatar">
-                        <img src="/images/Customer2.jpeg" alt="Shashank Sanmukh Kanade"/>
-                    </div>
-                    <div class="review-text">
-                        <p><em>I was impressed by how smooth the process was and how well they understood our needs. The result exceeded our expectations, and we're very happy.</em></p>
-                    </div>
-                    <h3 class="review-author">Shashank Sanmukh Kanade</h3>
-                </div>
+            
+            <!-- Carousel Wrapper -->
+            <div class="reviews-carousel-wrapper">
+                <button class="carousel-nav-btn prev" onclick="slideReviews(-1)" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="reviews-carousel">
+                    <div class="reviews-grid" id="reviewsTrack">
+                        <!-- Review Card 1 -->
+                        <div class="review-card" data-animate="fade-in-up" data-delay="100">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/Customer2.jpeg" alt="Shashank Sanmukh Kanade"/>
+                            </div>
+                            <div class="review-text">
+                                <p>I was impressed by how smooth the process was and how well they understood our needs. The result exceeded our expectations, and we're very happy.</p>
+                            </div>
+                            <h3 class="review-author">Shashank Sanmukh Kanade</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating" data-rating="5">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
 
-                <div class="review-card" data-animate="fade-in-up" data-delay="200">
-                    <div class="review-avatar">
-                        <img src="/images/Customer1.jpeg" alt="Soham Appasaheb Thopate"/>
-                    </div>
-                    <div class="review-text">
-                        <p><em>From start to finish, their team was responsive, friendly, and genuinely invested in helping us succeed. They go above and beyond, and it shows in the results.</em></p>
-                    </div>
-                    <h3 class="review-author">Soham Appasaheb Thopate</h3>
-                </div>
+                        <!-- Review Card 2 -->
+                        <div class="review-card" data-animate="fade-in-up" data-delay="200">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/Customer1.jpeg" alt="Soham Appasaheb Thopate"/>
+                            </div>
+                            <div class="review-text">
+                                <p>From start to finish, their team was responsive, friendly, and genuinely invested in helping us succeed. They go above and beyond, and it shows in the results.</p>
+                            </div>
+                            <h3 class="review-author">Soham Appasaheb Thopate</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating" data-rating="5">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
 
-                <div class="review-card" data-animate="fade-in-up" data-delay="300">
-                    <div class="review-avatar">
-                        <img src="/images/customer4.jpeg" alt="Sarang Pradeep Jadhav"/>
-                    </div>
-                    <div class="review-text">
-                        <p><em>Professional and reliable service. Easy to work with and highly recommended!</em></p>
-                    </div>
-                    <h3 class="review-author">Sarang Pradeep Jadhav</h3>
-                </div>
+                        <!-- Review Card 3 -->
+                        <div class="review-card" data-animate="fade-in-up" data-delay="300">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer4.jpeg" alt="Sarang Pradeep Jadhav"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Professional and reliable service. Easy to work with and highly recommended!</p>
+                            </div>
+                            <h3 class="review-author">Sarang Pradeep Jadhav</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating" data-rating="5">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
 
-                <div class="review-card" data-animate="fade-in-up" data-delay="400">
-                    <div class="review-avatar">
-                        <img src="/images/customer3.png" alt="Atharv Rajan Mulik"/>
+                        <!-- Review Card 4 -->
+                        <div class="review-card" data-animate="fade-in-up" data-delay="400">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer3.png" alt="Atharv Rajan Mulik"/>
+                            </div>
+                            <div class="review-text">
+                                <p>They delivered exactly what we needed. Great quality and on time!</p>
+                            </div>
+                            <h3 class="review-author">Atharv Rajan Mulik</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating" data-rating="4.5">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 5 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer7.jpeg" alt="Atharva Holsambre"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Handled everything efficiently and met expectations without issues. Solid service, responsive, and easy to coordinate with.</p>
+                            </div>
+                            <h3 class="review-author">Atharva Holsambre</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 6 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer5.jpeg" alt="Akshada Sangale"/>
+                            </div>
+                            <div class="review-text">
+                                <p>The freshness and quality of the vegetables are unmatched. I love supporting local farmers through this platform!</p>
+                            </div>
+                            <h3 class="review-author">Akshada Sangale</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 7 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer10.jpeg" alt="Bunty Thalkar"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Best decision I made was joining Krishi Setu. Direct connection with farmers means better prices and fresher produce!</p>
+                            </div>
+                            <h3 class="review-author">Bunty Thalkar</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 8 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer6.jpeg" alt="Akshata Kanade"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Amazing platform! The organic vegetables taste so much better than store-bought ones. Will definitely order again!</p>
+                            </div>
+                            <h3 class="review-author">Akshata Kanade</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 9 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer12.png" alt="Parth Kathane"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Krishi Setu has transformed how I shop for vegetables. The quality is exceptional and delivery is always on time.</p>
+                            </div>
+                            <h3 class="review-author">Parth Kathane</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 10 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer9.jpeg" alt="Ganesh Kotwade"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Fresh produce delivered right to my doorstep! The farmers are dedicated and the platform makes it so easy to order.</p>
+                            </div>
+                            <h3 class="review-author">Ganesh Kotwade</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 11 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer11.png" alt="Om Sherikar"/>
+                            </div>
+                            <div class="review-text">
+                                <p>I've tried many online grocery services, but nothing compares to Krishi Setu. The vegetables are incredibly fresh!</p>
+                            </div>
+                            <h3 class="review-author">Om Sherikar</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Card 12 -->
+                        <div class="review-card">
+                            <i class="review-quote-icon fas fa-quote-left"></i>
+                            <div class="review-avatar">
+                                <img src="/images/customer8.jpeg" alt="Rohit Devshatvar"/>
+                            </div>
+                            <div class="review-text">
+                                <p>Outstanding service from farm to home! The transparency in sourcing and commitment to quality is remarkable.</p>
+                            </div>
+                            <h3 class="review-author">Rohit Devshatvar</h3>
+                            <p class="review-role">Customer</p>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div class="review-text">
-                        <p><em>They delivered exactly what we needed. Great quality and on time!</em></p>
-                    </div>
-                    <h3 class="review-author">Atharv Rajan Mulik</h3>
                 </div>
+                
+                <button class="carousel-nav-btn next" onclick="slideReviews(1)" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-
-            <div style="text-align: center; margin-top: 50px;">
-                <a href="/reviews" class="hero-btn primary">
-                    <i class="fas fa-comments"></i> View All Reviews
-                </a>
-            </div>
+            
+            <!-- Carousel Dots -->
+            <div class="carousel-dots" id="carouselDots"></div>
         </div>
     </section>
 
     <%- include('partials/footer') %>
 
     <script src="/js/home.js"></script>
+    
+    <script>
+        // Reviews Carousel
+        let currentReviewSlide = 0;
+        const reviewsTrack = document.getElementById('reviewsTrack');
+        const reviewCards = document.querySelectorAll('.review-card');
+        const totalReviews = reviewCards.length;
+        let cardsPerView = 3;
+        
+        function updateCardsPerView() {
+            if (window.innerWidth > 1200) {
+                cardsPerView = 3;
+            } else if (window.innerWidth > 768) {
+                cardsPerView = 2;
+            } else {
+                cardsPerView = 1;
+            }
+        }
+        
+        function slideReviews(direction) {
+            currentReviewSlide += direction;
+            const maxSlide = totalReviews - cardsPerView;
+            
+            if (currentReviewSlide > maxSlide) {
+                currentReviewSlide = 0;
+            } else if (currentReviewSlide < 0) {
+                currentReviewSlide = maxSlide;
+            }
+            
+            updateReviewsCarousel();
+        }
+        
+        function updateReviewsCarousel() {
+            const cardWidth = reviewCards[0].offsetWidth;
+            const gap = 30;
+            const offset = -(currentReviewSlide * (cardWidth + gap));
+            reviewsTrack.style.transform = `translateX(${offset}px)`;
+            updateCarouselDots();
+        }
+        
+        function createCarouselDots() {
+            const dotsContainer = document.getElementById('carouselDots');
+            dotsContainer.innerHTML = '';
+            const maxSlide = totalReviews - cardsPerView;
+            
+            for (let i = 0; i <= maxSlide; i++) {
+                const dot = document.createElement('span');
+                dot.classList.add('carousel-dot');
+                if (i === currentReviewSlide) dot.classList.add('active');
+                dot.onclick = () => {
+                    currentReviewSlide = i;
+                    updateReviewsCarousel();
+                };
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        function updateCarouselDots() {
+            const dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentReviewSlide);
+            });
+        }
+        
+        window.addEventListener('resize', () => {
+            updateCardsPerView();
+            createCarouselDots();
+            updateReviewsCarousel();
+        });
+        
+        updateCardsPerView();
+        createCarouselDots();
+        
+        // Auto-slide every 4 seconds
+        setInterval(() => {
+            slideReviews(1);
+        }, 4000);
+    </script>
     <script src="/js/landing.js"></script>
 </body>
 </html>
