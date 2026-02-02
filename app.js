@@ -817,6 +817,25 @@ app.delete('/api/products/delete/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+app.get('/api/products/:id', isAuthenticated, async (req, res) => {
+    try {
+        if (req.session.userRole !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        const product = await Product.findOne({ _id: req.params.id, farmerId: req.session.userId });
+        
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        res.json({ success: true, product: product });
+    } catch (error) {
+        console.error('Get product error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch product' });
+    }
+});
+
 app.put('/api/products/update/:id', isAuthenticated, upload.single('productImage'), async (req, res) => {
     try {
         if (req.session.userRole !== 'farmer') {

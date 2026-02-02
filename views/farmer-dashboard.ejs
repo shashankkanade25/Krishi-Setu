@@ -703,10 +703,16 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <button onclick="confirmDeleteProduct('${product._id}', '${product.name}')" 
-                                        class="px-4 py-2 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition font-semibold">
-                                        <i class="fas fa-trash mr-1"></i> Delete
-                                    </button>
+                                    <div class="flex gap-2">
+                                        <button onclick="editProduct('${product._id}')" 
+                                            class="px-4 py-2 bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition font-semibold">
+                                            <i class="fas fa-edit mr-1"></i> Edit
+                                        </button>
+                                        <button onclick="confirmDeleteProduct('${product._id}', '${product.name}')" 
+                                            class="px-4 py-2 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition font-semibold">
+                                            <i class="fas fa-trash mr-1"></i> Delete
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         `).join('');
@@ -718,6 +724,63 @@
                     loadingDiv.classList.add('hidden');
                     emptyDiv.classList.remove('hidden');
                     console.error('Error loading products:', error);
+                });
+        }
+
+        function editProduct(productId) {
+            // Fetch product details
+            fetch(`/api/products/${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.product) {
+                        const product = data.product;
+                        
+                        // Show edit section and populate form
+                        showSection('addProduct');
+                        
+                        // Change form title and button text
+                        document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-edit mr-3" style="color: #b89f7e;"></i> Edit Product';
+                        
+                        // Populate form fields
+                        document.getElementById('productName').value = product.name;
+                        document.getElementById('category').value = product.category;
+                        document.getElementById('price').value = product.price;
+                        document.getElementById('unit').value = product.unit;
+                        document.getElementById('stock').value = product.stock;
+                        document.getElementById('description').value = product.description;
+                        document.getElementById('farmLocation').value = product.farmLocation || '';
+                        
+                        // Store product ID for update
+                        document.getElementById('addProductForm').dataset.editId = productId;
+                        
+                        // Change submit button
+                        const submitBtn = document.getElementById('addProductSubmit');
+                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Update Product';
+                        
+                        // Show cancel button if not exists
+                        if (!document.getElementById('cancelEditBtn')) {
+                            const cancelBtn = document.createElement('button');
+                            cancelBtn.type = 'button';
+                            cancelBtn.id = 'cancelEditBtn';
+                            cancelBtn.className = 'w-full py-4 bg-gray-500 text-white rounded-lg font-bold text-lg hover:bg-gray-600 transition';
+                            cancelBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+                            cancelBtn.onclick = () => {
+                                document.getElementById('addProductForm').reset();
+                                delete document.getElementById('addProductForm').dataset.editId;
+                                document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                                submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                                cancelBtn.remove();
+                                showSection('myProducts');
+                            };
+                            submitBtn.parentElement.appendChild(cancelBtn);
+                        }
+                    } else {
+                        showNotification('Failed to load product details', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading product:', error);
+                    showNotification('Failed to load product details', 'error');
                 });
         }
 
@@ -781,15 +844,20 @@
                     
                     const submitBtn = document.getElementById('submitBtn');
                     const messageDiv = document.getElementById('addProductMessage');
+                    const editId = addProductForm.dataset.editId;
+                    const isEdit = !!editId;
                     
                     submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding Product...';
+                    submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>${isEdit ? 'Updating' : 'Adding'} Product...`;
                     
                     const formData = new FormData(addProductForm);
                     
                     try {
-                        const response = await fetch('/api/products/add', {
-                            method: 'POST',
+                        const url = isEdit ? `/api/products/update/${editId}` : '/api/products/add';
+                        const method = isEdit ? 'PUT' : 'POST';
+                        
+                        const response = await fetch(url, {
+                            method: method,
                             body: formData
                         });
                         
@@ -800,10 +868,18 @@
                             messageDiv.innerHTML = '<i class="fas fa-check-circle mr-2 text-xl"></i>' + data.message;
                             messageDiv.classList.remove('hidden');
                             addProductForm.reset();
-                            showNotification('Product added successfully!', 'success');
+                            delete addProductForm.dataset.editId;
+                            showNotification(`Product ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
                             
                             // Add notification
-                            addNotification('success', 'Product Listed!', `${formData.get('productName')} is now live and visible to customers.`);
+                            const productName = formData.get('productName');
+                            addNotification('success', isEdit ? 'Product Updated!' : 'Product Listed!', 
+                                `${productName} ${isEdit ? 'has been updated successfully' : 'is now live and visible to customers'}.`);
+                            
+                            // Reset form title and button
+                            document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                            const cancelBtn = document.getElementById('cancelEditBtn');
+                            if (cancelBtn) cancelBtn.remove();
                             
                             setTimeout(() => {
                                 messageDiv.classList.add('hidden');
@@ -813,16 +889,16 @@
                             messageDiv.className = 'mb-4 p-5 bg-red-100 border-2 border-red-400 text-red-800 rounded-xl font-semibold';
                             messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-xl"></i>' + data.message;
                             messageDiv.classList.remove('hidden');
-                            showNotification('Failed to add product', 'error');
+                            showNotification(`Failed to ${isEdit ? 'update' : 'add'} product`, 'error');
                         }
                     } catch (error) {
                         messageDiv.className = 'mb-4 p-5 bg-red-100 border-2 border-red-400 text-red-800 rounded-xl font-semibold';
-                        messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-xl"></i>Failed to add product. Please try again.';
+                        messageDiv.innerHTML = `<i class="fas fa-exclamation-triangle mr-2 text-xl"></i>Failed to ${isEdit ? 'update' : 'add'} product. Please try again.`;
                         messageDiv.classList.remove('hidden');
-                        showNotification('Failed to add product', 'error');
+                        showNotification(`Failed to ${isEdit ? 'update' : 'add'} product`, 'error');
                     } finally {
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                        submitBtn.innerHTML = `<i class="fas fa-${isEdit ? 'save' : 'plus-circle'} mr-2"></i>${isEdit ? 'Update' : 'Add'} Product`;
                     }
                 });
             }
