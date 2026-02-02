@@ -28,10 +28,13 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Hash password before saving
+// Create index for role lookups (email already has unique: true which creates index)
+userSchema.index({ role: 1 });
+
+// Hash password before saving (10 rounds is faster and still secure)
 userSchema.pre('save', async function() {
     if (!this.isModified('password')) return;
-    this.password = await bcrypt.hash(this.password, 12);
+    this.password = await bcrypt.hash(this.password, 10);
 });
 
 // Compare password method

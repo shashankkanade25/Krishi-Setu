@@ -293,12 +293,10 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password, role } = req.body;
 
-        console.log('Login attempt for:', email, 'as', role);
-
-        // Find user
-        const user = await User.findOne({ email });
+        // Find user with only necessary fields for faster query
+        const user = await User.findOne({ email }).select('+password name email role _id');
+        
         if (!user) {
-            console.log('User not found:', email);
             return res.status(401).json({ 
                 error: 'invalid_credentials',
                 message: 'Invalid email or password. Please register first.' 
@@ -310,7 +308,6 @@ app.post('/login', async (req, res) => {
         
         // Check if user role matches
         if (normalizedUserRole !== role) {
-            console.log('Role mismatch:', email, 'registered as', normalizedUserRole, 'trying to login as', role);
             const displayRole = normalizedUserRole === 'farmer' ? 'farmer' : 'customer';
             return res.status(401).json({ 
                 error: 'role_mismatch', 
@@ -319,18 +316,15 @@ app.post('/login', async (req, res) => {
             });
         }
 
-        console.log('User found, checking password...');
         // Check password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            console.log('Password mismatch for:', email);
             return res.status(401).json({ 
                 error: 'invalid_credentials',
                 message: 'Invalid email or password' 
             });
         }
 
-        console.log('Login successful for:', email);
         // Create session (normalize old "user" role to "customer")
         const normalizedRole = user.role === 'user' ? 'customer' : user.role;
         req.session.userId = user._id;
@@ -338,12 +332,20 @@ app.post('/login', async (req, res) => {
         req.session.userEmail = user.email;
         req.session.userRole = normalizedRole;
 
-        // Redirect based on role
-        if (normalizedRole === 'farmer') {
-            res.redirect('/farmer-home');
-        } else {
-            res.redirect('/customer-home');
-        }
+        // Save session and redirect (faster with callback)
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({ error: 'server_error', message: 'Login failed' });
+            }
+            
+            // Redirect based on role
+            if (normalizedRole === 'farmer') {
+                res.redirect('/farmer-home');
+            } else {
+                res.redirect('/customer-home');
+            }
+        });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ 
