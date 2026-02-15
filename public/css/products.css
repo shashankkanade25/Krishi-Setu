@@ -266,9 +266,21 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+    }
+}
+
 @media (max-width: 1024px) {
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 18px;
+    }
+
+    .container {
+        padding: 0 15px;
     }
 }
 
@@ -282,30 +294,342 @@
         position: static;
         max-height: none;
         border-right: none;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 2px solid #e0e0e0;
+        padding: 15px;
+    }
+
+    .sidebar-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .filter-section {
+        margin-bottom: 15px;
+    }
+
+    .filter-section h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .category-btn,
+    .price-filter-btn {
+        padding: 8px 12px;
+        font-size: 13px;
     }
     
     .products-main {
-        padding: 20px;
+        padding: 15px;
     }
     
     .products-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+        gap: 12px;
+        margin-bottom: 20px;
     }
     
     .products-title {
-        font-size: 24px;
+        font-size: 22px;
+    }
+
+    .products-count {
+        font-size: 13px;
     }
     
     .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .product-card {
+        border-radius: 12px;
     }
     
     .product-img {
-        height: 160px;
+        height: 140px;
+        border-radius: 10px;
+    }
+
+    .product-name {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .product-farmer {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+
+    .product-price {
+        margin-bottom: 8px;
+    }
+
+    .current-price {
+        font-size: 17px;
+    }
+
+    .original-price {
+        font-size: 13px;
+    }
+
+    .discount-badge {
+        top: 6px;
+        right: 6px;
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+
+    .product-unit {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    .add-to-cart-btn {
+        padding: 8px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .add-to-cart-btn i {
+        font-size: 14px;
+    }
+
+    /* Quantity controls mobile optimization */
+    .quantity-controls {
+        border-radius: 8px;
+    }
+
+    .product-qty-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+
+    .product-qty-display {
+        font-size: 16px;
+    }
+
+    /* Modal mobile optimization */
+    .custom-modal-content {
+        padding: 24px;
+        max-width: 85%;
+    }
+
+    .custom-modal-message {
+        font-size: 15px;
+    }
+
+    .custom-modal-btn {
+        padding: 10px 32px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .sidebar {
+        padding: 12px;
+    }
+
+    .sidebar-title {
+        font-size: 16px;
+    }
+
+    .filter-section h3 {
+        font-size: 14px;
+    }
+
+    .category-btn,
+    .price-filter-btn {
+        padding: 7px 10px;
+        font-size: 12px;
+    }
+
+    .products-main {
+        padding: 12px 10px;
+    }
+    
+    .products-header {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .products-title {
+        font-size: 20px;
+    }
+
+    .products-count {
+        font-size: 12px;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .product-card {
+        padding: 8px;
+        border-radius: 10px;
+    }
+
+    .product-img {
+        height: 120px;
+        border-radius: 8px;
+    }
+    
+    .product-name {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .product-farmer {
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+
+    .product-price {
+        margin-bottom: 6px;
+    }
+    
+    .current-price {
+        font-size: 15px;
+    }
+
+    .original-price {
+        font-size: 12px;
+    }
+
+    .discount-badge {
+        top: 5px;
+        right: 5px;
+        padding: 2px 5px;
+        font-size: 9px;
+    }
+
+    .product-unit {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .add-to-cart-btn {
+        padding: 7px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+
+    .add-to-cart-btn i {
+        font-size: 13px;
+    }
+
+    .quantity-controls {
+        border-radius: 6px;
+    }
+
+    .product-qty-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .product-qty-display {
+        font-size: 14px;
+    }
+
+    .custom-modal-content {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .custom-modal-icon svg,
+    .custom-modal-icon img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .custom-modal-message {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .custom-modal-btn {
+        padding: 9px 28px;
+        font-size: 14px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .products-grid {
+        gap: 8px;
+    }
+
+    .product-card {
+        padding: 6px;
+    }
+
+    .product-img {
+        height: 100px;
+    }
+
+    .product-name {
+        font-size: 12px;
+    }
+
+    .current-price {
+        font-size: 14px;
+    }
+
+    .add-to-cart-btn {
+        font-size: 11px;
+        padding: 6px;
+    }
+}
+
+/* Touch-friendly improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .add-to-cart-btn,
+    .product-qty-btn,
+    .category-btn,
+    .price-filter-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .product-card {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .add-to-cart-btn:active,
+    .product-qty-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Remove hover effects on touch devices */
+    .product-card:hover {
+        transform: none;
+    }
+
+    .product-card:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .sidebar {
+        padding: 10px 15px;
+    }
+
+    .filter-section {
+        margin-bottom: 10px;
     }
 }
 

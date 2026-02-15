@@ -6,7 +6,15 @@
                 <img src="/images/krishi-setu-logo.png" alt="कृषी-सेतू" class="logo-img">
             </a>
             
-            <div class="search-container">
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <!-- Desktop Search -->
+            <div class="search-container desktop-search">
                 <input type="text" id="searchInput" class="search-bar" placeholder="Search for fresh produce..." autocomplete="off">
                 <span class="search-icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -17,8 +25,24 @@
                 <div id="searchResults" class="search-results"></div>
             </div>
             
-            <div class="nav-right">
-                <a href="#contact" class="nav-link">Contact Us</a>
+            <!-- Desktop Navigation -->
+            <div class="nav-right" id="navMenu">
+                <!-- Mobile Search -->
+                <div class="search-container mobile-search">
+                    <input type="text" id="searchInputMobile" class="search-bar" placeholder="Search products..." autocomplete="off">
+                    <span class="search-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </span>
+                    <div id="searchResultsMobile" class="search-results"></div>
+                </div>
+                
+                <a href="#contact" class="nav-link">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Contact Us</span>
+                </a>
                 
                 <a href="/cart" class="icon-link cart-link">
                     <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -62,7 +86,39 @@
     </div>
 </nav>
 
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
 <script>
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navMenu = document.getElementById('navMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    
+    function toggleMobileMenu() {
+        mobileMenuToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        mobileMenuOverlay.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+    }
+    
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+    }
+    
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+    }
+    
+    // Close mobile menu when clicking on a link
+    navMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+            if (navMenu.classList.contains('active')) {
+                toggleMobileMenu();
+            }
+        });
+    });
+
     function toggleDropdown(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -83,15 +139,15 @@
         fetch('/cart/count')
             .then(response => response.json())
             .then(data => {
-                const cartBadge = document.querySelector('.cart-count');
-                if (cartBadge) {
-                    cartBadge.textContent = data.count;
+                const cartBadges = document.querySelectorAll('.cart-count');
+                cartBadges.forEach(badge => {
+                    badge.textContent = data.count;
                     if (data.count > 0) {
-                        cartBadge.style.display = 'flex';
+                        badge.style.display = 'flex';
                     } else {
-                        cartBadge.style.display = 'none';
+                        badge.style.display = 'none';
                     }
-                }
+                });
             })
             .catch(error => console.error('Error updating cart count:', error));
     }
@@ -99,12 +155,14 @@
     // Update on page load
     updateCartCount();
 
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-    let searchTimeout;
+    // Search functionality for both desktop and mobile
+    function setupSearch(inputId, resultsId) {
+        const searchInput = document.getElementById(inputId);
+        const searchResults = document.getElementById(resultsId);
+        let searchTimeout;
 
-    if (searchInput) {
+        if (!searchInput || !searchResults) return;
+
         searchInput.addEventListener('input', function(e) {
             clearTimeout(searchTimeout);
             const query = e.target.value.trim();
@@ -119,7 +177,7 @@
                 fetch(`/api/search?q=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
-                        displaySearchResults(data.results);
+                        displaySearchResults(data.results, searchResults, query);
                     })
                     .catch(error => console.error('Search error:', error));
             }, 300);
@@ -139,10 +197,14 @@
         });
     }
 
-    function displaySearchResults(results) {
+    // Setup search for both desktop and mobile
+    setupSearch('searchInput', 'searchResults');
+    setupSearch('searchInputMobile', 'searchResultsMobile');
+
+    function displaySearchResults(results, container, query) {
         if (!results || results.length === 0) {
-            searchResults.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><p>No products found</p></div>';
-            searchResults.style.display = 'block';
+            container.innerHTML = '<div class="no-results"><i class="fas fa-search"></i><p>No products found</p></div>';
+            container.style.display = 'block';
             return;
         }
 
@@ -150,15 +212,15 @@
             <div class="search-result-item" onclick="goToProduct('${product.category}', '${product.name.replace(/'/g, "\\'")}')">
                 <img src="${product.image}" alt="${product.name}">
                 <div class="result-info">
-                    <h4>${highlightQuery(product.name, searchInput.value)}</h4>
+                    <h4>${highlightQuery(product.name, query)}</h4>
                     <p class="result-category">${product.category}</p>
                     <p class="result-price">₹${product.price}</p>
                 </div>
             </div>
         `).join('');
 
-        searchResults.innerHTML = html;
-        searchResults.style.display = 'block';
+        container.innerHTML = html;
+        container.style.display = 'block';
     }
 
     function highlightQuery(text, query) {

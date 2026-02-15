@@ -246,6 +246,7 @@ form {
 
     .auth-image {
         flex: 0 0 40vh;
+        min-height: 250px;
     }
 
     .auth-image img {
@@ -255,33 +256,190 @@ form {
 
     .auth-form {
         flex: 1;
-        padding: 2rem 2rem;
+        padding: 2rem;
+        flex: 0 0 auto;
     }
 
     .brand-title {
-        font-size: 3rem;
+        font-size: 2.2rem;
     }
 
     .welcome-text h2 {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
+    }
+
+    .brand-logo-img {
+        max-width: 180px;
     }
 }
 
 @media (max-width: 640px) {
     .auth-image {
-        flex: 0 0 30vh;
+        flex: 0 0 200px;
+        min-height: 200px;
+    }
+
+    .auth-image img {
+        max-width: 70%;
+        max-height: 70%;
     }
 
     .auth-form {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1.25rem;
     }
 
     .brand-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+    }
+
+    .brand-tagline {
+        font-size: 0.65rem;
     }
 
     .welcome-text h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+    }
+
+    .welcome-text p {
+        font-size: 0.85rem;
+    }
+
+    .brand-logo-img {
+        max-width: 160px;
+    }
+
+    .wheat-icon {
+        width: 50px;
+        height: 65px;
+    }
+
+    .input-group {
+        margin-bottom: 0.9rem;
+    }
+
+    .input-group label {
+        font-size: 0.85rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .input-group input {
+        padding: 0.7rem 1rem 0.7rem 2.8rem;
+        font-size: 0.85rem;
+    }
+
+    .input-icon {
+        left: 0.85rem;
+        font-size: 1.1rem;
+    }
+
+    .password-toggle {
+        right: 0.85rem;
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    .switch {
+        margin-top: 1.5rem;
+        font-size: 0.85rem;
+    }
+
+    .alert {
+        padding: 0.85rem;
+        font-size: 0.85rem;
+        margin-bottom: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-image {
+        flex: 0 0 180px;
+        min-height: 180px;
+    }
+
+    .auth-form {
+        padding: 1.2rem 1rem;
+    }
+
+    .brand-title {
+        font-size: 1.8rem;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.2rem;
+    }
+
+    .welcome-text p {
+        font-size: 0.8rem;
+    }
+
+    .brand-logo-img {
+        max-width: 140px;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    .input-group input,
+    .btn {
+        min-height: 48px;
+    }
+
+    .password-toggle,
+    .input-icon {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn:active {
+        transform: translateY(-1px);
+        opacity: 0.9;
+    }
+
+    /* Remove hover effects on touch devices */
+    .btn:hover {
+        transform: none;
+    }
+}
+
+/* Landscape mobile devices */
+@media (max-width: 968px) and (orientation: landscape) {
+    .auth-container {
+        flex-direction: row;
+    }
+
+    .auth-image {
+        flex: 0 0 40%;
+    }
+
+    .auth-form {
+        flex: 1;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .auth-form {
+        padding: 1rem 0.85rem;
+    }
+
+    .brand-title {
+        font-size: 1.6rem;
+    }
+
+    .welcome-text {
+        margin-bottom: 1.2rem;
+    }
+
+    .input-group {
+        margin-bottom: 0.8rem;
     }
 }
 
