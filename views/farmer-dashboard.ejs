@@ -604,6 +604,42 @@
                 activeLink.classList.add('text-white', 'bg-primary', 'active');
             }
             
+            // Reset form when navigating to Add Product section
+            if (sectionId === 'addProduct') {
+                const addProductForm = document.getElementById('addProductForm');
+                if (addProductForm) {
+                    // Reset the form
+                    addProductForm.reset();
+                    
+                    // Clear edit mode
+                    delete addProductForm.dataset.editId;
+                    
+                    // Reset form title
+                    const formTitle = document.querySelector('#addProduct h3');
+                    if (formTitle) {
+                        formTitle.innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                    }
+                    
+                    // Reset submit button
+                    const submitBtn = document.getElementById('submitBtn');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                    }
+                    
+                    // Remove cancel button if exists
+                    const cancelBtn = document.getElementById('cancelEditBtn');
+                    if (cancelBtn) {
+                        cancelBtn.remove();
+                    }
+                    
+                    // Hide any messages
+                    const messageDiv = document.getElementById('addProductMessage');
+                    if (messageDiv) {
+                        messageDiv.classList.add('hidden');
+                    }
+                }
+            }
+            
             // Load data for specific sections
             if (sectionId === 'myProducts') loadProducts();
             if (sectionId === 'dashboard') loadDashboardStats();
@@ -906,14 +942,17 @@
                             addNotification('success', isEdit ? 'Product Updated!' : 'Product Listed!', 
                                 `${productName} ${isEdit ? 'has been updated successfully' : 'is now live and visible to customers'}.`);
                             
-                            // Reset form title and button
+                            // Reset form title and button immediately
                             document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                            submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                            
                             const cancelBtn = document.getElementById('cancelEditBtn');
                             if (cancelBtn) cancelBtn.remove();
                             
-                            // Reload dashboard stats if it was an edit
+                            // Reload dashboard stats and products list if it was an edit
                             if (isEdit) {
                                 loadDashboardStats();
+                                loadProducts();
                             }
                             
                             setTimeout(() => {
@@ -933,7 +972,9 @@
                         showNotification(`Failed to ${isEdit ? 'update' : 'add'} product`, 'error');
                     } finally {
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = `<i class="fas fa-${isEdit ? 'save' : 'plus-circle'} mr-2"></i>${isEdit ? 'Update' : 'Add'} Product`;
+                        // Check current state of editId instead of using old isEdit value
+                        const currentlyEditing = !!addProductForm.dataset.editId;
+                        submitBtn.innerHTML = `<i class="fas fa-${currentlyEditing ? 'save' : 'plus-circle'} mr-2"></i>${currentlyEditing ? 'Update' : 'Add'} Product`;
                     }
                 });
             }
