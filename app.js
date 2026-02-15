@@ -293,8 +293,8 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password, role } = req.body;
 
-        // Find user with only necessary fields for faster query
-        const user = await User.findOne({ email }).select('+password name email role _id');
+        // Find user with password field included
+        const user = await User.findOne({ email }).select('name email role _id password');
         
         if (!user) {
             return res.status(401).json({ 
@@ -306,14 +306,19 @@ app.post('/login', async (req, res) => {
         // Normalize old "user" role to "customer" for backward compatibility
         const normalizedUserRole = user.role === 'user' ? 'customer' : user.role;
         
-        // Check if user role matches
-        if (normalizedUserRole !== role) {
-            const displayRole = normalizedUserRole === 'farmer' ? 'farmer' : 'customer';
-            return res.status(401).json({ 
-                error: 'role_mismatch', 
-                message: `This account is registered as a ${displayRole}. Please select the correct role.`,
-                correctRole: displayRole
-            });
+        // Admin can login without role selection
+        if (normalizedUserRole === 'admin') {
+            // Skip role check for admin
+        } else {
+            // Check if user role matches for non-admin users
+            if (normalizedUserRole !== role) {
+                const displayRole = normalizedUserRole === 'farmer' ? 'farmer' : 'customer';
+                return res.status(401).json({ 
+                    error: 'role_mismatch', 
+                    message: `This account is registered as a ${displayRole}. Please select the correct role.`,
+                    correctRole: displayRole
+                });
+            }
         }
 
         // Check password
@@ -340,7 +345,9 @@ app.post('/login', async (req, res) => {
             }
             
             // Redirect based on role
-            if (normalizedRole === 'farmer') {
+            if (normalizedRole === 'admin') {
+                res.redirect('/admin');
+            } else if (normalizedRole === 'farmer') {
                 res.redirect('/farmer-home');
             } else {
                 res.redirect('/customer-home');
@@ -656,12 +663,26 @@ app.post('/checkout/place-order', isAuthenticated, async (req, res) => {
             weight: item.weight,
             quantity: item.quantity,
             price: item.price,
-            image: item.image
+            image: item.image,
+            category: item.category
         }));
         
         const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const deliveryCharges = 0; // Free delivery
+        const deliveryCharges = subtotal >= 500 ? 0 : 40; // Free delivery above ₹500
         const totalAmount = subtotal + deliveryCharges;
+        
+        // Get farmer IDs from products in cart
+        const productIds = items.map(item => item.productId).filter(Boolean);
+        let farmerId = null;
+        let farmerName = null;
+        
+        if (productIds.length > 0) {
+            const products = await Product.find({ _id: { $in: productIds } }).limit(1);
+            if (products.length > 0) {
+                farmerId = products[0].farmerId;
+                farmerName = products[0].farmerName;
+            }
+        }
         
         // Create order
         const order = new Order({
@@ -670,24 +691,64 @@ app.post('/checkout/place-order', isAuthenticated, async (req, res) => {
             userEmail: req.session.userEmail,
             items: items,
             deliveryAddress: address,
-            paymentMethod: paymentMethod,
+            paymentMethod: paymentMethod || 'cod',
             specialInstructions: instructions || '',
             subtotal: subtotal,
             deliveryCharges: deliveryCharges,
             totalAmount: totalAmount,
-            status: 'Pending',
+            status: 'pending',
+            farmerId: farmerId,
+            farmerName: farmerName,
             orderDate: new Date()
         });
         
         await order.save();
+        
+        // Send notifications
+        const notificationService = require('./utils/notificationService');
+        const user = await User.findById(req.session.userId);
+        
+        // Notify customer
+        if (user) {
+            await notificationService.notifyOrderPlaced(order, user);
+        }
+        
+        // Notify farmer
+        if (farmerId) {
+            const farmer = await User.findById(farmerId);
+            if (farmer) {
+                await notificationService.notifyFarmerNewOrder(order, farmer);
+            }
+        }
+        
+        // Check for low stock and notify farmers
+        for (const item of items) {
+            if (item.productId) {
+                const product = await Product.findById(item.productId);
+                if (product) {
+                    // Update stock
+                    product.stock = Math.max(0, product.stock - item.quantity);
+                    await product.save();
+                    
+                    // Check if stock is low (less than 10 units)
+                    if (product.stock < 10 && product.stock > 0) {
+                        const productFarmer = await User.findById(product.farmerId);
+                        if (productFarmer) {
+                            await notificationService.notifyLowStock(product, productFarmer);
+                        }
+                    }
+                }
+            }
+        }
         
         // Clear cart after successful order
         req.session.cart = [];
         
         res.json({ 
             success: true, 
-            message: 'Order placed successfully',
-            orderId: order._id 
+            message: 'Order placed successfully! You will receive a confirmation email shortly.',
+            orderId: order._id,
+            orderNumber: order.orderNumber
         });
     } catch (error) {
         console.error('Place order error:', error);
@@ -767,19 +828,63 @@ app.post('/api/products/add', isAuthenticated, upload.single('productImage'), as
 
 app.get('/api/products/all', async (req, res) => {
     try {
-        const { category, search } = req.query;
+        const { 
+            category, 
+            search, 
+            minPrice, 
+            maxPrice, 
+            sortBy, 
+            farmerName,
+            location,
+            inStock
+        } = req.query;
+        
         let query = { status: 'active' };
 
+        // Category filter
         if (category && category !== 'all') {
             query.category = category.toLowerCase();
         }
 
+        // Search by name or description
         if (search) {
-            query.name = { $regex: search, $options: 'i' };
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
         }
 
-        const products = await Product.find(query).sort({ createdAt: -1 }).lean();
-        res.json({ success: true, products: products });
+        // Price range filter
+        if (minPrice || maxPrice) {
+            query.price = {};
+            if (minPrice) query.price.$gte = parseFloat(minPrice);
+            if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+        }
+
+        // Farmer name filter
+        if (farmerName) {
+            query.farmerName = { $regex: farmerName, $options: 'i' };
+        }
+
+        // Stock availability filter
+        if (inStock === 'true') {
+            query.stock = { $gt: 0 };
+        }
+
+        // Sorting
+        let sortOptions = { createdAt: -1 }; // default: newest first
+        if (sortBy === 'price_low') {
+            sortOptions = { price: 1 };
+        } else if (sortBy === 'price_high') {
+            sortOptions = { price: -1 };
+        } else if (sortBy === 'name') {
+            sortOptions = { name: 1 };
+        } else if (sortBy === 'discount') {
+            sortOptions = { discount: -1 };
+        }
+
+        const products = await Product.find(query).sort(sortOptions).lean();
+        res.json({ success: true, products: products, count: products.length });
     } catch (error) {
         console.error('Get products error:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch products' });
@@ -954,34 +1059,370 @@ app.get('/api/orders/farmer', isAuthenticated, async (req, res) => {
 // Update order status
 app.put('/api/orders/:orderId/status', isAuthenticated, async (req, res) => {
     try {
-        if (req.session.userRole !== 'farmer') {
-            return res.status(403).json({ success: false, message: 'Access denied' });
-        }
-
-        const { status } = req.body;
-        const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+        const { status, trackingNumber, note } = req.body;
+        const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'];
         
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ success: false, message: 'Invalid status' });
         }
 
-        const order = await Order.findByIdAndUpdate(
-            req.params.orderId,
-            { 
-                status: status,
-                ...(status === 'delivered' && { deliveryDate: new Date() })
-            },
-            { new: true }
-        );
-
+        const order = await Order.findById(req.params.orderId);
         if (!order) {
             return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+
+        // Check authorization
+        if (req.session.userRole === 'farmer') {
+            // Farmer can only update their own orders
+            const farmerProducts = await Product.find({ farmerId: req.session.userId });
+            const farmerProductNames = farmerProducts.map(p => p.name);
+            const hasProduct = order.items.some(item => farmerProductNames.includes(item.productName));
+            if (!hasProduct) {
+                return res.status(403).json({ success: false, message: 'Access denied' });
+            }
+        } else if (req.session.userRole !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        // Update order
+        order.status = status;
+        if (trackingNumber) order.trackingNumber = trackingNumber;
+        if (status === 'delivered' && !order.deliveryDate) {
+            order.deliveryDate = new Date();
+        }
+        
+        await order.save();
+
+        // Send notification to customer
+        const notificationService = require('./utils/notificationService');
+        const user = await User.findById(order.userId);
+        if (user) {
+            await notificationService.notifyOrderStatusUpdate(order, user, status);
         }
 
         res.json({ success: true, message: 'Order status updated successfully', order: order });
     } catch (error) {
         console.error('Update order status error:', error);
         res.status(500).json({ success: false, message: 'Failed to update order status' });
+    }
+});
+
+// ===== NOTIFICATION ROUTES =====
+
+// Get user notifications
+app.get('/api/notifications', isAuthenticated, async (req, res) => {
+    try {
+        const Notification = require('./models/Notification');
+        const notifications = await Notification.find({ userId: req.session.userId })
+            .sort({ createdAt: -1 })
+            .limit(50)
+            .lean();
+        
+        const unreadCount = await Notification.countDocuments({ 
+            userId: req.session.userId, 
+            read: false 
+        });
+
+        res.json({ success: true, notifications, unreadCount });
+    } catch (error) {
+        console.error('Get notifications error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// Mark notification as read
+app.put('/api/notifications/:id/read', isAuthenticated, async (req, res) => {
+    try {
+        const Notification = require('./models/Notification');
+        await Notification.findOneAndUpdate(
+            { _id: req.params.id, userId: req.session.userId },
+            { read: true, readAt: new Date() }
+        );
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Mark notification as read error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update notification' });
+    }
+});
+
+// Mark all notifications as read
+app.put('/api/notifications/read-all', isAuthenticated, async (req, res) => {
+    try {
+        const Notification = require('./models/Notification');
+        await Notification.updateMany(
+            { userId: req.session.userId, read: false },
+            { read: true, readAt: new Date() }
+        );
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Mark all notifications as read error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update notifications' });
+    }
+});
+
+// ===== ADMIN ROUTES =====
+
+// Admin middleware
+const isAdmin = (req, res, next) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ success: false, message: 'Please login' });
+    }
+    if (req.session.userRole !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+    }
+    next();
+};
+
+// Admin dashboard page
+app.get('/admin', isAdmin, (req, res) => {
+    res.render('admin-dashboard', {
+        user: {
+            id: req.session.userId,
+            name: req.session.userName,
+            email: req.session.userEmail,
+            role: req.session.userRole
+        }
+    });
+});
+
+// Get dashboard statistics
+app.get('/api/admin/stats', isAdmin, async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalFarmers = await User.countDocuments({ role: 'farmer' });
+        const totalCustomers = await User.countDocuments({ role: 'customer' });
+        const totalProducts = await Product.countDocuments();
+        const activeProducts = await Product.countDocuments({ status: 'active' });
+        const totalOrders = await Order.countDocuments();
+        const pendingOrders = await Order.countDocuments({ status: 'pending' });
+        const deliveredOrders = await Order.countDocuments({ status: 'delivered' });
+        
+        // Revenue calculation
+        const revenueData = await Order.aggregate([
+            { $match: { status: { $ne: 'cancelled' } } },
+            { $group: { _id: null, totalRevenue: { $sum: '$totalAmount' } } }
+        ]);
+        const totalRevenue = revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
+
+        // Recent orders (last 7 days)
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const recentOrders = await Order.countDocuments({ 
+            orderDate: { $gte: sevenDaysAgo } 
+        });
+
+        res.json({
+            success: true,
+            stats: {
+                users: { total: totalUsers, farmers: totalFarmers, customers: totalCustomers },
+                products: { total: totalProducts, active: activeProducts },
+                orders: { total: totalOrders, pending: pendingOrders, delivered: deliveredOrders, recent: recentOrders },
+                revenue: { total: totalRevenue }
+            }
+        });
+    } catch (error) {
+        console.error('Get admin stats error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch statistics' });
+    }
+});
+
+// Get all users (with pagination)
+app.get('/api/admin/users', isAdmin, async (req, res) => {
+    try {
+        const { page = 1, limit = 20, role, search } = req.query;
+        const query = {};
+        
+        if (role) query.role = role;
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        const users = await User.find(query)
+            .select('-password')
+            .sort({ createdAt: -1 })
+            .limit(parseInt(limit))
+            .skip((parseInt(page) - 1) * parseInt(limit))
+            .lean();
+
+        const total = await User.countDocuments(query);
+
+        res.json({ success: true, users, total, page: parseInt(page), pages: Math.ceil(total / limit) });
+    } catch (error) {
+        console.error('Get users error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch users' });
+    }
+});
+
+// Get all orders (with filters)
+app.get('/api/admin/orders', isAdmin, async (req, res) => {
+    try {
+        const { page = 1, limit = 20, status, search } = req.query;
+        const query = {};
+        
+        if (status) query.status = status;
+        if (search) {
+            query.$or = [
+                { orderNumber: { $regex: search, $options: 'i' } },
+                { userName: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        const orders = await Order.find(query)
+            .sort({ orderDate: -1 })
+            .limit(parseInt(limit))
+            .skip((parseInt(page) - 1) * parseInt(limit))
+            .lean();
+
+        const total = await Order.countDocuments(query);
+
+        res.json({ success: true, orders, total, page: parseInt(page), pages: Math.ceil(total / limit) });
+    } catch (error) {
+        console.error('Get orders error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch orders' });
+    }
+});
+
+// Get all products (admin view)
+app.get('/api/admin/products', isAdmin, async (req, res) => {
+    try {
+        const { page = 1, limit = 20, status, category, search } = req.query;
+        const query = {};
+        
+        if (status) query.status = status;
+        if (category && category !== 'all') query.category = category;
+        if (search) {
+            query.$or = [
+                { name: { $regex: search, $options: 'i' } },
+                { farmerName: { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        const products = await Product.find(query)
+            .sort({ createdAt: -1 })
+            .limit(parseInt(limit))
+            .skip((parseInt(page) - 1) * parseInt(limit))
+            .lean();
+
+        const total = await Product.countDocuments(query);
+
+        res.json({ success: true, products, total, page: parseInt(page), pages: Math.ceil(total / limit) });
+    } catch (error) {
+        console.error('Get products error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch products' });
+    }
+});
+
+// Update user status/role
+app.put('/api/admin/users/:userId', isAdmin, async (req, res) => {
+    try {
+        const { role, isVerified } = req.body;
+        const updateData = {};
+        
+        if (role) updateData.role = role;
+        if (isVerified !== undefined) updateData.isVerified = isVerified;
+
+        const user = await User.findByIdAndUpdate(
+            req.params.userId,
+            updateData,
+            { new: true, select: '-password' }
+        );
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.json({ success: true, message: 'User updated successfully', user });
+    } catch (error) {
+        console.error('Update user error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update user' });
+    }
+});
+
+// Delete user
+app.delete('/api/admin/users/:userId', isAdmin, async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        res.json({ success: true, message: 'User deleted successfully' });
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete user' });
+    }
+});
+
+// Update product status (admin can change any product)
+app.put('/api/admin/products/:productId', isAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
+        const product = await Product.findByIdAndUpdate(
+            req.params.productId,
+            { status },
+            { new: true }
+        );
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        res.json({ success: true, message: 'Product updated successfully', product });
+    } catch (error) {
+        console.error('Update product error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update product' });
+    }
+});
+
+// Delete product (admin can delete any product)
+app.delete('/api/admin/products/:productId', isAdmin, async (req, res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.productId);
+        
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        res.json({ success: true, message: 'Product deleted successfully' });
+    } catch (error) {
+        console.error('Delete product error:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete product' });
+    }
+});
+
+// Revenue analytics
+app.get('/api/admin/analytics/revenue', isAdmin, async (req, res) => {
+    try {
+        const { period = 'week' } = req.query;
+        
+        let dateLimit;
+        if (period === 'week') {
+            dateLimit = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        } else if (period === 'month') {
+            dateLimit = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        } else if (period === 'year') {
+            dateLimit = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+        }
+
+        const revenueData = await Order.aggregate([
+            { $match: { orderDate: { $gte: dateLimit }, status: { $ne: 'cancelled' } } },
+            {
+                $group: {
+                    _id: { 
+                        $dateToString: { format: '%Y-%m-%d', date: '$orderDate' }
+                    },
+                    revenue: { $sum: '$totalAmount' },
+                    orders: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: 1 } }
+        ]);
+
+        res.json({ success: true, data: revenueData });
+    } catch (error) {
+        console.error('Get revenue analytics error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch analytics' });
     }
 });
 

@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/krishisetu', {
+        const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu';
+        const conn = await mongoose.connect(mongoUri, {
             // Connection pool size for better performance
             maxPoolSize: 10,
             minPoolSize: 2,

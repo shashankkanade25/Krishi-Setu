@@ -22,6 +22,32 @@ const userSchema = new mongoose.Schema({
         enum: ['customer', 'farmer', 'admin'],
         default: 'customer'
     },
+    phone: String,
+    address: {
+        street: String,
+        city: String,
+        state: String,
+        pincode: String,
+        location: {
+            type: { type: String, default: 'Point' },
+            coordinates: [Number] // [longitude, latitude]
+        }
+    },
+    notifications: {
+        email: { type: Boolean, default: true },
+        sms: { type: Boolean, default: false },
+        inApp: { type: Boolean, default: true }
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationDocuments: [{
+        type: String,
+        url: String,
+        verifiedAt: Date
+    }],
+    lastLogin: Date,
     createdAt: {
         type: Date,
         default: Date.now

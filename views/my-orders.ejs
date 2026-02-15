@@ -124,15 +124,45 @@
             fetch(`/orders/${orderId}`)
                 .then(response => response.json())
                 .then(order => {
+                    const statusSteps = ['pending', 'confirmed', 'processing', 'shipped', 'out_for_delivery', 'delivered'];
+                    const currentIndex = statusSteps.indexOf(order.status);
+                    const isCancelled = order.status === 'cancelled';
+                    
                     modalBody.innerHTML = `
                         <h2>Order Details</h2>
                         <div class="modal-order-info">
                             <p><strong>Order Number:</strong> ${order.orderNumber}</p>
                             <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleString('en-IN')}</p>
-                            <p><strong>Status:</strong> <span class="status-${order.status}">${order.status.toUpperCase()}</span></p>
+                            <p><strong>Status:</strong> <span class="status-${order.status}">${order.status.replace('_', ' ').toUpperCase()}</span></p>
+                            ${order.trackingNumber ? `<p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>` : ''}
+                            ${order.estimatedDeliveryDate ? `<p><strong>Estimated Delivery:</strong> ${new Date(order.estimatedDeliveryDate).toLocaleDateString('en-IN')}</p>` : ''}
+                            ${order.deliveryDate ? `<p><strong>Delivered On:</strong> ${new Date(order.deliveryDate).toLocaleDateString('en-IN')}</p>` : ''}
                             <p><strong>Payment Method:</strong> ${order.paymentMethod.toUpperCase()}</p>
                             <p><strong>Payment Status:</strong> ${order.paymentStatus.toUpperCase()}</p>
                         </div>
+                        
+                        ${!isCancelled ? `
+                        <h3>Order Tracking</h3>
+                        <div class="order-timeline">
+                            ${statusSteps.map((step, index) => {
+                                const isComplete = index <= currentIndex;
+                                const isCurrent = index === currentIndex;
+                                return `
+                                    <div class="timeline-step ${isComplete ? 'completed' : ''} ${isCurrent ? 'current' : ''}">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-${isComplete ? 'check' : 'circle'}"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h4>${step.replace('_', ' ').toUpperCase()}</h4>
+                                            ${order.statusHistory && order.statusHistory.find(h => h.status === step) ? 
+                                                `<p class="timeline-date">${new Date(order.statusHistory.find(h => h.status === step).timestamp).toLocaleString('en-IN')}</p>` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        ` : '<div class="cancelled-notice"><i class="fas fa-times-circle"></i> This order has been cancelled</div>'}
+                        
                         <h3>Items</h3>
                         <div class="modal-items">
                             ${order.items.map(item => `
@@ -146,8 +176,25 @@
                                 </div>
                             `).join('')}
                         </div>
+                        
+                        ${order.deliveryAddress ? `
+                        <h3>Delivery Address</h3>
+                        <div class="modal-address">
+                            <p><strong>${order.deliveryAddress.fullName}</strong></p>
+                            <p>${order.deliveryAddress.phone}</p>
+                            <p>${order.deliveryAddress.address}</p>
+                            ${order.deliveryAddress.landmark ? `<p>Landmark: ${order.deliveryAddress.landmark}</p>` : ''}
+                            <p>${order.deliveryAddress.city}, ${order.deliveryAddress.state} - ${order.deliveryAddress.pincode}</p>
+                        </div>
+                        ` : ''}
+                        
                         <div class="modal-total">
-                            <strong>Total: ₹${order.totalAmount.toFixed(2)}</strong>
+                            <div class="total-breakdown">
+                                <p>Subtotal: <span>₹${(order.subtotal || order.totalAmount).toFixed(2)}</span></p>
+                                ${order.deliveryCharges ? `<p>Delivery Charges: <span>₹${order.deliveryCharges.toFixed(2)}</span></p>` : ''}
+                                <hr>
+                                <p class="total"><strong>Total: <span>₹${order.totalAmount.toFixed(2)}</span></strong></p>
+                            </div>
                         </div>
                     `;
                 })
@@ -158,7 +205,18 @@
         }
 
         function trackOrder(orderNumber) {
-            showModal(`Tracking information for Order #${orderNumber} will be available soon!`, { type: 'info' });
+            // Find the order card and scroll to it / highlight it
+            const orderCards = document.querySelectorAll('.order-card');
+            orderCards.forEach(card => {
+                const orderNum = card.querySelector('h3').textContent;
+                if (orderNum.includes(orderNumber)) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.5)';
+                    setTimeout(() => {
+                        card.style.boxShadow = '';
+                    }, 2000);
+                }
+            });
         }
 
         function closeModal() {

@@ -40,9 +40,18 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+        enum: ['pending', 'confirmed', 'processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'],
         default: 'pending'
     },
+    statusHistory: [{
+        status: String,
+        timestamp: {
+            type: Date,
+            default: Date.now
+        },
+        updatedBy: String,
+        note: String
+    }],
     shippingAddress: {
         fullName: String,
         phone: String,
@@ -87,7 +96,27 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    deliveryDate: Date
+    estimatedDeliveryDate: {
+        type: Date
+    },
+    deliveryDate: Date,
+    trackingNumber: String,
+    farmerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    farmerName: String,
+    notifications: {
+        orderPlaced: { type: Boolean, default: false },
+        confirmed: { type: Boolean, default: false },
+        shipped: { type: Boolean, default: false },
+        delivered: { type: Boolean, default: false }
+    },
+    rating: {
+        score: { type: Number, min: 1, max: 5 },
+        review: String,
+        ratedAt: Date
+    }
 }, {
     timestamps: true
 });
@@ -97,7 +126,35 @@ orderSchema.pre('save', async function(next) {
     if (this.isNew && !this.orderNumber) {
         const count = await mongoose.model('Order').countDocuments();
         this.orderNumber = `ORD${Date.now()}${String(count + 1).padStart(4, '0')}`;
+        
+        // Set estimated delivery date (5-7 days from order)
+        const estimatedDays = 7;
+        this.estimatedDeliveryDate = new Date(Date.now() + estimatedDays * 24 * 60 * 60 * 1000);
+        
+        // Initialize status history
+        this.statusHistory = [{
+            status: 'pending',
+            timestamp: new Date(),
+            updatedBy: 'system',
+            note: 'Order placed successfully'
+        }];
     }
+    
+    // Track status changes
+    if (this.isModified('status') && !this.isNew) {
+        this.statusHistory.push({
+            status: this.status,
+            timestamp: new Date(),
+            updatedBy: 'system',
+            note: `Order status updated to ${this.status}`
+        });
+        
+        // Set delivery date when status is delivered
+        if (this.status === 'delivered' && !this.deliveryDate) {
+            this.deliveryDate = new Date();
+        }
+    }
+    
     next();
 });
 
