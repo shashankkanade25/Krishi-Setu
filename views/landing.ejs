@@ -14,9 +14,20 @@
         nav .search-container {
             display: none !important;
         }
+        
+        /* Hide cart and account sections on landing page */
+        body.landing-page .cart-link,
+        body.landing-page .profile-dropdown {
+            display: none !important;
+        }
+        
+        /* Position Contact Us on the right corner */
+        body.landing-page .nav-link {
+            margin-left: auto;
+        }
     </style>
 </head>
-<body>
+<body class="landing-page">
     <%- include('partials/navbar') %>
 
     <!-- Hero Section -->

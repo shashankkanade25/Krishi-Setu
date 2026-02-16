@@ -167,30 +167,51 @@
                     return;
                 }
                 
+                // Check if response is OK (status 200-299)
+                if (response.ok) {
+                    // Success but no redirect - shouldn't happen, but handle it
+                    window.location.reload();
+                    return;
+                }
+                
                 // Try to parse as JSON for error handling
-                try {
-                    const result = await response.json();
-                    console.log('JSON result:', result);
-                    
-                    if (result.error === 'role_mismatch') {
-                        // Show modal with error message
-                        console.log('Showing modal for role mismatch');
-                        showModal(result.message, result.correctRole);
-                    } else if (result.error === 'invalid_credentials') {
-                        // Show modal for invalid credentials
-                        showModal(result.message);
-                    } else {
-                        showModal(result.message || 'Login failed. Please try again.');
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        const result = await response.json();
+                        console.log('JSON result:', result);
+                        
+                        if (result.error === 'role_mismatch') {
+                            // Show modal with error message
+                            console.log('Showing modal for role mismatch');
+                            showModal(result.message, result.correctRole);
+                        } else if (result.error === 'invalid_credentials') {
+                            // Show modal for invalid credentials
+                            showModal(result.message);
+                        } else if (result.error === 'server_error') {
+                            // Show server error
+                            showModal(result.message || 'Server error. Please try again.');
+                        } else {
+                            showModal(result.message || 'Login failed. Please try again.');
+                        }
+                    } catch (jsonError) {
+                        console.error('JSON parsing error:', jsonError);
+                        showModal('Login failed. Please check your credentials and try again.');
                     }
-                } catch (jsonError) {
-                    // If not JSON, try text
+                } else {
+                    // Not JSON response
                     const text = await response.text();
                     console.log('Text result:', text);
-                    showModal(text || 'Login failed. Please try again.');
+                    showModal('Login failed. Please try again later.');
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showModal('An error occurred. Please try again.');
+                // More specific error message for network issues
+                if (error.message && error.message.includes('fetch')) {
+                    showModal('Network error. Please check your connection and try again.');
+                } else {
+                    showModal('An error occurred. Please try again.');
+                }
             }
         });
     }
