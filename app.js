@@ -27,10 +27,7 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu',
-        touchAfter: 24 * 3600, // lazy session update (24 hours)
-        crypto: {
-            secret: process.env.SESSION_SECRET || 'your-secret-key'
-        }
+        touchAfter: 24 * 3600 // lazy session update (24 hours)
     }),
     cookie: { 
         secure: process.env.NODE_ENV === 'production', // true for production/HTTPS
