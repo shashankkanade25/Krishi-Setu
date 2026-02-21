@@ -18,7 +18,7 @@ connectDB();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Session configuration with MongoDB store for Vercel
 app.use(session({
@@ -27,7 +27,11 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu',
-        touchAfter: 24 * 3600 // lazy session update (24 hours)
+        touchAfter: 24 * 3600, // lazy session update (24 hours)
+        mongoOptions: {
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000
+        }
     }),
     cookie: { 
         secure: process.env.NODE_ENV === 'production', // true for production/HTTPS
