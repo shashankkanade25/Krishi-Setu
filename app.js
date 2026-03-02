@@ -4,6 +4,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const path = require('path');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const Order = require('./models/Order');
@@ -12,14 +13,11 @@ const { isAuthenticated } = require('./middleware/auth');
 
 const app = express();
 
-// Connect to MongoDB - await in async IIFE for serverless
-(async () => {
-    try {
-        await connectDB();
-    } catch (error) {
-        console.error('MongoDB connection failed:', error);
-    }
-})();
+// Connect to MongoDB and get client promise for session store
+const mongoUrl = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu';
+
+// Connect to MongoDB
+connectDB();
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -45,20 +43,16 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu',
-        touchAfter: 24 * 3600, // lazy session update (24 hours)
-        mongoOptions: {
-            serverSelectionTimeoutMS: 10000,
-            socketTimeoutMS: 45000
-        },
-        crypto: {
-            secret: process.env.SESSION_SECRET || 'your-secret-key'
-        }
+        mongoUrl: mongoUrl,
+        collectionName: 'sessions',
+        ttl: 7 * 24 * 60 * 60, // 7 days (in seconds)
+        autoRemove: 'native',
+        touchAfter: 24 * 3600
     }),
     cookie: { 
         secure: true, // true for production/HTTPS (Vercel provides HTTPS)
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (in milliseconds)
         sameSite: 'lax',
         path: '/'
     },
