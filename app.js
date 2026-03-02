@@ -12,8 +12,14 @@ const { isAuthenticated } = require('./middleware/auth');
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB - await in async IIFE for serverless
+(async () => {
+    try {
+        await connectDB();
+    } catch (error) {
+        console.error('MongoDB connection failed:', error);
+    }
+})();
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -44,14 +50,19 @@ app.use(session({
         mongoOptions: {
             serverSelectionTimeoutMS: 10000,
             socketTimeoutMS: 45000
+        },
+        crypto: {
+            secret: process.env.SESSION_SECRET || 'your-secret-key'
         }
     }),
     cookie: { 
         secure: true, // true for production/HTTPS (Vercel provides HTTPS)
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        sameSite: 'lax'
-    }
+        sameSite: 'lax',
+        path: '/'
+    },
+    name: 'krishisetu.sid' // Custom session name
 }));
 
 // View engine
@@ -317,16 +328,21 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password, role } = req.body;
+        
+        console.log('Login attempt:', { email, role, hasPassword: !!password });
 
         // Find user with password field included
         const user = await User.findOne({ email }).select('name email role _id password');
         
         if (!user) {
+            console.log('User not found:', email);
             return res.status(401).json({ 
                 error: 'invalid_credentials',
                 message: 'Invalid email or password. Please register first.' 
             });
         }
+        
+        console.log('User found:', { email: user.email, role: user.role });
 
         // Normalize old "user" role to "customer" for backward compatibility
         const normalizedUserRole = user.role === 'user' ? 'customer' : user.role;
@@ -337,6 +353,7 @@ app.post('/login', async (req, res) => {
         } else {
             // Check if user role matches for non-admin users
             if (normalizedUserRole !== role) {
+                console.log('Role mismatch:', { expected: normalizedUserRole, provided: role });
                 const displayRole = normalizedUserRole === 'farmer' ? 'farmer' : 'customer';
                 return res.status(401).json({ 
                     error: 'role_mismatch', 
@@ -348,6 +365,8 @@ app.post('/login', async (req, res) => {
 
         // Check password
         const isMatch = await user.comparePassword(password);
+        console.log('Password match:', isMatch);
+        
         if (!isMatch) {
             return res.status(401).json({ 
                 error: 'invalid_credentials',
@@ -361,22 +380,40 @@ app.post('/login', async (req, res) => {
         req.session.userName = user.name;
         req.session.userEmail = user.email;
         req.session.userRole = normalizedRole;
+        
+        console.log('Session data set:', { 
+            userId: req.session.userId, 
+            userName: req.session.userName,
+            userRole: req.session.userRole 
+        });
 
-        // Save session and redirect (faster with callback)
+        // Save session and return JSON with redirect URL
         req.session.save((err) => {
             if (err) {
                 console.error('Session save error:', err);
                 return res.status(500).json({ error: 'server_error', message: 'Login failed' });
             }
             
-            // Redirect based on role
+            console.log('Session saved successfully');
+            
+            // Determine redirect URL based on role
+            let redirectUrl;
             if (normalizedRole === 'admin') {
-                res.redirect('/admin');
+                redirectUrl = '/admin';
             } else if (normalizedRole === 'farmer') {
-                res.redirect('/farmer-home');
+                redirectUrl = '/farmer-home';
             } else {
-                res.redirect('/customer-home');
+                redirectUrl = '/customer-home';
             }
+            
+            console.log('Login successful, redirecting to:', redirectUrl);
+            
+            // Return JSON response with redirect URL
+            res.json({ 
+                success: true, 
+                redirect: redirectUrl,
+                message: 'Login successful' 
+            });
         });
     } catch (error) {
         console.error('Login error:', error);

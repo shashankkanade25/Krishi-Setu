@@ -157,46 +157,31 @@
                 console.log('Response status:', response.status);
                 console.log('Response ok:', response.ok);
                 
-                // If successful (redirect happens), animate and follow it
-                if (response.redirected) {
-                    console.log('Redirecting to:', response.url);
-                    animateCart();
-                    setTimeout(() => {
-                        window.location.href = response.url;
-                    }, 500);
-                    return;
-                }
-                
-                // Check if response is OK (status 200-299)
-                if (response.ok) {
-                    // Success but no redirect - shouldn't happen, but handle it
-                    window.location.reload();
-                    return;
-                }
-                
-                // Try to parse as JSON for error handling
+                // Try to parse as JSON
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
-                    try {
-                        const result = await response.json();
-                        console.log('JSON result:', result);
-                        
-                        if (result.error === 'role_mismatch') {
-                            // Show modal with error message
-                            console.log('Showing modal for role mismatch');
-                            showModal(result.message, result.correctRole);
-                        } else if (result.error === 'invalid_credentials') {
-                            // Show modal for invalid credentials
-                            showModal(result.message);
-                        } else if (result.error === 'server_error') {
-                            // Show server error
-                            showModal(result.message || 'Server error. Please try again.');
-                        } else {
-                            showModal(result.message || 'Login failed. Please try again.');
-                        }
-                    } catch (jsonError) {
-                        console.error('JSON parsing error:', jsonError);
-                        showModal('Login failed. Please check your credentials and try again.');
+                    const result = await response.json();
+                    console.log('JSON result:', result);
+                    
+                    // Check if login was successful
+                    if (result.success && result.redirect) {
+                        console.log('Login successful, redirecting to:', result.redirect);
+                        animateCart();
+                        setTimeout(() => {
+                            window.location.href = result.redirect;
+                        }, 500);
+                        return;
+                    }
+                    
+                    // Handle various error cases
+                    if (result.error === 'role_mismatch') {
+                        showModal(result.message, result.correctRole);
+                    } else if (result.error === 'invalid_credentials') {
+                        showModal(result.message);
+                    } else if (result.error === 'server_error') {
+                        showModal(result.message || 'Server error. Please try again.');
+                    } else {
+                        showModal(result.message || 'Login failed. Please try again.');
                     }
                 } else {
                     // Not JSON response
