@@ -18,7 +18,20 @@ connectDB();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Static files with caching headers
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1d',
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, filepath) => {
+        if (filepath.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css');
+        } else if (filepath.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
 
 // Session configuration with MongoDB store for Vercel
 app.use(session({
