@@ -29,12 +29,12 @@ app.use(session({
         mongoUrl: process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu',
         touchAfter: 24 * 3600, // lazy session update (24 hours)
         mongoOptions: {
-            serverSelectionTimeoutMS: 5000,
+            serverSelectionTimeoutMS: 10000,
             socketTimeoutMS: 45000
         }
     }),
     cookie: { 
-        secure: process.env.NODE_ENV === 'production', // true for production/HTTPS
+        secure: true, // true for production/HTTPS (Vercel provides HTTPS)
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         sameSite: 'lax'
@@ -1439,6 +1439,13 @@ app.get('/api/admin/analytics/revenue', isAdmin, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+
+// Only listen if not in serverless environment (Vercel)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+// Export for serverless (Vercel)
+module.exports = app;
