@@ -13,6 +13,9 @@ const { isAuthenticated } = require('./middleware/auth');
 
 const app = express();
 
+// Trust Vercel/reverse-proxy headers so secure cookies work correctly
+app.set('trust proxy', 1);
+
 // Connect to MongoDB and get client promise for session store
 const mongoUrl = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/krishisetu';
 
@@ -53,7 +56,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production', // true only for production/HTTPS
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (in milliseconds)
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/'
     },
     name: 'krishisetu.sid' // Custom session name
