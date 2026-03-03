@@ -50,7 +50,7 @@ app.use(session({
         touchAfter: 24 * 3600
     }),
     cookie: { 
-        secure: true, // true for production/HTTPS (Vercel provides HTTPS)
+        secure: process.env.NODE_ENV === 'production', // true only for production/HTTPS
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (in milliseconds)
         sameSite: 'lax',
@@ -402,12 +402,16 @@ app.post('/login', async (req, res) => {
             
             console.log('Login successful, redirecting to:', redirectUrl);
             
-            // Return JSON response with redirect URL
-            res.json({ 
+            const responseData = { 
                 success: true, 
                 redirect: redirectUrl,
                 message: 'Login successful' 
-            });
+            };
+            
+            console.log('Sending response:', JSON.stringify(responseData));
+            
+            // Return JSON response with redirect URL
+            res.status(200).json(responseData);
         });
     } catch (error) {
         console.error('Login error:', error);

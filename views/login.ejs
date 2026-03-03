@@ -94,13 +94,8 @@
 </div>
 
 <script>
-    // Check URL parameter for role
-    const urlParams = new URLSearchParams(window.location.search);
-    const roleParam = urlParams.get('role');
-    
-    if (roleParam && (roleParam === 'customer' || roleParam === 'farmer')) {
-        selectRole(roleParam);
-    }
+    // Global variables and functions accessible from HTML onclick attributes
+    let cartSvgObj = null;
     
     function togglePassword(id) {
         const input = document.getElementById(id);
@@ -118,110 +113,41 @@
     
     function selectRole(role) {
         // Update hidden input
-        document.getElementById('role').value = role;
+        const roleInput = document.getElementById('role');
+        if (roleInput) {
+            roleInput.value = role;
+        }
         
         // Update button styles
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.classList.remove('active');
         });
-        document.querySelector(`[data-role="${role}"]`).classList.add('active');
-    }
-    
-    // Cart Animation on Form Submit
-    const cartSvgObj = document.getElementById('cart-svg');
-    const loginForm = document.getElementById('loginForm');
-    
-    // Handle form submission
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = {
-                email: formData.get('email'),
-                password: formData.get('password'),
-                role: formData.get('role')
-            };
-            
-            console.log('Submitting login:', data);
-            
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-                
-                // Try to parse as JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const result = await response.json();
-                    console.log('JSON result:', result);
-                    
-                    // Check if login was successful
-                    if (result.success && result.redirect) {
-                        console.log('Login successful, redirecting to:', result.redirect);
-                        animateCart();
-                        setTimeout(() => {
-                            window.location.href = result.redirect;
-                        }, 500);
-                        return;
-                    }
-                    
-                    // Handle various error cases
-                    if (result.error === 'role_mismatch') {
-                        showModal(result.message, result.correctRole);
-                    } else if (result.error === 'invalid_credentials') {
-                        showModal(result.message);
-                    } else if (result.error === 'server_error') {
-                        showModal(result.message || 'Server error. Please try again.');
-                    } else {
-                        showModal(result.message || 'Login failed. Please try again.');
-                    }
-                } else {
-                    // Not JSON response
-                    const text = await response.text();
-                    console.log('Text result:', text);
-                    showModal('Login failed. Please try again later.');
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                // More specific error message for network issues
-                if (error.message && error.message.includes('fetch')) {
-                    showModal('Network error. Please check your connection and try again.');
-                } else {
-                    showModal('An error occurred. Please try again.');
-                }
-            }
-        });
+        const roleBtn = document.querySelector(`[data-role="${role}"]`);
+        if (roleBtn) {
+            roleBtn.classList.add('active');
+        }
     }
     
     function showModal(message, correctRole) {
-        document.getElementById('modalMessage').textContent = message;
-        document.getElementById('roleModal').style.display = 'flex';
-        
-        // Auto-switch to correct role only for role mismatch
-        if (correctRole) {
-            setTimeout(() => {
-                selectRole(correctRole);
-            }, 100);
+        const modalMessage = document.getElementById('modalMessage');
+        const modal = document.getElementById('roleModal');
+        if (modalMessage && modal) {
+            modalMessage.textContent = message;
+            modal.style.display = 'flex';
+            
+            // Auto-switch to correct role only for role mismatch
+            if (correctRole) {
+                setTimeout(() => {
+                    selectRole(correctRole);
+                }, 100);
+            }
         }
     }
 
     function closeModal() {
-        document.getElementById('roleModal').style.display = 'none';
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
         const modal = document.getElementById('roleModal');
-        if (event.target === modal) {
-            closeModal();
+        if (modal) {
+            modal.style.display = 'none';
         }
     }
     
@@ -252,6 +178,119 @@
             wheelRight.style.transform = 'rotate(720deg)';
         }
     }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('roleModal');
+        if (modal && event.target === modal) {
+            closeModal();
+        }
+    }
+    
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize cart SVG object
+        cartSvgObj = document.getElementById('cart-svg');
+        
+        // Check URL parameter for role
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        
+        if (roleParam && (roleParam === 'customer' || roleParam === 'farmer')) {
+            selectRole(roleParam);
+        }
+        
+        const loginForm = document.getElementById('loginForm');
+        
+        console.log('Login form found:', !!loginForm);
+        
+        // Handle form submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                console.log('Form submission intercepted');
+            
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: formData.get('role')
+            };
+            
+            console.log('Submitting login:', data);
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data),
+                    credentials: 'same-origin'
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                // First, try to get the response text
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+                
+                // Try to parse as JSON
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                    console.log('Parsed JSON result:', result);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    showModal('Server returned invalid response. Please try again.');
+                    return;
+                }
+                
+                // Check if login was successful
+                if (response.ok && result.success === true && result.redirect) {
+                    console.log('✅ Login successful! Redirecting to:', result.redirect);
+                    console.log('Redirect URL type:', typeof result.redirect);
+                    console.log('Redirect URL value:', result.redirect);
+                    
+                    // Disable form to prevent re-submission
+                    loginForm.style.pointerEvents = 'none';
+                    
+                    // Simple immediate redirect
+                    console.log('Executing redirect NOW...');
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 100);
+                    return false;
+                }
+                
+                // Handle various error cases
+                if (result.error === 'role_mismatch') {
+                    showModal(result.message, result.correctRole);
+                } else if (result.error === 'invalid_credentials') {
+                    showModal(result.message);
+                } else if (result.error === 'server_error') {
+                    showModal(result.message || 'Server error. Please try again.');
+                } else {
+                    showModal(result.message || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                console.error('Error stack:', error.stack);
+                // More specific error message for network issues
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showModal('Network error. Please check your connection and try again.');
+                } else {
+                    showModal('An error occurred: ' + error.message);
+                }
+            }
+        });
+        } else {
+            console.error('Login form not found!');
+        }
+    }); // End DOMContentLoaded
 </script>
 
 <style>

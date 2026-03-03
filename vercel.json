@@ -1,27 +1,12 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "app.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["views/**", "public/**", "models/**", "config/**", "middleware/**", "utils/**"]
-      }
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
+  "functions": {
+    "app.js": {
+      "includeFiles": "**"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(css|js|images|icons|Product_images)/(.*)",
-      "dest": "/public/$1/$2"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/app.js"
-    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/app.js" }
   ],
   "env": {
     "NODE_ENV": "production"
