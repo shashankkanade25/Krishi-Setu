@@ -1,12 +1,26 @@
 {
   "version": 2,
-  "functions": {
-    "app.js": {
-      "includeFiles": "**"
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "public/**",
+          "views/**",
+          "models/**",
+          "config/**",
+          "middleware/**",
+          "utils/**"
+        ]
+      }
     }
-  },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/app.js" }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/app.js"
+    }
   ],
   "env": {
     "NODE_ENV": "production"
