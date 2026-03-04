@@ -5,6 +5,7 @@ const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const path = require('path');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const Order = require('./models/Order');
@@ -25,6 +26,15 @@ connectDB();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// CORS for mobile app
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') return res.sendStatus(200);
+    next();
+});
 
 // Static files with caching headers
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -1486,6 +1496,383 @@ app.get('/api/admin/analytics/revenue', isAdmin, async (req, res) => {
     } catch (error) {
         console.error('Get revenue analytics error:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch analytics' });
+    }
+});
+
+// ============================================================
+//  MOBILE APP API ROUTES (JWT-based authentication)
+//  These routes are used by the React Native mobile app.
+//  They do NOT affect the existing session-based web app.
+// ============================================================
+
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'krishisetu-jwt-secret';
+
+// JWT auth middleware for mobile routes
+function authenticateMobile(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
+    try {
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.mobileUser = decoded;
+        next();
+    } catch (err) {
+        return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+}
+
+// Mobile Login
+app.post('/api/mobile/login', async (req, res) => {
+    try {
+        const { email, password, role } = req.body;
+        console.log('Mobile login attempt:', { email, role });
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: 'Email and password are required' });
+        }
+        const user = await User.findOne({ email: email.toLowerCase() }).select('+password +name +email +role +phone +address');
+        if (!user) {
+            console.log('Mobile login - user not found:', email);
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+        }
+        // Normalize old 'user' role to 'customer'
+        if (user.role === 'user') user.role = 'customer';
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            console.log('Mobile login - password mismatch for:', email);
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+        }
+        if (role && role !== 'any' && user.role !== role) {
+            return res.status(401).json({ success: false, message: `No ${role} account found with this email` });
+        }
+        const token = jwt.sign(
+            { userId: user._id, email: user.email, role: user.role, name: user.name },
+            JWT_SECRET,
+            { expiresIn: '30d' }
+        );
+        user.lastLogin = new Date();
+        await user.save();
+        res.json({
+            success: true,
+            token,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                phone: user.phone,
+                address: user.address,
+            }
+        });
+    } catch (error) {
+        console.error('Mobile login error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Mobile Register
+app.post('/api/mobile/register', async (req, res) => {
+    try {
+        const { name, email, password, role } = req.body;
+        if (!name || !email || !password) {
+            return res.status(400).json({ success: false, message: 'All fields are required' });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+        }
+        const existing = await User.findOne({ email: email.toLowerCase() });
+        if (existing) {
+            return res.status(400).json({ success: false, message: 'Email already registered' });
+        }
+        const user = new User({
+            name: name.trim(),
+            email: email.toLowerCase().trim(),
+            password,
+            role: role || 'customer',
+        });
+        await user.save();
+        const token = jwt.sign(
+            { userId: user._id, email: user.email, role: user.role, name: user.name },
+            JWT_SECRET,
+            { expiresIn: '30d' }
+        );
+        res.status(201).json({
+            success: true,
+            token,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            }
+        });
+    } catch (error) {
+        console.error('Mobile register error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Mobile – Get user's orders
+app.get('/api/mobile/orders', authenticateMobile, async (req, res) => {
+    try {
+        const orders = await Order.find({ userId: req.mobileUser.userId })
+            .sort({ orderDate: -1 })
+            .lean();
+        res.json({ success: true, orders });
+    } catch (error) {
+        console.error('Mobile get orders error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch orders' });
+    }
+});
+
+// Mobile – Get single order
+app.get('/api/mobile/orders/:id', authenticateMobile, async (req, res) => {
+    try {
+        const order = await Order.findOne({
+            _id: req.params.id,
+            userId: req.mobileUser.userId
+        }).lean();
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+        res.json({ success: true, order });
+    } catch (error) {
+        console.error('Mobile get order error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch order' });
+    }
+});
+
+// Mobile – Place order
+app.post('/api/mobile/place-order', authenticateMobile, async (req, res) => {
+    try {
+        const { items, address, paymentMethod, instructions, totalAmount, subtotal, deliveryCharges } = req.body;
+        if (!items || items.length === 0) {
+            return res.status(400).json({ success: false, message: 'Cart is empty' });
+        }
+        if (!address || !address.fullName || !address.phone || !address.address || !address.city || !address.state || !address.pincode) {
+            return res.status(400).json({ success: false, message: 'Complete delivery address is required' });
+        }
+
+        const user = await User.findById(req.mobileUser.userId);
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'User not found' });
+        }
+
+        // Create order
+        const order = new Order({
+            userId: user._id,
+            userName: user.name,
+            userEmail: user.email,
+            items: items,
+            totalAmount: totalAmount || items.reduce((sum, i) => sum + (i.price * (i.quantity || 1)), 0),
+            subtotal: subtotal || totalAmount,
+            deliveryCharges: deliveryCharges || 0,
+            deliveryAddress: address,
+            shippingAddress: {
+                fullName: address.fullName,
+                phone: address.phone,
+                address: address.address,
+                city: address.city,
+                state: address.state,
+                pincode: address.pincode,
+            },
+            paymentMethod: paymentMethod || 'cod',
+            paymentStatus: paymentMethod === 'cod' ? 'pending' : 'pending',
+            status: 'pending',
+            specialInstructions: instructions || '',
+        });
+
+        await order.save();
+
+        // Update product stock
+        for (const item of items) {
+            if (item.productId) {
+                await Product.findByIdAndUpdate(item.productId, {
+                    $inc: { stock: -(item.quantity || 1) }
+                });
+            }
+        }
+
+        res.status(201).json({
+            success: true,
+            orderId: order._id,
+            orderNumber: order.orderNumber,
+            message: 'Order placed successfully'
+        });
+    } catch (error) {
+        console.error('Mobile place order error:', error);
+        res.status(500).json({ success: false, message: 'Failed to place order' });
+    }
+});
+
+// Mobile – Get user profile
+app.get('/api/mobile/profile', authenticateMobile, async (req, res) => {
+    try {
+        const user = await User.findById(req.mobileUser.userId).select('-password').lean();
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+    }
+});
+
+// Mobile – Update profile
+app.put('/api/mobile/profile', authenticateMobile, async (req, res) => {
+    try {
+        const { name, phone, address } = req.body;
+        const updates = {};
+        if (name) updates.name = name.trim();
+        if (phone) updates.phone = phone;
+        if (address) updates.address = address;
+
+        const user = await User.findByIdAndUpdate(
+            req.mobileUser.userId,
+            { $set: updates },
+            { new: true }
+        ).select('-password');
+
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to update profile' });
+    }
+});
+
+// Mobile – Get notifications
+app.get('/api/mobile/notifications', authenticateMobile, async (req, res) => {
+    try {
+        const Notification = require('./models/Notification');
+        const notifications = await Notification.find({ userId: req.mobileUser.userId })
+            .sort({ createdAt: -1 })
+            .limit(50)
+            .lean();
+        const unreadCount = await Notification.countDocuments({ userId: req.mobileUser.userId, read: false });
+        res.json({ success: true, notifications, unreadCount });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
+    }
+});
+
+// ============================================================
+//  END OF MOBILE API ROUTES
+// ============================================================
+
+// ==================== MOBILE FARMER API ROUTES ====================
+
+// Get farmer's own products (mobile)
+app.get('/api/mobile/farmer/products', authenticateMobile, async (req, res) => {
+    try {
+        if (req.mobileUser.role !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied - Farmer role required' });
+        }
+        const products = await Product.find({ farmerId: req.mobileUser.userId }).sort({ createdAt: -1 }).lean();
+        res.json({ success: true, products });
+    } catch (error) {
+        console.error('Mobile get farmer products error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch products' });
+    }
+});
+
+// Add product (mobile)
+app.post('/api/mobile/farmer/products', authenticateMobile, upload.single('productImage'), async (req, res) => {
+    try {
+        if (req.mobileUser.role !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Only farmers can add products' });
+        }
+        const { productName, category, price, originalPrice, stock, unit, description } = req.body;
+        if (!productName || !category || !price || !originalPrice || !stock) {
+            return res.status(400).json({ success: false, message: 'All required fields must be filled' });
+        }
+        const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+        const imagePath = req.file ? `/Product_images/${req.file.filename}` : '/Product_images/default.jpg';
+        const product = new Product({
+            name: productName,
+            category: category.toLowerCase(),
+            price: parseFloat(price),
+            originalPrice: parseFloat(originalPrice),
+            discount: discount,
+            stock: parseInt(stock),
+            unit: unit || 'kg',
+            image: imagePath,
+            description: description || '',
+            farmerId: req.mobileUser.userId,
+            farmerName: req.mobileUser.name,
+            status: parseInt(stock) > 0 ? 'active' : 'out_of_stock'
+        });
+        await product.save();
+        res.json({ success: true, message: 'Product added successfully', product });
+    } catch (error) {
+        console.error('Mobile add product error:', error);
+        res.status(500).json({ success: false, message: error.message || 'Failed to add product' });
+    }
+});
+
+// Delete product (mobile)
+app.delete('/api/mobile/farmer/products/:id', authenticateMobile, async (req, res) => {
+    try {
+        if (req.mobileUser.role !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+        const product = await Product.findOneAndDelete({ _id: req.params.id, farmerId: req.mobileUser.userId });
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+        res.json({ success: true, message: 'Product deleted successfully' });
+    } catch (error) {
+        console.error('Mobile delete product error:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete product' });
+    }
+});
+
+// Get farmer's orders (mobile)
+app.get('/api/mobile/farmer/orders', authenticateMobile, async (req, res) => {
+    try {
+        if (req.mobileUser.role !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+        const farmerProducts = await Product.find({ farmerId: req.mobileUser.userId }).select('_id name');
+        const farmerProductNames = farmerProducts.map(p => p.name);
+        const orders = await Order.find({
+            'items.productName': { $in: farmerProductNames }
+        }).sort({ orderDate: -1 }).lean();
+        const filteredOrders = orders.map(order => {
+            const farmerItems = order.items.filter(item => farmerProductNames.includes(item.productName));
+            const farmerSubtotal = farmerItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            return {
+                ...order,
+                items: farmerItems,
+                subtotal: farmerSubtotal,
+                totalAmount: farmerSubtotal + (order.deliveryCharges || 0)
+            };
+        }).filter(order => order.items.length > 0);
+        res.json({ success: true, orders: filteredOrders });
+    } catch (error) {
+        console.error('Mobile get farmer orders error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch orders' });
+    }
+});
+
+// Update order status (mobile farmer)
+app.put('/api/mobile/farmer/orders/:id/status', authenticateMobile, async (req, res) => {
+    try {
+        if (req.mobileUser.role !== 'farmer') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+        const { status } = req.body;
+        const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ success: false, message: 'Invalid status' });
+        }
+        const order = await Order.findByIdAndUpdate(req.params.id, { status }, { new: true });
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
+        }
+        res.json({ success: true, message: 'Order status updated', order });
+    } catch (error) {
+        console.error('Mobile update order status error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update order status' });
     }
 });
 

@@ -514,7 +514,7 @@ nav {
 .steps {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 30px;
     max-width: 1100px;
     margin: 0 auto;
@@ -525,6 +525,12 @@ nav {
     flex: 1;
     max-width: 280px;
     padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(76, 175, 80, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .step-icon-wrapper {
@@ -579,7 +585,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 45px;
+    flex-shrink: 0;
 }
 
 .step-arrow svg {
