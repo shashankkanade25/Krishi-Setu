@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.local
+.git
+*.log
+test-*.js
+check-*.js
+fix-*.js
+reassign-*.js
+seed-*.js
+setup-*.js
+scripts/

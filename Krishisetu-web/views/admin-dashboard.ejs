@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | कृषी-सेतू</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-40">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleSidebar()" class="lg:hidden text-gray-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-green-600">कृषी-सेतू Admin</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, <strong><%= user.name %></strong></span>
+                <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white shadow-2xl z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 mt-16">
+        <nav class="p-4 space-y-1">
+            <a href="#dashboard" onclick="showSection('dashboard')" class="nav-item flex items-center px-4 py-3 text-white bg-green-600 rounded-lg">
+                <i class="fas fa-chart-line mr-3"></i><span>Dashboard</span>
+            </a>
+            <a href="#users" onclick="showSection('users')" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <i class="fas fa-users mr-3"></i><span>Users</span>
+            </a>
+            <a href="#orders" onclick="showSection('orders')" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <i class="fas fa-shopping-cart mr-3"></i><span>Orders</span>
+            </a>
+            <a href="#products" onclick="showSection('products')" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <i class="fas fa-box mr-3"></i><span>Products</span>
+            </a>
+            <a href="#analytics" onclick="showSection('analytics')" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <i class="fas fa-chart-bar mr-3"></i><span>Analytics</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 p-6">
+        
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h2>
+            
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Users</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-users">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-4 rounded-full">
+                            <i class="fas fa-users text-2xl text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Products</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-products">0</p>
+                        </div>
+                        <div class="bg-green-100 p-4 rounded-full">
+                            <i class="fas fa-box text-2xl text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Orders</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-orders">0</p>
+                        </div>
+                        <div class="bg-purple-100 p-4 rounded-full">
+                            <i class="fas fa-shopping-cart text-2xl text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Revenue</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-revenue">₹0</p>
+                        </div>
+                        <div class="bg-yellow-100 p-4 rounded-full">
+                            <i class="fas fa-rupee-sign text-2xl text-yellow-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">User Distribution</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Farmers</span>
+                            <span class="font-semibold text-gray-800" id="stat-farmers">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Customers</span>
+                            <span class="font-semibold text-gray-800" id="stat-customers">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Order Status</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Pending</span>
+                            <span class="font-semibold text-yellow-600" id="stat-pending">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Delivered</span>
+                            <span class="font-semibold text-green-600" id="stat-delivered">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="users-section" class="section hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">User Management</h2>
+                <div class="flex space-x-4">
+                    <select id="userRoleFilter" class="px-4 py-2 border rounded-lg" onchange="loadUsers()">
+                        <option value="">All Roles</option>
+                        <option value="customer">Customers</option>
+                        <option value="farmer">Farmers</option>
+                        <option value="admin">Admins</option>
+                    </select>
+                    <input type="text" id="userSearch" placeholder="Search users..." class="px-4 py-2 border rounded-lg" onkeyup="debounceSearch(loadUsers)">
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Verified</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody" class="divide-y divide-gray-200">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div id="orders-section" class="section hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Order Management</h2>
+                <div class="flex space-x-4">
+                    <select id="orderStatusFilter" class="px-4 py-2 border rounded-lg" onchange="loadOrders()">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="text" id="orderSearch" placeholder="Search orders..." class="px-4 py-2 border rounded-lg" onkeyup="debounceSearch(loadOrders)">
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order #</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody" class="divide-y divide-gray-200">
+                        <!-- Orders will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="products-section" class="section hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Product Management</h2>
+                <div class="flex space-x-4">
+                    <select id="productCategoryFilter" class="px-4 py-2 border rounded-lg" onchange="loadProducts()">
+                        <option value="">All Categories</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="dairy">Dairy</option>
+                        <option value="pulses">Pulses</option>
+                        <option value="pickles">Pickles</option>
+                        <option value="masala">Masala</option>
+                        <option value="grains">Grains</option>
+                    </select>
+                    <input type="text" id="productSearch" placeholder="Search products..." class="px-4 py-2 border rounded-lg" onkeyup="debounceSearch(loadProducts)">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+            
+            <!-- Pagination -->
+            <div class="flex justify-center mt-8">
+                <div id="productsPagination" class="flex space-x-2"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics-section" class="section hidden">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Analytics & Reports</h2>
+            
+            <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Revenue Trends</h3>
+                    <select id="revenuePeriod" class="px-4 py-2 border rounded-lg" onchange="loadRevenueAnalytics()">
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">Last 30 Days</option>
+                        <option value="year">Last Year</option>
+                    </select>
+                </div>
+                <canvas id="revenueChart" height="80"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let currentSection = 'dashboard';
+        let searchTimeout;
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        // Show section
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('bg-green-600', 'text-white');
+                item.classList.add('text-gray-700', 'hover:bg-gray-100');
+            });
+            
+            event.target.closest('.nav-item').classList.add('bg-green-600', 'text-white');
+            event.target.closest('.nav-item').classList.remove('text-gray-700', 'hover:bg-gray-100');
+            
+            currentSection = section;
+            
+            if (section === 'users') loadUsers();
+            if (section === 'orders') loadOrders();
+            if (section === 'products') loadProducts();
+            if (section === 'analytics') loadRevenueAnalytics();
+        }
+
+        // Debounce search
+        function debounceSearch(func) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(func, 500);
+        }
+
+        // Load dashboard stats
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('/api/admin/stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('stat-users').textContent = data.stats.users.total;
+                    document.getElementById('stat-farmers').textContent = data.stats.users.farmers;
+                    document.getElementById('stat-customers').textContent = data.stats.users.customers;
+                    document.getElementById('stat-products').textContent = data.stats.products.total;
+                    document.getElementById('stat-orders').textContent = data.stats.orders.total;
+                    document.getElementById('stat-pending').textContent = data.stats.orders.pending;
+                    document.getElementById('stat-delivered').textContent = data.stats.orders.delivered;
+                    document.getElementById('stat-revenue').textContent = '₹' + data.stats.revenue.total.toLocaleString('en-IN');
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            const role = document.getElementById('userRoleFilter').value;
+            const search = document.getElementById('userSearch').value;
+            
+            try {
+                const response = await fetch(`/api/admin/users?role=${role}&search=${search}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const tbody = document.getElementById('usersTableBody');
+                    tbody.innerHTML = data.users.map(user => `
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-900">${user.name}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">${user.email}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="px-2 py-1 rounded-full text-xs ${user.role === 'farmer' ? 'bg-green-100 text-green-800' : user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">
+                                    ${user.role}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="px-2 py-1 rounded-full text-xs ${user.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                    ${user.isVerified ? 'Verified' : 'Not Verified'}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <button onclick="toggleUserVerification('${user._id}', ${!user.isVerified})" class="text-blue-600 hover:text-blue-800 mr-3">
+                                    <i class="fas fa-${user.isVerified ? 'times-circle' : 'check-circle'}"></i>
+                                </button>
+                                <button onclick="deleteUser('${user._id}')" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Load orders
+        async function loadOrders() {
+            const status = document.getElementById('orderStatusFilter').value;
+            const search = document.getElementById('orderSearch').value;
+            
+            try {
+                const response = await fetch(`/api/admin/orders?status=${status}&search=${search}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const tbody = document.getElementById('ordersTableBody');
+                    tbody.innerHTML = data.orders.map(order => `
+                        <tr>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${order.orderNumber}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">${order.userName}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">₹${order.totalAmount}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <select onchange="updateOrderStatus('${order._id}', this.value)" class="px-2 py-1 border rounded text-xs">
+                                    <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                    <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                    <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">${new Date(order.orderDate).toLocaleDateString('en-IN')}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <button onclick="viewOrder('${order._id}')" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Load products
+        async function loadProducts() {
+            const category = document.getElementById('productCategoryFilter').value;
+            const search = document.getElementById('productSearch').value;
+            
+            try {
+                const response = await fetch(`/api/admin/products?category=${category}&search=${search}&limit=100`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const grid = document.getElementById('productsGrid');
+                    
+                    if (data.products.length === 0) {
+                        grid.innerHTML = `
+                            <div class="col-span-full text-center py-12">
+                                <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                                <p class="text-gray-500 text-lg">No products found</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    grid.innerHTML = data.products.map(product => {
+                        const statusBadgeClass = product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                        const stockClass = product.stock > 10 ? 'text-green-600' : product.stock > 0 ? 'text-yellow-600' : 'text-red-600';
+                        
+                        return `
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100">
+                            <div class="relative">
+                                <span class="absolute top-2 right-2 px-3 py-1 text-xs font-semibold rounded-full ${statusBadgeClass}">
+                                    ${product.status === 'active' ? '✓ Active' : '✗ Inactive'}
+                                </span>
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover" onerror="this.src='/Product_images/default.jpg'">
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg text-gray-800 mb-1 truncate" title="${product.name}">${product.name}</h3>
+                                <p class="text-xs text-gray-500 mb-2">
+                                    <i class="fas fa-user-farmer"></i> ${product.farmerName || 'Unknown Farmer'}
+                                </p>
+                                <div class="mb-3">
+                                    <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">${product.category || 'Uncategorized'}</span>
+                                </div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <div>
+                                        ${product.originalPrice && product.originalPrice > product.price ? 
+                                            `<span class="text-xs text-gray-400 line-through">₹${product.originalPrice}</span>` : ''}
+                                        <span class="text-xl font-bold text-green-600">₹${product.price}</span>
+                                        <span class="text-xs text-gray-500">/${product.unit || 'kg'}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-gray-500">Stock</p>
+                                        <p class="text-sm font-semibold ${stockClass}">${product.stock}</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="toggleProductStatus('${product._id}', '${product.status === 'active' ? 'inactive' : 'active'}')" 
+                                        class="flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${product.status === 'active' ? 'bg-yellow-500 hover:bg-yellow-600 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}">
+                                        <i class="fas fa-${product.status === 'active' ? 'pause' : 'check'}-circle"></i> 
+                                        ${product.status === 'active' ? 'Deactivate' : 'Activate'}
+                                    </button>
+                                    <button onclick="editProduct('${product._id}')" 
+                                        class="px-3 py-2 text-xs font-semibold rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-all">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteProduct('${product._id}', '${product.name}')" 
+                                        class="px-3 py-2 text-xs font-semibold rounded-lg bg-red-500 hover:bg-red-600 text-white transition-all">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-6xl text-red-300 mb-4"></i>
+                        <p class="text-red-500 text-lg">Error loading products</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update order status
+        async function updateOrderStatus(orderId, status) {
+            try {
+                const response = await fetch(`/api/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('Order status updated successfully');
+                    loadOrders();
+                }
+            } catch (error) {
+                console.error('Error updating order:', error);
+                alert('Failed to update order status');
+            }
+        }
+
+        // Toggle user verification
+        async function toggleUserVerification(userId, isVerified) {
+            try {
+                const response = await fetch(`/api/admin/users/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ isVerified })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('User verification status updated');
+                    loadUsers();
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+            }
+        }
+
+        // Delete user
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+            
+            try {
+                const response = await fetch(`/api/admin/users/${userId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    alert('User deleted successfully');
+                    loadUsers();
+                    loadDashboardStats();
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
+        }
+
+        // Toggle product status
+        async function toggleProductStatus(productId, status) {
+            try {
+                const response = await fetch(`/api/admin/products/${productId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showNotification('Product status updated successfully!', 'success');
+                    loadProducts();
+                    loadDashboardStats();
+                } else {
+                    showNotification(data.message || 'Failed to update product', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating product:', error);
+                showNotification('Error updating product status', 'error');
+            }
+        }
+        
+        // Edit product
+        function editProduct(productId) {
+            // For now, show alert - you can implement a modal form later
+            showNotification('Edit product feature - Opening product editor...', 'info');
+            // In a full implementation, you would open a modal with product form
+            // window.location.href = `/admin/products/${productId}/edit`;
+        }
+        
+        // Delete product
+        async function deleteProduct(productId, productName) {
+            if (!confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/products/${productId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showNotification('Product deleted successfully!', 'success');
+                    loadProducts();
+                    loadDashboardStats();
+                } else {
+                    showNotification(data.message || 'Failed to delete product', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                showNotification('Error deleting product', 'error');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all transform`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Load revenue analytics
+        let revenueChart;
+        async function loadRevenueAnalytics() {
+            const period = document.getElementById('revenuePeriod').value;
+            
+            try {
+                const response = await fetch(`/api/admin/analytics/revenue?period=${period}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const ctx = document.getElementById('revenueChart').getContext('2d');
+                    
+                    if (revenueChart) {
+                        revenueChart.destroy();
+                    }
+                    
+                    revenueChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.data.map(d => d._id),
+                            datasets: [{
+                                label: 'Revenue (₹)',
+                                data: data.data.map(d => d.revenue),
+                                borderColor: 'rgb(16, 185, 129)',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: true },
+                                title: { display: false }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        // View order details
+        function viewOrder(orderId) {
+            window.location.href = `/orders/${orderId}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardStats();
+            // Pre-load all sections data for instant display
+            loadUsers();
+            loadOrders();
+            loadProducts();
+            loadRevenueAnalytics();
+        });
+    </script>
+
+</body>
+</html>

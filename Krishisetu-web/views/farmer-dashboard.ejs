@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Portal | कृषी-सेतू</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5dc;
+        }
+        .brand-title {
+            font-family: 'Hind', 'Noto Sans Devanagari', sans-serif;
+        }
+        .stat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: #ffffff;
+            border-left: 4px solid;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(107, 155, 109, 0.15);
+        }
+        .nav-item {
+            transition: all 0.2s ease;
+            border-radius: 8px;
+        }
+        .nav-item:hover {
+            transform: translateX(3px);
+            background-color: #e8f5e9;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, #6b9b6d 0%, #5a8a5c 100%);
+            color: white;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #ffffff 0%, #fafaf8 100%);
+            border-right: 1px solid #e0e0d8;
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #f5f5dc 0%, #eaeac2 100%);
+            border-bottom: 2px solid #d4d4bc;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6b9b6d 0%, #5a8a5c 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a8a5c 0%, #6b9b6d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(107, 155, 109, 0.3);
+        }
+        .text-primary-green {
+            color: #6b9b6d;
+        }
+        .bg-primary-green {
+            background-color: #6b9b6d;
+        }
+        .border-primary-green {
+            border-color: #6b9b6d;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6b9b6d',
+                        'primary-light': '#8bb88d',
+                        'primary-dark': '#5a8a5c',
+                        secondary: '#b89f7e',
+                        earth: '#d4af37',
+                        cream: '#f5f5dc',
+                        'cream-dark': '#eaeac2',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-green-50">
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 shadow-xl z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-6 border-b" style="background: linear-gradient(135deg, #6b9b6d 0%, #5a8a5c 100%);">
+            <h1 class="text-2xl font-bold text-white brand-title">कृषी-सेतू</h1>
+            <p class="text-xs text-green-100 mt-1 uppercase tracking-wide">Farmer Portal</p>
+        </div>
+        
+        <nav class="p-4 space-y-1 overflow-y-auto h-[calc(100vh-120px)]">
+            <a href="javascript:void(0);" onclick="showSection('dashboard'); return false;" class="nav-item flex items-center px-4 py-3 text-white bg-primary-green rounded-lg nav-link active" data-section="dashboard" style="background: linear-gradient(135deg, #6b9b6d 0%, #5a8a5c 100%);">
+                <i class="fas fa-home mr-3 text-lg"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+            <a href="javascript:void(0);" onclick="showSection('notifications'); return false;" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition nav-link" data-section="notifications">
+                <i class="fas fa-bell mr-3 text-lg" style="color: #d4af37;"></i>
+                <span class="font-medium">Notifications</span>
+                <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full" id="notifBadge">3</span>
+            </a>
+            <a href="javascript:void(0);" onclick="showSection('addProduct'); return false;" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition nav-link" data-section="addProduct">
+                <i class="fas fa-plus-circle mr-3 text-lg" style="color: #8bb88d;"></i>
+                <span class="font-medium">Add Product</span>
+            </a>
+            <a href="javascript:void(0);" onclick="showSection('myProducts'); return false;" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition nav-link" data-section="myProducts">
+                <i class="fas fa-box mr-3 text-lg" style="color: #b89f7e;"></i>
+                <span class="font-medium">My Products</span>
+            </a>
+            <a href="javascript:void(0);" onclick="showSection('orders'); return false;" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition nav-link" data-section="orders">
+                <i class="fas fa-truck mr-3 text-lg" style="color: #6b8e23;"></i>
+                <span class="font-medium">Orders</span>
+            </a>
+            <a href="/profile" class="nav-item flex items-center px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg transition">
+                <i class="fas fa-user mr-3 text-lg text-gray-600"></i>
+                <span class="font-medium">Profile</span>
+            </a>
+            <a href="/logout" class="nav-item flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition">
+                <i class="fas fa-right-from-bracket mr-3 text-lg"></i>
+                <span class="font-medium">Logout</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button onclick="toggleSidebar()" class="lg:hidden fixed top-4 left-4 z-50 p-3 text-white rounded-lg shadow-lg" style="background: linear-gradient(135deg, #6b9b6d 0%, #5a8a5c 100%);">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="header-bg shadow-sm sticky top-0 z-40" style="background: linear-gradient(135deg, #ffffff 0%, #f0f8f0 100%);">
+            <div class="px-4 lg:px-8 py-5 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl lg:text-3xl font-bold text-primary-green">
+                        Welcome, <%= user.name %>! <i class="fas fa-seedling"></i>
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-1">Manage your farm products easily</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="hidden sm:flex items-center space-x-2 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
+                        <img src="https://ui-avatars.com/api/?name=<%= user.name %>&background=6b9b6d&color=fff" class="w-10 h-10 rounded-full border-2 border-primary-green">
+                        <div class="hidden md:block">
+                            <p class="font-semibold text-gray-800 text-sm"><%= user.name %></p>
+                            <p class="text-xs text-primary-green">Farmer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-4 lg:p-8">
+            
+            <!-- Dashboard Overview -->
+            <div id="dashboard" style="display: block;" class="space-y-6">
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                    <div class="stat-card rounded-xl shadow-md p-6" style="border-left-color: #6b9b6d;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">My Products</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2" id="totalProducts">0</h3>
+                                <p class="text-xs mt-1" style="color: #6b9b6d;"><i class="fas fa-box"></i> Total listed</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background-color: rgba(107, 155, 109, 0.1);">
+                                <i class="fas fa-box text-2xl" style="color: #6b9b6d;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card rounded-xl shadow-md p-6" style="border-left-color: #8bb88d;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Active Products</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2" id="activeProducts">0</h3>
+                                <p class="text-xs mt-1" style="color: #8bb88d;"><i class="fas fa-check-circle"></i> In stock</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background-color: rgba(139, 184, 141, 0.1);">
+                                <i class="fas fa-check-circle text-2xl" style="color: #8bb88d;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card rounded-xl shadow-md p-6" style="border-left-color: #d4af37;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Low Stock</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2" id="lowStockProducts">0</h3>
+                                <p class="text-xs mt-1" style="color: #d4af37;"><i class="fas fa-exclamation-triangle"></i> Need attention</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background-color: rgba(212, 175, 55, 0.1);">
+                                <i class="fas fa-exclamation-triangle text-2xl" style="color: #d4af37;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card rounded-xl shadow-md p-6" style="border-left-color: #b89f7e;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Total Orders</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mt-2" id="totalOrders">0</h3>
+                                <p class="text-xs mt-1" style="color: #b89f7e;"><i class="fas fa-truck"></i> All time</p>
+                            </div>
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background-color: rgba(184, 159, 126, 0.1);">
+                                <i class="fas fa-truck text-2xl" style="color: #b89f7e;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                    <h3 class="text-xl font-bold text-primary-green mb-4 flex items-center">
+                        <i class="fas fa-bolt mr-2" style="color: #d4af37;"></i> Quick Actions
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <button onclick="showSection('addProduct')" class="btn-primary flex items-center justify-center p-4 rounded-lg font-semibold transition transform hover:scale-105">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            <span>Add New Product</span>
+                        </button>
+                        <button onclick="showSection('myProducts')" class="btn-primary flex items-center justify-center p-4 rounded-lg font-semibold transition transform hover:scale-105">
+                            <i class="fas fa-box mr-2"></i>
+                            <span>View My Products</span>
+                        </button>
+                        <button onclick="showSection('orders')" class="btn-primary flex items-center justify-center p-4 rounded-lg font-semibold transition transform hover:scale-105">
+                            <i class="fas fa-truck mr-2"></i>
+                            <span>Check Orders</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Getting Started Guide -->
+                <div class="rounded-xl shadow-md p-6 border" style="background: linear-gradient(135deg, #fafaf8 0%, #f5f5dc 100%); border-color: #d4d4bc;">
+                    <h3 class="text-xl font-bold text-primary-green mb-4 flex items-center">
+                        <i class="fas fa-lightbulb mr-2" style="color: #d4af37;"></i> Getting Started
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0" style="background-color: #6b9b6d;">1</div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Add Your Products</p>
+                                <p class="text-sm text-gray-600">List your farm products with photos and prices</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0" style="background-color: #8bb88d;">2</div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Manage Stock</p>
+                                <p class="text-sm text-gray-600">Keep your inventory updated regularly</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0" style="background-color: #b89f7e;">3</div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Fulfill Orders</p>
+                                <p class="text-sm text-gray-600">Deliver fresh products to customers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div id="notifications" style="display: none;">
+                <div class="bg-white rounded-xl shadow-md p-6 lg:p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-primary-green flex items-center">
+                            <i class="fas fa-bell mr-3 text-3xl" style="color: #d4af37;"></i> Notifications
+                        </h3>
+                        <button onclick="markAllAsRead()" class="text-sm font-semibold hover:opacity-80" style="color: #6b9b6d;">
+                            <i class="fas fa-check-double mr-1"></i> Mark all as read
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-3" id="notificationsList">
+                        <!-- Product Added Notification -->
+                        <div class="notification-item flex items-start p-4 rounded-lg border-l-4 hover:shadow-md transition" style="background-color: rgba(107, 155, 109, 0.05); border-left-color: #6b9b6d;">
+                            <i class="fas fa-check-circle text-3xl mr-4 mt-1" style="color: #6b9b6d;"></i>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Product Added Successfully!</p>
+                                <p class="text-xs text-gray-600 mt-1">Your product has been listed and is now visible to customers.</p>
+                                <p class="text-xs mt-2" style="color: #6b9b6d;">
+                                    <i class="fas fa-clock mr-1"></i> Just now
+                                </p>
+                            </div>
+                            <button onclick="this.parentElement.remove(); updateNotifCount();" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Low Stock Warning -->
+                        <div class="notification-item flex items-start p-4 rounded-lg border-l-4 hover:shadow-md transition" style="background-color: rgba(212, 175, 55, 0.05); border-left-color: #d4af37;">
+                            <i class="fas fa-exclamation-triangle text-3xl mr-4 mt-1" style="color: #d4af37;"></i>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Low Stock Alert!</p>
+                                <p class="text-xs text-gray-600 mt-1">Some of your products are running low on stock. Update inventory to continue selling.</p>
+                                <button onclick="showSection('myProducts')" class="text-xs font-semibold mt-2 hover:opacity-80" style="color: #d4af37;">
+                                    <i class="fas fa-arrow-right mr-1"></i> View Products
+                                </button>
+                                <p class="text-xs mt-2" style="color: #d4af37;">
+                                    <i class="fas fa-clock mr-1"></i> 2 hours ago
+                                </p>
+                            </div>
+                            <button onclick="this.parentElement.remove(); updateNotifCount();" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- System Update -->
+                        <div class="notification-item flex items-start p-4 rounded-lg border-l-4 hover:shadow-md transition" style="background-color: rgba(184, 159, 126, 0.05); border-left-color: #b89f7e;">
+                            <i class="fas fa-info-circle text-3xl mr-4 mt-1" style="color: #b89f7e;"></i>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Welcome to Krishi-Setu!</p>
+                                <p class="text-xs text-gray-600 mt-1">Start listing your farm products to reach more customers directly.</p>
+                                <p class="text-xs mt-2" style="color: #b89f7e;">
+                                    <i class="fas fa-clock mr-1"></i> 1 day ago
+                                </p>
+                            </div>
+                            <button onclick="this.parentElement.remove(); updateNotifCount();" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Empty State (initially hidden) -->
+                    <div id="emptyNotifications" class="hidden text-center py-16">
+                        <i class="fas fa-bell-slash text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-xl text-gray-600 font-semibold">No Notifications</p>
+                        <p class="text-gray-500 mt-2">You're all caught up!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Product Section -->
+            <div id="addProduct" style="display: none;">
+                <div class="bg-white rounded-xl shadow-md p-6 lg:p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-plus-circle text-primary mr-3"></i> Add New Product
+                        </h3>
+                        <button onclick="showSection('dashboard')" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="addProductMessage" class="mb-4 hidden"></div>
+                    <form id="addProductForm" class="grid grid-cols-1 md:grid-cols-2 gap-6" enctype="multipart/form-data">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-tag text-primary mr-1"></i> Product Name *
+                            </label>
+                            <input type="text" id="productName" name="productName" placeholder="e.g., Fresh Tomatoes" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-list text-primary mr-1"></i> Category *
+                            </label>
+                            <select id="category" name="category" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                <option value="">Select Category</option>
+                                <option value="vegetables">🥬 Vegetables</option>
+                                <option value="fruits">🍎 Fruits</option>
+                                <option value="grains"><i class="fas fa-wheat"></i> Grains & Cereals</option>
+                                <option value="dairy">🥛 Dairy Products</option>
+                                <option value="pulses">🫘 Pulses</option>
+                                <option value="pickles">🥒 Pickles</option>
+                                <option value="masala">🌶️ Masala Blends</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-rupee-sign text-primary mr-1"></i> Original Price (₹) *
+                            </label>
+                            <input type="number" id="originalPrice" name="originalPrice" placeholder="100" min="0" step="0.01" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-tags text-primary mr-1"></i> Selling Price (₹) *
+                            </label>
+                            <input type="number" id="price" name="price" placeholder="80" min="0" step="0.01" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                            <p class="text-xs text-gray-500 mt-1">Discount will be calculated automatically</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-boxes-stacked text-primary mr-1"></i> Available Stock *
+                            </label>
+                            <input type="number" id="stock" name="stock" placeholder="100" min="0" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-weight text-primary mr-1"></i> Unit *
+                            </label>
+                            <select id="unit" name="unit" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+                                <option value="kg">Kilogram (kg)</option>
+                                <option value="liter">Liter (L)</option>
+                                <option value="gram">Gram (g)</option>
+                                <option value="100g">100 Grams</option>
+                                <option value="piece">Piece</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-image text-primary mr-1"></i> Product Image *
+                            </label>
+                            <input type="file" id="productImage" name="productImage" accept="image/*" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-green-700">
+                            <p class="text-xs text-gray-500 mt-2">
+                                <i class="fas fa-info-circle"></i> Accepted: JPG, PNG, GIF, WEBP, AVIF (Max 5MB)
+                            </p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-align-left text-primary mr-1"></i> Description
+                            </label>
+                            <textarea id="description" name="description" rows="4" placeholder="Describe your product quality, freshness, organic nature, etc..." 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"></textarea>
+                        </div>
+                        <div class="md:col-span-2 flex gap-4">
+                            <button type="submit" id="submitBtn" 
+                                class="flex-1 bg-gradient-to-r from-primary to-green-600 text-white py-4 rounded-lg font-bold hover:shadow-lg transition transform hover:scale-105">
+                                <i class="fas fa-plus-circle mr-2"></i>Add Product
+                            </button>
+                            <button type="button" onclick="document.getElementById('addProductForm').reset()" 
+                                class="px-8 py-4 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition">
+                                <i class="fas fa-redo mr-2"></i>Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- My Products Section -->
+            <div id="myProducts" style="display: none;">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+                    <div class="p-6 border-b flex items-center justify-between" style="background: linear-gradient(135deg, #fafaf8 0%, #f5f5dc 100%);">
+                        <h3 class="text-2xl font-bold text-primary-green flex items-center">
+                            <i class="fas fa-box mr-3" style="color: #b89f7e;"></i> My Products
+                        </h3>
+                        <button onclick="showSection('addProduct')" class="btn-primary px-6 py-3 rounded-lg font-semibold">
+                            <i class="fas fa-plus-circle mr-2"></i> Add New
+                        </button>
+                    </div>
+                    <div id="productsLoading" class="p-12 text-center">
+                        <i class="fas fa-spinner fa-spin text-5xl text-primary mb-4"></i>
+                        <p class="text-gray-600 text-lg">Loading your products...</p>
+                    </div>
+                    <div id="productsContainer" class="hidden overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Product</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Category</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Stock</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="productsTableBody">
+                                <!-- Products will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="productsEmpty" class="hidden p-16 text-center">
+                        <i class="fas fa-box-open text-8xl text-gray-300 mb-6"></i>
+                        <p class="text-2xl font-semibold text-gray-700 mb-3">No products yet</p>
+                        <p class="text-gray-500 mb-8 text-lg">Start by adding your first farm product and grow your business!</p>
+                        <button onclick="showSection('addProduct')" class="px-10 py-4 bg-gradient-to-r from-primary to-green-600 text-white rounded-lg hover:shadow-lg transition transform hover:scale-105 font-bold text-lg">
+                            <i class="fas fa-plus-circle mr-2"></i> Add Your First Product
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders" style="display: none;">
+                <div class="bg-white rounded-xl shadow-md p-6 lg:p-10 border border-gray-200">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-primary-green flex items-center">
+                            <i class="fas fa-truck mr-3 text-3xl" style="color: #b89f7e;"></i> Orders Management
+                        </h3>
+                        <div class="flex gap-3">
+                            <select id="orderStatusFilter" onchange="filterOrders()" class="px-4 py-2 border-2 rounded-lg focus:outline-none" style="border-color: #d4d4bc; color: #6b9b6d;" onfocus="this.style.borderColor='#6b9b6d';" onblur="this.style.borderColor='#d4d4bc';">
+                                <option value="all">All Orders</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="ordersLoading" class="text-center py-16">
+                        <i class="fas fa-spinner fa-spin text-6xl mb-4" style="color: #6b9b6d;"></i>
+                        <p class="text-xl text-gray-600 font-semibold">Loading orders...</p>
+                    </div>
+
+                    <!-- Orders Table -->
+                    <div id="ordersContainer" class="hidden overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b-2" style="background: linear-gradient(135deg, rgba(107, 155, 109, 0.1) 0%, rgba(184, 159, 126, 0.1) 100%); border-bottom-color: #6b9b6d;">
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Order #</th>
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Customer</th>
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Products</th>
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Amount</th>
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Date</th>
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Status</th>
+                                    <th class="px-6 py-4 text-left text-sm font-bold text-primary-green">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Orders will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="ordersEmpty" class="hidden text-center py-16">
+                        <i class="fas fa-inbox text-8xl text-gray-300 mb-6"></i>
+                        <h4 class="text-2xl font-bold text-primary-green mb-3">No Orders Yet</h4>
+                        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+                            When customers order your products, they will appear here.
+                        </p>
+                        <button onclick="showSection('addProduct')" class="btn-primary px-6 py-3 rounded-lg font-semibold">
+                            <i class="fas fa-plus-circle mr-2"></i> Add Products
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Details Modal -->
+            <div id="orderDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="sticky top-0 text-white p-6 rounded-t-2xl flex justify-between items-center" style="background: linear-gradient(135deg, #6b9b6d 0%, #5a8a5c 100%);">
+                        <h3 class="text-2xl font-bold flex items-center">
+                            <i class="fas fa-file-invoice mr-3"></i> Order Details
+                        </h3>
+                        <button onclick="closeOrderModal()" class="text-white hover:text-gray-200 text-2xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="orderDetailsContent" class="p-6">
+                        <!-- Order details will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings Section (Removed duplicate) -->
+            
+        </main>
+    </div>
+
+    <script>
+        // Toggle Sidebar (Mobile)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        // Show Section
+        function showSection(sectionId) {
+            console.log('showSection called with:', sectionId);
+            
+            // Hide all sections
+            ['dashboard', 'notifications', 'addProduct', 'myProducts', 'orders'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                    console.log('Hiding section:', id);
+                } else {
+                    console.log('Section not found:', id);
+                }
+            });
+            
+            // Show selected section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'block';
+                console.log('Showing section:', sectionId);
+            } else {
+                console.log('ERROR: Section not found:', sectionId);
+            }
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-white', 'bg-primary', 'active');
+                link.classList.add('text-gray-700', 'hover:bg-gray-100');
+            });
+            const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeLink) {
+                activeLink.classList.remove('text-gray-700', 'hover:bg-gray-100');
+                activeLink.classList.add('text-white', 'bg-primary', 'active');
+            }
+            
+            // Reset form when navigating to Add Product section
+            if (sectionId === 'addProduct') {
+                const addProductForm = document.getElementById('addProductForm');
+                if (addProductForm) {
+                    // Reset the form
+                    addProductForm.reset();
+                    
+                    // Clear edit mode
+                    delete addProductForm.dataset.editId;
+                    
+                    // Reset form title
+                    const formTitle = document.querySelector('#addProduct h3');
+                    if (formTitle) {
+                        formTitle.innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                    }
+                    
+                    // Reset submit button
+                    const submitBtn = document.getElementById('submitBtn');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                    }
+                    
+                    // Remove cancel button if exists
+                    const cancelBtn = document.getElementById('cancelEditBtn');
+                    if (cancelBtn) {
+                        cancelBtn.remove();
+                    }
+                    
+                    // Hide any messages
+                    const messageDiv = document.getElementById('addProductMessage');
+                    if (messageDiv) {
+                        messageDiv.classList.add('hidden');
+                    }
+                }
+            }
+            
+            // Load data for specific sections
+            if (sectionId === 'myProducts') loadProducts();
+            if (sectionId === 'dashboard') loadDashboardStats();
+            if (sectionId === 'orders') loadOrders();
+            
+            // Close mobile sidebar
+            if (window.innerWidth < 1024) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+            }
+        }
+
+        // Load Dashboard Stats
+        function loadDashboardStats() {
+            fetch('/api/products/farmer')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const products = data.products || [];
+                        const totalProducts = products.length;
+                        const activeProducts = products.filter(p => p.status === 'active').length;
+                        const lowStockProducts = products.filter(p => p.stock < 50).length;
+                        
+                        document.getElementById('totalProducts').textContent = totalProducts;
+                        document.getElementById('activeProducts').textContent = activeProducts;
+                        document.getElementById('lowStockProducts').textContent = lowStockProducts;
+                    }
+                })
+                .catch(error => console.error('Error loading stats:', error));
+            
+            // Load order stats
+            fetch('/api/orders/farmer')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const orders = data.orders || [];
+                        document.getElementById('totalOrders').textContent = orders.length;
+                    }
+                })
+                .catch(error => console.error('Error loading order stats:', error));
+        }
+
+        // Load Products
+        function loadProducts() {
+            const loadingDiv = document.getElementById('productsLoading');
+            const containerDiv = document.getElementById('productsContainer');
+            const emptyDiv = document.getElementById('productsEmpty');
+            const tbody = document.getElementById('productsTableBody');
+            
+            loadingDiv.classList.remove('hidden');
+            containerDiv.classList.add('hidden');
+            emptyDiv.classList.add('hidden');
+            
+            fetch('/api/products/farmer')
+                .then(response => response.json())
+                .then(data => {
+                    loadingDiv.classList.add('hidden');
+                    
+                    if (data.success && data.products && data.products.length > 0) {
+                        containerDiv.classList.remove('hidden');
+                        tbody.innerHTML = data.products.map(product => `
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <img src="${product.image}" alt="${product.name}" class="w-16 h-16 rounded-xl object-cover mr-4 border-2 border-gray-200">
+                                        <div>
+                                            <div class="font-semibold text-gray-900 mb-1">${product.name}</div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; background-color: #fef3c7; padding: 6px 10px; border-radius: 6px; min-width: 200px;">
+                                                <span style="font-size: 12px; font-weight: 500;">1 ${product.unit}</span>
+                                                <span style="font-size: 11px; color: #10b981; display: flex; align-items: center; gap: 4px;">
+                                                    <span style="font-size: 14px;">🌾</span> By: ${product.farmerName || 'You'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium capitalize">
+                                        ${product.category}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-gray-900">₹${product.price}</div>
+                                    <div class="text-xs text-gray-500">per ${product.unit}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="font-semibold ${product.stock < 50 ? 'text-orange-600' : 'text-gray-900'}">
+                                        ${product.stock} ${product.unit}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-4 py-2 text-xs font-bold rounded-lg ${
+                                        product.status === 'active' ? 'bg-green-100 text-green-800' : 
+                                        product.status === 'out_of_stock' ? 'bg-red-100 text-red-800' :
+                                        'bg-gray-100 text-gray-800'
+                                    }">
+                                        ${product.status === 'active' ? '✓ Active' : product.status === 'out_of_stock' ? '✗ Out of Stock' : 'Inactive'}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex gap-2">
+                                        <button onclick="editProduct('${product._id}')" 
+                                            class="px-4 py-2 bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition font-semibold">
+                                            <i class="fas fa-edit mr-1"></i> Edit
+                                        </button>
+                                        <button onclick="confirmDeleteProduct('${product._id}', '${product.name}')" 
+                                            class="px-4 py-2 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition font-semibold">
+                                            <i class="fas fa-trash mr-1"></i> Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        emptyDiv.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.classList.add('hidden');
+                    emptyDiv.classList.remove('hidden');
+                    console.error('Error loading products:', error);
+                });
+        }
+
+        function editProduct(productId) {
+            console.log('Editing product:', productId);
+            
+            // Show loading notification
+            showNotification('Loading product details...', 'info');
+            
+            // Fetch product details
+            fetch(`/api/products/${productId}`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Product data received:', data);
+                    
+                    if (data.success && data.product) {
+                        const product = data.product;
+                        
+                        // Show edit section and populate form
+                        showSection('addProduct');
+                        
+                        // Scroll to top of form
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        
+                        // Change form title and button text
+                        document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-edit mr-3" style="color: #b89f7e;"></i> Edit Product';
+                        
+                        // Populate form fields
+                        document.getElementById('productName').value = product.name || '';
+                        document.getElementById('category').value = product.category || 'vegetables';
+                        document.getElementById('originalPrice').value = product.originalPrice || product.price || '';
+                        document.getElementById('price').value = product.price || '';
+                        document.getElementById('unit').value = product.unit || 'kg';
+                        document.getElementById('stock').value = product.stock || '';
+                        document.getElementById('description').value = product.description || '';
+                        
+                        // Farm location might not exist in older products
+                        const farmLocationField = document.getElementById('farmLocation');
+                        if (farmLocationField) {
+                            farmLocationField.value = product.farmLocation || '';
+                        }
+                        
+                        // Store product ID for update
+                        document.getElementById('addProductForm').dataset.editId = productId;
+                        
+                        // Change submit button
+                        const submitBtn = document.getElementById('submitBtn');
+                        submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Update Product';
+                        
+                        // Show cancel button if not exists
+                        if (!document.getElementById('cancelEditBtn')) {
+                            const cancelBtn = document.createElement('button');
+                            cancelBtn.type = 'button';
+                            cancelBtn.id = 'cancelEditBtn';
+                            cancelBtn.className = 'w-full py-4 bg-gray-500 text-white rounded-lg font-bold text-lg hover:bg-gray-600 transition mt-3';
+                            cancelBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
+                            cancelBtn.onclick = () => {
+                                document.getElementById('addProductForm').reset();
+                                delete document.getElementById('addProductForm').dataset.editId;
+                                document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                                submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                                cancelBtn.remove();
+                                showSection('myProducts');
+                            };
+                            const buttonContainer = submitBtn.closest('.md\\:col-span-2');
+                            if (buttonContainer) {
+                                buttonContainer.parentElement.insertBefore(cancelBtn, buttonContainer.nextSibling);
+                            } else {
+                                submitBtn.parentElement.appendChild(cancelBtn);
+                            }
+                        }
+                        
+                        showNotification('Product loaded successfully!', 'success');
+                    } else {
+                        console.error('Invalid response data:', data);
+                        showNotification(data.message || 'Failed to load product details', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading product:', error);
+                    showNotification('Failed to load product details: ' + error.message, 'error');
+                });
+        }
+
+        function confirmDeleteProduct(productId, productName) {
+            if (!confirm(`Are you sure you want to delete "${productName}"?\n\nThis action cannot be undone.`)) return;
+            
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8"><i class="fas fa-spinner fa-spin text-3xl text-primary"></i></td></tr>';
+            
+            fetch(`/api/products/delete/${productId}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadProducts();
+                        loadDashboardStats();
+                        showNotification('Product deleted successfully!', 'success');
+                    } else {
+                        showNotification('Failed to delete product: ' + data.message, 'error');
+                        loadProducts();
+                    }
+                })
+                .catch(() => {
+                    showNotification('Failed to delete product', 'error');
+                    loadProducts();
+                });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-24 right-8 z-50 px-6 py-4 rounded-lg shadow-2xl transform transition-all duration-300 ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} text-2xl"></i>
+                    <span class="font-semibold">${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded - Initializing farmer dashboard');
+            
+            // Show dashboard by default
+            showSection('dashboard');
+
+            // Add Product Form Handler
+            const addProductForm = document.getElementById('addProductForm');
+            if (addProductForm) {
+                console.log('Add Product Form found');
+                addProductForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.getElementById('submitBtn');
+                    const messageDiv = document.getElementById('addProductMessage');
+                    const editId = addProductForm.dataset.editId;
+                    const isEdit = !!editId;
+                    
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>${isEdit ? 'Updating' : 'Adding'} Product...`;
+                    
+                    const formData = new FormData(addProductForm);
+                    
+                    try {
+                        const url = isEdit ? `/api/products/update/${editId}` : '/api/products/add';
+                        const method = isEdit ? 'PUT' : 'POST';
+                        
+                        const response = await fetch(url, {
+                            method: method,
+                            body: formData
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            messageDiv.className = 'mb-4 p-5 bg-green-100 border-2 border-green-400 text-green-800 rounded-xl font-semibold';
+                            messageDiv.innerHTML = '<i class="fas fa-check-circle mr-2 text-xl"></i>' + data.message;
+                            messageDiv.classList.remove('hidden');
+                            addProductForm.reset();
+                            delete addProductForm.dataset.editId;
+                            showNotification(`Product ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
+                            
+                            // Add notification
+                            const productName = formData.get('productName');
+                            addNotification('success', isEdit ? 'Product Updated!' : 'Product Listed!', 
+                                `${productName} ${isEdit ? 'has been updated successfully' : 'is now live and visible to customers'}.`);
+                            
+                            // Reset form title and button immediately
+                            document.querySelector('#addProduct h3').innerHTML = '<i class="fas fa-plus-circle mr-3" style="color: #b89f7e;"></i> Add New Product';
+                            submitBtn.innerHTML = '<i class="fas fa-plus-circle mr-2"></i>Add Product';
+                            
+                            const cancelBtn = document.getElementById('cancelEditBtn');
+                            if (cancelBtn) cancelBtn.remove();
+                            
+                            // Reload dashboard stats and products list if it was an edit
+                            if (isEdit) {
+                                loadDashboardStats();
+                                loadProducts();
+                            }
+                            
+                            setTimeout(() => {
+                                messageDiv.classList.add('hidden');
+                                showSection('myProducts');
+                            }, 2000);
+                        } else {
+                            messageDiv.className = 'mb-4 p-5 bg-red-100 border-2 border-red-400 text-red-800 rounded-xl font-semibold';
+                            messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2 text-xl"></i>' + data.message;
+                            messageDiv.classList.remove('hidden');
+                            showNotification(`Failed to ${isEdit ? 'update' : 'add'} product`, 'error');
+                        }
+                    } catch (error) {
+                        messageDiv.className = 'mb-4 p-5 bg-red-100 border-2 border-red-400 text-red-800 rounded-xl font-semibold';
+                        messageDiv.innerHTML = `<i class="fas fa-exclamation-triangle mr-2 text-xl"></i>Failed to ${isEdit ? 'update' : 'add'} product. Please try again.`;
+                        messageDiv.classList.remove('hidden');
+                        showNotification(`Failed to ${isEdit ? 'update' : 'add'} product`, 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        // Check current state of editId instead of using old isEdit value
+                        const currentlyEditing = !!addProductForm.dataset.editId;
+                        submitBtn.innerHTML = `<i class="fas fa-${currentlyEditing ? 'save' : 'plus-circle'} mr-2"></i>${currentlyEditing ? 'Update' : 'Add'} Product`;
+                    }
+                });
+            }
+            
+            // Initialize notification count
+            updateNotifCount();
+        });
+
+        // Notification Management Functions
+        function updateNotifCount() {
+            const notifItems = document.querySelectorAll('#notificationsList .notification-item');
+            const count = notifItems.length;
+            const badge = document.getElementById('notifBadge');
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+                const notifsList = document.getElementById('notificationsList');
+                const emptyState = document.getElementById('emptyNotifications');
+                if (notifsList) notifsList.classList.add('hidden');
+                if (emptyState) emptyState.classList.remove('hidden');
+            }
+        }
+
+        function markAllAsRead() {
+            const notifsList = document.getElementById('notificationsList');
+            if (notifsList) {
+                notifsList.innerHTML = '';
+                updateNotifCount();
+                showNotification('All notifications cleared', 'success');
+            }
+        }
+
+        function addNotification(type, title, message) {
+            const notifsList = document.getElementById('notificationsList');
+            const emptyState = document.getElementById('emptyNotifications');
+            
+            if (!notifsList) return;
+            
+            if (emptyState) emptyState.classList.add('hidden');
+            notifsList.classList.remove('hidden');
+            
+            const colors = {
+                success: { bg: 'green', icon: 'check-circle' },
+                warning: { bg: 'orange', icon: 'exclamation-triangle' },
+                info: { bg: 'blue', icon: 'info-circle' },
+                error: { bg: 'red', icon: 'times-circle' }
+            };
+            
+            const color = colors[type] || colors.info;
+            
+            const notifHTML = `
+                <div class="notification-item flex items-start p-4 bg-${color.bg}-50 rounded-lg border-l-4 border-${color.bg}-500 hover:shadow-md transition">
+                    <i class="fas fa-${color.icon} text-3xl text-${color.bg}-500 mr-4 mt-1"></i>
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold text-gray-800">${title}</p>
+                        <p class="text-xs text-gray-600 mt-1">${message}</p>
+                        <p class="text-xs text-${color.bg}-600 mt-2">
+                            <i class="fas fa-clock mr-1"></i> Just now
+                        </p>
+                    </div>
+                    <button onclick="this.parentElement.remove(); updateNotifCount();" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            notifsList.insertAdjacentHTML('afterbegin', notifHTML);
+            updateNotifCount();
+        }
+
+        // Order Management Functions
+        let allOrders = [];
+
+        function loadOrders() {
+            const loadingDiv = document.getElementById('ordersLoading');
+            const containerDiv = document.getElementById('ordersContainer');
+            const emptyDiv = document.getElementById('ordersEmpty');
+            
+            loadingDiv.classList.remove('hidden');
+            containerDiv.classList.add('hidden');
+            emptyDiv.classList.add('hidden');
+            
+            fetch('/api/orders/farmer')
+                .then(response => response.json())
+                .then(data => {
+                    loadingDiv.classList.add('hidden');
+                    
+                    if (data.success && data.orders && data.orders.length > 0) {
+                        allOrders = data.orders;
+                        containerDiv.classList.remove('hidden');
+                        renderOrders(allOrders);
+                    } else {
+                        emptyDiv.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    loadingDiv.classList.add('hidden');
+                    emptyDiv.classList.remove('hidden');
+                    console.error('Error loading orders:', error);
+                    showNotification('Failed to load orders', 'error');
+                });
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            
+            tbody.innerHTML = orders.map(order => {
+                const statusColors = {
+                    pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: 'clock' },
+                    processing: { bg: 'bg-blue-100', text: 'text-blue-800', icon: 'cog' },
+                    shipped: { bg: 'bg-purple-100', text: 'text-purple-800', icon: 'truck' },
+                    delivered: { bg: 'bg-green-100', text: 'text-green-800', icon: 'check-circle' },
+                    cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: 'times-circle' }
+                };
+                
+                const status = statusColors[order.status] || statusColors.pending;
+                const orderDate = new Date(order.orderDate).toLocaleDateString('en-IN', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                return `
+                    <tr class="hover:bg-gray-50 transition border-b">
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-purple-600">#${order.orderNumber}</div>
+                            <div class="text-xs text-gray-500">${order._id.substring(0, 8)}...</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-semibold text-gray-900">${order.deliveryAddress?.fullName || order.userName || 'N/A'}</div>
+                            <div class="text-xs text-gray-600">${order.deliveryAddress?.phone || 'No phone'}</div>
+                            <div class="text-xs text-gray-500">${order.deliveryAddress?.city || ''}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-semibold text-gray-900">${order.items.length} item(s)</div>
+                            <div class="text-xs text-gray-600">${order.items.map(item => item.productName).join(', ').substring(0, 50)}${order.items.length > 1 ? '...' : ''}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-gray-900">₹${order.totalAmount.toFixed(2)}</div>
+                            <div class="text-xs text-gray-500">${order.paymentMethod?.toUpperCase() || 'COD'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">${orderDate}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 ${status.bg} ${status.text} rounded-lg text-xs font-bold capitalize inline-flex items-center">
+                                <i class="fas fa-${status.icon} mr-1"></i>
+                                ${order.status}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex gap-2">
+                                <button onclick="viewOrderDetails('${order._id}')" 
+                                    class="px-3 py-1 bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition text-xs font-semibold">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                ${order.status !== 'delivered' && order.status !== 'cancelled' ? `
+                                    <select onchange="updateOrderStatus('${order._id}', this.value)" 
+                                        class="px-2 py-1 border-2 border-gray-300 rounded-lg text-xs focus:border-purple-500 focus:outline-none">
+                                        <option value="">Update...</option>
+                                        ${order.status === 'pending' ? '<option value="processing">Mark Processing</option>' : ''}
+                                        ${order.status === 'processing' ? '<option value="shipped">Mark Shipped</option>' : ''}
+                                        ${order.status === 'shipped' ? '<option value="delivered">Mark Delivered</option>' : ''}
+                                        <option value="cancelled">Cancel Order</option>
+                                    </select>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterOrders() {
+            const filter = document.getElementById('orderStatusFilter').value;
+            
+            if (filter === 'all') {
+                renderOrders(allOrders);
+            } else {
+                const filtered = allOrders.filter(order => order.status === filter);
+                renderOrders(filtered);
+            }
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = allOrders.find(o => o._id === orderId);
+            if (!order) {
+                showNotification('Order not found', 'error');
+                return;
+            }
+            
+            const modal = document.getElementById('orderDetailsModal');
+            const content = document.getElementById('orderDetailsContent');
+            
+            const statusColors = {
+                pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: 'clock' },
+                processing: { bg: 'bg-blue-100', text: 'text-blue-800', icon: 'cog' },
+                shipped: { bg: 'bg-purple-100', text: 'text-purple-800', icon: 'truck' },
+                delivered: { bg: 'bg-green-100', text: 'text-green-800', icon: 'check-circle' },
+                cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: 'times-circle' }
+            };
+            
+            const status = statusColors[order.status] || statusColors.pending;
+            const orderDate = new Date(order.orderDate).toLocaleDateString('en-IN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Order Header -->
+                    <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-xl border-2 border-purple-200">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-2xl font-bold text-gray-800">Order #${order.orderNumber}</h4>
+                                <p class="text-sm text-gray-600 mt-1">${orderDate}</p>
+                            </div>
+                            <span class="px-4 py-2 ${status.bg} ${status.text} rounded-lg text-sm font-bold capitalize inline-flex items-center">
+                                <i class="fas fa-${status.icon} mr-2"></i>
+                                ${order.status}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600 font-medium">Payment Method</p>
+                                <p class="text-gray-800 font-semibold">${order.paymentMethod?.toUpperCase() || 'COD'}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Payment Status</p>
+                                <p class="text-gray-800 font-semibold capitalize">${order.paymentStatus || 'Pending'}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Details -->
+                    <div class="bg-gray-50 p-6 rounded-xl">
+                        <h5 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-user text-blue-600 mr-2"></i> Customer Details
+                        </h5>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600 font-medium">Name</p>
+                                <p class="text-gray-800 font-semibold">${order.deliveryAddress?.fullName || order.userName || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Phone</p>
+                                <p class="text-gray-800 font-semibold">${order.deliveryAddress?.phone || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="bg-green-50 p-6 rounded-xl">
+                        <h5 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Delivery Address
+                        </h5>
+                        <p class="text-gray-800">${order.deliveryAddress?.address || 'N/A'}</p>
+                        ${order.deliveryAddress?.landmark ? `<p class="text-gray-600 text-sm mt-1">Landmark: ${order.deliveryAddress.landmark}</p>` : ''}
+                        <p class="text-gray-800 mt-2">
+                            ${order.deliveryAddress?.city || ''}, ${order.deliveryAddress?.state || ''} - ${order.deliveryAddress?.pincode || ''}
+                        </p>
+                    </div>
+
+                    <!-- Order Items -->
+                    <div>
+                        <h5 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-shopping-cart text-purple-600 mr-2"></i> Order Items
+                        </h5>
+                        <div class="space-y-3">
+                            ${order.items.map(item => `
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center gap-4">
+                                        ${item.image ? `<img src="${item.image}" alt="${item.productName}" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">` : ''}
+                                        <div>
+                                            <p class="font-semibold text-gray-900">${item.productName}</p>
+                                            <p class="text-sm text-gray-600">${item.weight} × ${item.quantity}</p>
+                                            ${item.category ? `<p class="text-xs text-gray-500 capitalize">${item.category}</p>` : ''}
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-gray-900">₹${(item.price * item.quantity).toFixed(2)}</p>
+                                        <p class="text-xs text-gray-600">₹${item.price} each</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="bg-gradient-to-r from-gray-50 to-green-50 p-6 rounded-xl border-2 border-green-200">
+                        <h5 class="text-lg font-bold text-gray-800 mb-3">Order Summary</h5>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Subtotal</span>
+                                <span class="text-gray-800 font-semibold">₹${(order.subtotal || order.totalAmount).toFixed(2)}</span>
+                            </div>
+                            ${order.deliveryCharges ? `
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Delivery Charges</span>
+                                    <span class="text-gray-800 font-semibold">₹${order.deliveryCharges.toFixed(2)}</span>
+                                </div>
+                            ` : ''}
+                            <div class="border-t-2 border-gray-300 pt-2 mt-2"></div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-800 font-bold text-lg">Total Amount</span>
+                                <span class="text-green-600 font-bold text-xl">₹${order.totalAmount.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${order.specialInstructions ? `
+                        <div class="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200">
+                            <p class="text-sm text-gray-600 font-medium mb-1">Special Instructions:</p>
+                            <p class="text-gray-800">${order.specialInstructions}</p>
+                        </div>
+                    ` : ''}
+
+                    <!-- Action Buttons -->
+                    ${order.status !== 'delivered' && order.status !== 'cancelled' ? `
+                        <div class="flex gap-3 pt-4 border-t-2">
+                            ${order.status === 'pending' ? `
+                                <button onclick="updateOrderStatus('${order._id}', 'processing'); closeOrderModal();" 
+                                    class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                                    <i class="fas fa-cog mr-2"></i> Mark as Processing
+                                </button>
+                            ` : ''}
+                            ${order.status === 'processing' ? `
+                                <button onclick="updateOrderStatus('${order._id}', 'shipped'); closeOrderModal();" 
+                                    class="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold">
+                                    <i class="fas fa-truck mr-2"></i> Mark as Shipped
+                                </button>
+                            ` : ''}
+                            ${order.status === 'shipped' ? `
+                                <button onclick="updateOrderStatus('${order._id}', 'delivered'); closeOrderModal();" 
+                                    class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
+                                    <i class="fas fa-check-circle mr-2"></i> Mark as Delivered
+                                </button>
+                            ` : ''}
+                            <button onclick="if(confirm('Are you sure you want to cancel this order?')) { updateOrderStatus('${order._id}', 'cancelled'); closeOrderModal(); }" 
+                                class="px-6 py-3 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition font-semibold">
+                                <i class="fas fa-times-circle mr-2"></i> Cancel Order
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderDetailsModal').classList.add('hidden');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            if (!newStatus) return;
+            
+            fetch(`/api/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(`Order ${newStatus} successfully!`, 'success');
+                    loadOrders();
+                    addNotification('success', 'Order Updated', `Order #${data.order?.orderNumber || orderId.substring(0, 8)} marked as ${newStatus}`);
+                } else {
+                    showNotification('Failed to update order: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating order:', error);
+                showNotification('Failed to update order status', 'error');
+            });
+        }
+    </script>
+
+</body>
+</html>

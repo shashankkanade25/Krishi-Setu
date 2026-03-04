@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "KrishiSetu",
+    "slug": "krishisetu",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon-generated.png",
+    "userInterfaceStyle": "light",
+    "scheme": "krishisetu",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.krishisetu.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon-fg.png",
+        "backgroundColor": "#4CAF50"
+      },
+      "package": "com.krishisetu.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/icon-generated.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6a48942d-e984-4452-bd1f-df98654da2bf"
+      }
+    },
+    "owner": "shashankkanade25"
+  }
+}
