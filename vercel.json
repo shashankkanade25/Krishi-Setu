@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Krishisetu-web/app.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "Krishisetu-web/public/**",
+          "Krishisetu-web/views/**",
+          "Krishisetu-web/models/**",
+          "Krishisetu-web/config/**",
+          "Krishisetu-web/middleware/**",
+          "Krishisetu-web/utils/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/Krishisetu-web/app.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
