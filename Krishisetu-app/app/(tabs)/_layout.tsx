@@ -36,6 +36,10 @@ export default function TabLayout() {
     return <Redirect href="/(farmer)/dashboard" />;
   }
 
+  if (user.role === 'admin') {
+    return <Redirect href="/(admin)/dashboard" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
