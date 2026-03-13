@@ -64,16 +64,14 @@ export default function AddProductScreen() {
         formData.append('productImage', { uri: imageUri, name: filename, type } as any);
       }
 
-      await api.post('/api/mobile/farmer/products', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await api.post('/api/mobile/farmer/products', formData);
 
       Alert.alert('Success', 'Product added successfully!');
       // Reset form
       setName(''); setCategory(''); setPrice(''); setOriginalPrice('');
       setStock(''); setUnit('kg'); setDescription(''); setImageUri(null);
     } catch (err: any) {
-      const msg = err.response?.data?.message || 'Failed to add product';
+      const msg = err.response?.data?.message || err.message || 'Failed to add product';
       Alert.alert('Error', msg);
     } finally {
       setLoading(false);

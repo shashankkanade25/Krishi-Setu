@@ -4,12 +4,10 @@ import {
   KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator,
   Image, Dimensions, StatusBar, Animated, Keyboard,
 } from 'react-native';
-import * as Linking from 'expo-linking';
 import { Link, router } from 'expo-router';
 import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
-import { BASE_URL } from '../../services/api';
 
 const { height } = Dimensions.get('window');
 
@@ -17,7 +15,7 @@ export default function LoginScreen() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'customer' | 'farmer' | 'admin'>('customer');
+  const [role, setRole] = useState<'customer' | 'farmer'>('customer');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isSensitiveFieldFocused, setIsSensitiveFieldFocused] = useState(false);
@@ -81,12 +79,6 @@ export default function LoginScreen() {
       const isAdminAccount = authenticatedUser.email?.trim().toLowerCase() === ADMIN_EMAIL || authenticatedUser.role === 'admin';
 
       if (isAdminAccount) {
-        const adminUrl = `${BASE_URL}/admin`;
-        try {
-          await Linking.openURL(adminUrl);
-        } catch {
-          Alert.alert('Admin Access', `Open admin dashboard here: ${adminUrl}`);
-        }
         router.replace('/(admin)/dashboard');
       } else if (authenticatedUser.role === 'farmer') {
         router.replace('/(farmer)/dashboard');
@@ -139,13 +131,6 @@ export default function LoginScreen() {
 
           {/* Role Selector - matching web */}
           <View style={styles.roleSelector}>
-            <TouchableOpacity
-              style={[styles.roleBtn, role === 'admin' && styles.roleBtnActive]}
-              onPress={() => setRole('admin')}
-            >
-              <Ionicons name="shield-checkmark" size={18} color={role === 'admin' ? COLORS.white : '#555'} />
-              <Text style={[styles.roleBtnText, role === 'admin' && styles.roleBtnTextActive]}>Admin</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.roleBtn, role === 'farmer' && styles.roleBtnActive]}
               onPress={() => setRole('farmer')}
@@ -263,7 +248,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-    marginTop: -24,
+    marginTop: -36,
     paddingHorizontal: 28,
     paddingTop: 24,
     paddingBottom: 30,
@@ -284,8 +269,8 @@ const styles = StyleSheet.create({
 
   // Role selector - matching web
   roleSelector: {
-    flexDirection: 'row', gap: 8,
-    justifyContent: 'space-between', marginBottom: 18,
+    flexDirection: 'row', gap: 12,
+    justifyContent: 'center', marginBottom: 18,
   },
   roleBtn: {
     flex: 1,

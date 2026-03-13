@@ -6,11 +6,10 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { COLORS, SIZES, FONTS } from '../../constants/theme';
+import { COLORS, SIZES } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
-import { BASE_URL } from '../../services/api';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export default function RegisterScreen() {
   const { register } = useAuth();
@@ -283,7 +282,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-    marginTop: -24,
+    marginTop: -36,
     paddingHorizontal: 28,
     paddingTop: 22,
     paddingBottom: 30,

@@ -13,6 +13,16 @@ const Product = require('./models/Product');
 const { isAuthenticated } = require('./middleware/auth');
 
 const app = express();
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@krishisetu.com').trim().toLowerCase();
+
+function normalizeRoleValue(role) {
+    return role === 'user' ? 'customer' : role;
+}
+
+function isAdminIdentity({ role, email }) {
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    return normalizeRoleValue(role) === 'admin' || normalizedEmail === ADMIN_EMAIL;
+}
 
 // Trust Vercel/reverse-proxy headers so secure cookies work correctly
 app.set('trust proxy', 1);
@@ -137,6 +147,8 @@ app.get('/', (req, res) => {
         // Redirect based on role for authenticated users
         if (req.session.userRole === 'farmer') {
             return res.redirect('/farmer-home');
+        } else if (req.session.userRole === 'admin') {
+            return res.redirect('/admin');
         } else {
             return res.redirect('/customer-home');
         }
@@ -154,6 +166,8 @@ app.get('/reviews', (req, res) => {
 app.get('/home', isAuthenticated, (req, res) => {
     if (req.session.userRole === 'farmer') {
         return res.redirect('/farmer-home');
+    } else if (req.session.userRole === 'admin') {
+        return res.redirect('/admin');
     }
     res.redirect('/customer-home');
 });
@@ -163,6 +177,8 @@ app.get('/customer-home', isAuthenticated, (req, res) => {
     // Check if user is customer
     if (req.session.userRole === 'farmer') {
         return res.redirect('/farmer-home');
+    } else if (req.session.userRole === 'admin') {
+        return res.redirect('/admin');
     }
     res.render('customer_home', { 
         user: {
@@ -406,10 +422,11 @@ app.post('/login', async (req, res) => {
         console.log('User found:', { email: user.email, role: user.role });
 
         // Normalize old "user" role to "customer" for backward compatibility
-        const normalizedUserRole = user.role === 'user' ? 'customer' : user.role;
+        const normalizedUserRole = normalizeRoleValue(user.role);
+        const adminUser = isAdminIdentity({ role: normalizedUserRole, email: user.email });
         
         // Admin can login without role selection
-        if (normalizedUserRole === 'admin') {
+        if (adminUser) {
             // Skip role check for admin
         } else {
             // Check if user role matches for non-admin users
@@ -436,7 +453,7 @@ app.post('/login', async (req, res) => {
         }
 
         // Create session (normalize old "user" role to "customer")
-        const normalizedRole = user.role === 'user' ? 'customer' : user.role;
+        const normalizedRole = adminUser ? 'admin' : normalizedUserRole;
         req.session.userId = user._id;
         req.session.userName = user.name;
         req.session.userEmail = user.email;
@@ -884,21 +901,11 @@ app.post('/checkout/place-order', isAuthenticated, async (req, res) => {
 });
 
 // Configure Multer for image uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/Product_images/');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
 const upload = multer({ 
-    storage: storage,
+    storage: multer.memoryStorage(),
     limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: function (req, file, cb) {
-        const filetypes = /jpeg|jpg|png|gif|webp|avif/;
+        const filetypes = /jpeg|jpg|png|gif|webp|avif|heic|heif/;
         const mimetype = filetypes.test(file.mimetype);
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         if (mimetype && extname) {
@@ -907,6 +914,70 @@ const upload = multer({
         cb(null, false);
     }
 });
+
+const PRODUCT_CATEGORY_VALUES = new Set(['fruits', 'vegetables', 'dairy', 'pulses', 'pickles', 'masala', 'grains', 'other']);
+const PRODUCT_UNIT_ALIASES = {
+    kg: 'kg',
+    kilogram: 'kg',
+    kilograms: 'kg',
+    g: 'gram',
+    gram: 'gram',
+    grams: 'gram',
+    liter: 'liter',
+    litre: 'liter',
+    l: 'liter',
+    ml: 'ml',
+    piece: 'piece',
+    pieces: 'piece',
+    pc: 'piece',
+    pcs: 'piece',
+    '100g': '100g',
+    dozen: 'dozen',
+    bundle: 'bundle'
+};
+
+function normalizeProductCategory(value) {
+    if (typeof value !== 'string') return null;
+    const normalized = value.trim().toLowerCase();
+    if (!normalized) return null;
+    return PRODUCT_CATEGORY_VALUES.has(normalized) ? normalized : null;
+}
+
+function normalizeProductUnit(value) {
+    if (value === undefined || value === null || value === '') {
+        return 'kg';
+    }
+    const normalized = String(value).trim().toLowerCase();
+    return PRODUCT_UNIT_ALIASES[normalized] || null;
+}
+
+function parseProductValues({ price, originalPrice, stock }) {
+    const priceValue = Number(price);
+    const originalPriceValue = Number(originalPrice ?? price);
+    const stockValue = Number.parseInt(String(stock), 10);
+
+    if (!Number.isFinite(priceValue) || priceValue < 0) return null;
+    if (!Number.isFinite(originalPriceValue) || originalPriceValue < 0) return null;
+    if (!Number.isInteger(stockValue) || stockValue < 0) return null;
+
+    const discount = originalPriceValue > 0
+        ? Math.round(((originalPriceValue - priceValue) / originalPriceValue) * 100)
+        : 0;
+
+    return {
+        priceValue,
+        originalPriceValue,
+        stockValue,
+        discountValue: Math.max(0, Math.min(100, discount)),
+    };
+}
+
+function getUploadedImagePath(file) {
+    if (!file || !file.buffer || !file.mimetype) {
+        return '/Product_images/default.jpg';
+    }
+    return `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+}
 
 // Product Routes
 app.post('/api/products/add', isAuthenticated, upload.single('productImage'), async (req, res) => {
@@ -922,26 +993,40 @@ app.post('/api/products/add', isAuthenticated, upload.single('productImage'), as
 
         const { productName, category, price, originalPrice, stock, unit, description } = req.body;
 
-        if (!productName || !category || !price || !originalPrice || !stock) {
+        if (!productName?.trim() || !category || price === undefined || price === null || price === '' || stock === undefined || stock === null || stock === '') {
             return res.status(400).json({ success: false, message: 'All required fields must be filled' });
         }
 
-        const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-        const imagePath = req.file ? `/Product_images/${req.file.filename}` : '/Product_images/default.jpg';
+        const normalizedCategory = normalizeProductCategory(category);
+        if (!normalizedCategory) {
+            return res.status(400).json({ success: false, message: 'Invalid category selected' });
+        }
+
+        const normalizedUnit = normalizeProductUnit(unit);
+        if (!normalizedUnit) {
+            return res.status(400).json({ success: false, message: 'Invalid unit selected' });
+        }
+
+        const parsedValues = parseProductValues({ price, originalPrice, stock });
+        if (!parsedValues) {
+            return res.status(400).json({ success: false, message: 'Invalid price, original price, or stock value' });
+        }
+
+        const imagePath = getUploadedImagePath(req.file);
 
         const product = new Product({
-            name: productName,
-            category: category.toLowerCase(),
-            price: parseFloat(price),
-            originalPrice: parseFloat(originalPrice),
-            discount: discount,
-            stock: parseInt(stock),
-            unit: unit || 'kg',
+            name: productName.trim(),
+            category: normalizedCategory,
+            price: parsedValues.priceValue,
+            originalPrice: parsedValues.originalPriceValue,
+            discount: parsedValues.discountValue,
+            stock: parsedValues.stockValue,
+            unit: normalizedUnit,
             image: imagePath,
             description: description || '',
             farmerId: req.session.userId,
             farmerName: req.session.userName,
-            status: parseInt(stock) > 0 ? 'active' : 'out_of_stock'
+            status: parsedValues.stockValue > 0 ? 'active' : 'out_of_stock'
         });
 
         await product.save();
@@ -1093,24 +1178,39 @@ app.put('/api/products/update/:id', isAuthenticated, upload.single('productImage
         const { productName, category, price, originalPrice, stock, unit, description } = req.body;
 
         // Validate required fields
-        if (!productName || !category || !price || !stock || !unit) {
+        if (!productName?.trim() || !category || price === undefined || price === null || price === '' || stock === undefined || stock === null || stock === '') {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
 
+        const normalizedCategory = normalizeProductCategory(category);
+        if (!normalizedCategory) {
+            return res.status(400).json({ success: false, message: 'Invalid category selected' });
+        }
+
+        const normalizedUnit = normalizeProductUnit(unit);
+        if (!normalizedUnit) {
+            return res.status(400).json({ success: false, message: 'Invalid unit selected' });
+        }
+
+        const parsedValues = parseProductValues({ price, originalPrice: originalPrice || price, stock });
+        if (!parsedValues) {
+            return res.status(400).json({ success: false, message: 'Invalid price, original price, or stock value' });
+        }
+
         const updateData = {
-            name: productName,
-            category: category.toLowerCase(),
-            price: parseFloat(price),
-            originalPrice: parseFloat(originalPrice || price),
-            discount: originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0,
-            stock: parseInt(stock),
-            unit: unit || 'kg',
+            name: productName.trim(),
+            category: normalizedCategory,
+            price: parsedValues.priceValue,
+            originalPrice: parsedValues.originalPriceValue,
+            discount: parsedValues.discountValue,
+            stock: parsedValues.stockValue,
+            unit: normalizedUnit,
             description: description || '',
-            status: parseInt(stock) > 0 ? 'active' : 'out_of_stock'
+            status: parsedValues.stockValue > 0 ? 'active' : 'out_of_stock'
         };
 
         if (req.file) {
-            updateData.image = `/Product_images/${req.file.filename}`;
+            updateData.image = getUploadedImagePath(req.file);
         }
 
         console.log('Update data:', updateData);
@@ -1292,9 +1392,16 @@ app.put('/api/notifications/read-all', isAuthenticated, async (req, res) => {
 // Admin middleware
 const isAdmin = (req, res, next) => {
     if (!req.session.userId) {
+        if (req.originalUrl === '/admin') {
+            return res.redirect('/login');
+        }
         return res.status(401).json({ success: false, message: 'Please login' });
     }
-    if (req.session.userRole !== 'admin') {
+    const hasAdminAccess = req.session.userRole === 'admin' || (req.session.userEmail || '').trim().toLowerCase() === ADMIN_EMAIL;
+    if (!hasAdminAccess) {
+        if (req.originalUrl === '/admin') {
+            return res.redirect('/login');
+        }
         return res.status(403).json({ success: false, message: 'Admin access required' });
     }
     next();
@@ -1577,6 +1684,47 @@ function authenticateMobile(req, res, next) {
     }
 }
 
+app.get('/mobile/admin/auto-login', async (req, res) => {
+    try {
+        const tokenFromQuery = req.query.token;
+        if (!tokenFromQuery || typeof tokenFromQuery !== 'string') {
+            return res.redirect('/login');
+        }
+
+        const decoded = jwt.verify(tokenFromQuery, JWT_SECRET);
+        if (!decoded?.userId) {
+            return res.redirect('/login');
+        }
+
+        const user = await User.findById(decoded.userId).select('name email role');
+        if (!user) {
+            return res.redirect('/login');
+        }
+
+        const normalizedRole = normalizeRoleValue(user.role);
+        const adminUser = isAdminIdentity({ role: normalizedRole, email: user.email });
+        if (!adminUser) {
+            return res.status(403).send('Admin access required');
+        }
+
+        req.session.userId = user._id;
+        req.session.userName = user.name;
+        req.session.userEmail = user.email;
+        req.session.userRole = 'admin';
+
+        req.session.save((sessionError) => {
+            if (sessionError) {
+                console.error('Mobile admin auto-login session error:', sessionError);
+                return res.redirect('/login');
+            }
+            return res.redirect('/admin');
+        });
+    } catch (error) {
+        console.error('Mobile admin auto-login error:', error);
+        return res.redirect('/login');
+    }
+});
+
 // Mobile Login
 app.post('/api/mobile/login', async (req, res) => {
     try {
@@ -1591,30 +1739,32 @@ app.post('/api/mobile/login', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid email or password' });
         }
         // Normalize old 'user' role to 'customer'
-        if (user.role === 'user') user.role = 'customer';
+        const normalizedUserRole = normalizeRoleValue(user.role);
+        const adminUser = isAdminIdentity({ role: normalizedUserRole, email: user.email });
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             console.log('Mobile login - password mismatch for:', email);
             return res.status(401).json({ success: false, message: 'Invalid email or password' });
         }
         const selectedRole = role || 'any';
-        if (selectedRole !== 'any' && user.role !== selectedRole) {
-            if (user.role !== 'admin') {
+        if (!adminUser && selectedRole !== 'any' && normalizedUserRole !== selectedRole) {
                 return res.status(401).json({
                     success: false,
                     error: 'role_mismatch',
-                    message: `This account is registered as a ${user.role}. Please select the correct role.`,
-                    correctRole: user.role
+                    message: `This account is registered as a ${normalizedUserRole}. Please select the correct role.`,
+                    correctRole: normalizedUserRole
                 });
-            }
+        }
+        if (adminUser && selectedRole !== 'any' && selectedRole !== 'admin') {
             console.log('Mobile login - allowing admin despite selected role mismatch:', {
                 selectedRole,
-                actualRole: user.role,
+                actualRole: 'admin',
                 email: user.email
             });
         }
+        const effectiveRole = adminUser ? 'admin' : normalizedUserRole;
         const token = jwt.sign(
-            { userId: user._id, email: user.email, role: user.role, name: user.name },
+            { userId: user._id, email: user.email, role: effectiveRole, name: user.name },
             JWT_SECRET,
             { expiresIn: '30d' }
         );
@@ -1627,7 +1777,7 @@ app.post('/api/mobile/login', async (req, res) => {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
+                role: effectiveRole,
                 phone: user.phone,
                 address: user.address,
             }
@@ -1849,24 +1999,39 @@ app.post('/api/mobile/farmer/products', authenticateMobile, upload.single('produ
             return res.status(403).json({ success: false, message: 'Only farmers can add products' });
         }
         const { productName, category, price, originalPrice, stock, unit, description } = req.body;
-        if (!productName || !category || !price || !originalPrice || !stock) {
+        if (!productName?.trim() || !category || price === undefined || price === null || price === '' || stock === undefined || stock === null || stock === '') {
             return res.status(400).json({ success: false, message: 'All required fields must be filled' });
         }
-        const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-        const imagePath = req.file ? `/Product_images/${req.file.filename}` : '/Product_images/default.jpg';
+
+        const normalizedCategory = normalizeProductCategory(category);
+        if (!normalizedCategory) {
+            return res.status(400).json({ success: false, message: 'Invalid category selected' });
+        }
+
+        const normalizedUnit = normalizeProductUnit(unit);
+        if (!normalizedUnit) {
+            return res.status(400).json({ success: false, message: 'Invalid unit selected' });
+        }
+
+        const parsedValues = parseProductValues({ price, originalPrice, stock });
+        if (!parsedValues) {
+            return res.status(400).json({ success: false, message: 'Invalid price, original price, or stock value' });
+        }
+
+        const imagePath = getUploadedImagePath(req.file);
         const product = new Product({
-            name: productName,
-            category: category.toLowerCase(),
-            price: parseFloat(price),
-            originalPrice: parseFloat(originalPrice),
-            discount: discount,
-            stock: parseInt(stock),
-            unit: unit || 'kg',
+            name: productName.trim(),
+            category: normalizedCategory,
+            price: parsedValues.priceValue,
+            originalPrice: parsedValues.originalPriceValue,
+            discount: parsedValues.discountValue,
+            stock: parsedValues.stockValue,
+            unit: normalizedUnit,
             image: imagePath,
             description: description || '',
             farmerId: req.mobileUser.userId,
             farmerName: req.mobileUser.name,
-            status: parseInt(stock) > 0 ? 'active' : 'out_of_stock'
+            status: parsedValues.stockValue > 0 ? 'active' : 'out_of_stock'
         });
         await product.save();
         res.json({ success: true, message: 'Product added successfully', product });

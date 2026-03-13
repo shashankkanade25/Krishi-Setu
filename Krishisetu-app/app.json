@@ -24,7 +24,10 @@
         "foregroundImage": "./assets/adaptive-icon-fg.png",
         "backgroundColor": "#4CAF50"
       },
-      "package": "com.krishisetu.app"
+      "package": "com.krishisetu.app",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -41,6 +44,9 @@
         "projectId": "6a48942d-e984-4452-bd1f-df98654da2bf"
       }
     },
-    "owner": "shashankkanade25"
+    "owner": "shashankkanade25",
+    "updates": {
+      "url": "https://u.expo.dev/6a48942d-e984-4452-bd1f-df98654da2bf"
+    }
   }
 }

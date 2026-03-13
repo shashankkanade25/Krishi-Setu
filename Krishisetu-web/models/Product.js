@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['fruits', 'vegetables', 'dairy', 'pulses', 'pickles', 'masala', 'grains'],
+        enum: ['fruits', 'vegetables', 'dairy', 'pulses', 'pickles', 'masala', 'grains', 'other'],
         lowercase: true
     },
     price: {
@@ -37,7 +37,7 @@ const productSchema = new mongoose.Schema({
     unit: {
         type: String,
         default: 'kg',
-        enum: ['kg', 'liter', 'piece', 'gram', '100g']
+        enum: ['kg', 'liter', 'piece', 'gram', '100g', 'ml', 'dozen', 'bundle']
     },
     image: {
         type: String,

@@ -21,6 +21,10 @@ const normalizeRelativePath = (img: string) => {
 export const getImageUrl = (img?: string | null): string | undefined => {
   if (!img) return undefined;
 
+  if (img.startsWith('data:')) {
+    return img;
+  }
+
   if (img.startsWith('http://') || img.startsWith('https://')) {
     try {
       const url = new URL(img);

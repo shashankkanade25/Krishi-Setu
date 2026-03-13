@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Alert,
 } from 'react-native';
@@ -11,10 +11,12 @@ import { BASE_URL } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminDashboardScreen() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
 
   const openWebAdmin = async () => {
-    const adminUrl = `${BASE_URL}/admin`;
+    const adminUrl = token
+      ? `${BASE_URL}/mobile/admin/auto-login?token=${encodeURIComponent(token)}`
+      : `${BASE_URL}/login`;
     try {
       await Linking.openURL(adminUrl);
     } catch {
@@ -26,10 +28,6 @@ export default function AdminDashboardScreen() {
     await logout();
     router.replace('/(auth)/landing');
   };
-
-  useEffect(() => {
-    openWebAdmin();
-  }, []);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -45,7 +43,7 @@ export default function AdminDashboardScreen() {
       <View style={styles.card}>
         <Ionicons name="desktop-outline" size={28} color={COLORS.primary} />
         <Text style={styles.cardTitle}>Open Full Admin Dashboard</Text>
-        <Text style={styles.cardDesc}>Opening web admin dashboard automatically for complete controls and analytics.</Text>
+        <Text style={styles.cardDesc}>Open the full web admin with your current mobile login session.</Text>
         <TouchableOpacity style={styles.primaryBtn} onPress={openWebAdmin}>
           <Text style={styles.primaryBtnText}>Open Web Admin</Text>
         </TouchableOpacity>
