@@ -4,10 +4,12 @@ import {
   KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator,
   Image, Dimensions, StatusBar,
 } from 'react-native';
+import * as Linking from 'expo-linking';
 import { Link, router } from 'expo-router';
 import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
+import { BASE_URL } from '../../services/api';
 
 const { height } = Dimensions.get('window');
 
@@ -32,6 +34,12 @@ export default function LoginScreen() {
       const isAdminAccount = authenticatedUser.email?.trim().toLowerCase() === ADMIN_EMAIL || authenticatedUser.role === 'admin';
 
       if (isAdminAccount) {
+        const adminUrl = `${BASE_URL}/admin`;
+        try {
+          await Linking.openURL(adminUrl);
+        } catch {
+          Alert.alert('Admin Access', `Open admin dashboard here: ${adminUrl}`);
+        }
         router.replace('/(admin)/dashboard');
       } else if (authenticatedUser.role === 'farmer') {
         router.replace('/(farmer)/dashboard');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Alert,
 } from 'react-native';
@@ -27,6 +27,10 @@ export default function AdminDashboardScreen() {
     router.replace('/(auth)/landing');
   };
 
+  useEffect(() => {
+    openWebAdmin();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
@@ -41,16 +45,11 @@ export default function AdminDashboardScreen() {
       <View style={styles.card}>
         <Ionicons name="desktop-outline" size={28} color={COLORS.primary} />
         <Text style={styles.cardTitle}>Open Full Admin Dashboard</Text>
-        <Text style={styles.cardDesc}>Use the web dashboard for complete admin controls and analytics.</Text>
+        <Text style={styles.cardDesc}>Opening web admin dashboard automatically for complete controls and analytics.</Text>
         <TouchableOpacity style={styles.primaryBtn} onPress={openWebAdmin}>
           <Text style={styles.primaryBtnText}>Open Web Admin</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.secondaryBtn} onPress={() => router.replace('/(tabs)/home')}>
-        <Ionicons name="storefront-outline" size={18} color={COLORS.primary} />
-        <Text style={styles.secondaryBtnText}>Continue to Customer App</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={18} color={COLORS.error} />
@@ -129,25 +128,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
-  secondaryBtn: {
-    marginTop: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: COLORS.white,
-    borderRadius: 10,
-    paddingVertical: 13,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  secondaryBtnText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: COLORS.primary,
-  },
   logoutBtn: {
-    marginTop: 12,
+    marginTop: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

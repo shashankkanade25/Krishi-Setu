@@ -6,7 +6,7 @@ import {
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../contexts/AuthContext';
+import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
 import api from '../../services/api';
@@ -76,6 +76,24 @@ export default function HomeScreen() {
     getImageUrl('/images/organic-vegetables-f.jpg'),
     getImageUrl('/images/dairy-productsNew.jpeg'),
   ].filter((uri): uri is string => Boolean(uri));
+
+  const isAdminAccount = user?.email?.trim().toLowerCase() === ADMIN_EMAIL || user?.role === 'admin';
+
+  useEffect(() => {
+    if (isAdminAccount) {
+      router.replace('/(admin)/dashboard');
+    }
+  }, [isAdminAccount]);
+
+  if (isAdminAccount) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   // Auto-rotate hero carousel
   useEffect(() => {
