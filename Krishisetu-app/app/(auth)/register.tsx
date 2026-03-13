@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator,
-  Image, Dimensions, StatusBar,
+  Image, Dimensions, StatusBar, Animated, Keyboard,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
@@ -21,6 +21,53 @@ export default function RegisterScreen() {
   const [role, setRole] = useState<'customer' | 'farmer'>('customer');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSensitiveFieldFocused, setIsSensitiveFieldFocused] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const formLiftAnim = useRef(new Animated.Value(0)).current;
+  const blurTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSub = Keyboard.addListener(showEvent, () => setIsKeyboardVisible(true));
+    const hideSub = Keyboard.addListener(hideEvent, () => setIsKeyboardVisible(false));
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const shouldLift = isKeyboardVisible && isSensitiveFieldFocused;
+    Animated.timing(formLiftAnim, {
+      toValue: shouldLift ? (Platform.OS === 'ios' ? -52 : -82) : 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [formLiftAnim, isKeyboardVisible, isSensitiveFieldFocused]);
+
+  useEffect(() => () => {
+    if (blurTimerRef.current) {
+      clearTimeout(blurTimerRef.current);
+    }
+  }, []);
+
+  const handleSensitiveFocus = () => {
+    if (blurTimerRef.current) {
+      clearTimeout(blurTimerRef.current);
+      blurTimerRef.current = null;
+    }
+    setIsSensitiveFieldFocused(true);
+  };
+
+  const handleSensitiveBlur = () => {
+    blurTimerRef.current = setTimeout(() => {
+      setIsSensitiveFieldFocused(false);
+      blurTimerRef.current = null;
+    }, 80);
+  };
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
@@ -73,7 +120,7 @@ export default function RegisterScreen() {
         </View>
 
         {/* Form Section - matching web's right panel */}
-        <View style={styles.formSection}>
+        <Animated.View style={[styles.formSection, { transform: [{ translateY: formLiftAnim }] }]}>
           {/* Brand Logo */}
           <View style={styles.brandLogo}>
             <Image
@@ -136,6 +183,8 @@ export default function RegisterScreen() {
                 autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
+                onFocus={handleSensitiveFocus}
+                onBlur={handleSensitiveBlur}
               />
             </View>
           </View>
@@ -152,6 +201,8 @@ export default function RegisterScreen() {
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
+                onFocus={handleSensitiveFocus}
+                onBlur={handleSensitiveBlur}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
                 <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={18} color="#999" />
@@ -171,6 +222,8 @@ export default function RegisterScreen() {
                 secureTextEntry={!showPassword}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
+                onFocus={handleSensitiveFocus}
+                onBlur={handleSensitiveBlur}
               />
             </View>
           </View>
@@ -197,7 +250,7 @@ export default function RegisterScreen() {
               </TouchableOpacity>
             </Link>
           </View>
-        </View>
+        </Animated.View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
