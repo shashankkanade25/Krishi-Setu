@@ -86,7 +86,7 @@ KrishiSetu aims to solve this by creating a **direct farmer-to-customer digital 
 # 📱 Application Screenshots
 
 ## Landing Page
-![Landing Page][(./screenshots/landing.png](https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0)).
+[![Landing Page][(./screenshots/landing.png](https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0)).](https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0)
 
 ## Customer Marketplace
 ![Products][(./screenshots/products.png)
