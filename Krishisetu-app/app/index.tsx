@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'expo-router';
-import { useAuth } from '../contexts/AuthContext';
+import { ADMIN_EMAIL, useAuth } from '../contexts/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
 import { COLORS } from '../constants/theme';
 
@@ -16,11 +16,12 @@ export default function Index() {
   }
 
   if (user) {
+    const isAdminAccount = user.email?.trim().toLowerCase() === ADMIN_EMAIL || user.role === 'admin';
+    if (isAdminAccount) {
+      return <Redirect href="/(admin)/dashboard" />;
+    }
     if (user.role === 'farmer') {
       return <Redirect href="/(farmer)/dashboard" />;
-    }
-    if (user.role === 'admin') {
-      return <Redirect href="/(admin)/dashboard" />;
     }
     return <Redirect href="/(tabs)/home" />;
   }

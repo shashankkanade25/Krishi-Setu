@@ -5,7 +5,7 @@ import {
   Image, Dimensions, StatusBar,
 } from 'react-native';
 import { Link, router } from 'expo-router';
-import { useAuth } from '../../contexts/AuthContext';
+import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -29,10 +29,12 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       const authenticatedUser = await login(email.trim().toLowerCase(), password, role);
-      if (authenticatedUser.role === 'farmer') {
-        router.replace('/(farmer)/dashboard');
-      } else if (authenticatedUser.role === 'admin') {
+      const isAdminAccount = authenticatedUser.email?.trim().toLowerCase() === ADMIN_EMAIL || authenticatedUser.role === 'admin';
+
+      if (isAdminAccount) {
         router.replace('/(admin)/dashboard');
+      } else if (authenticatedUser.role === 'farmer') {
+        router.replace('/(farmer)/dashboard');
       } else {
         router.replace('/(tabs)/home');
       }

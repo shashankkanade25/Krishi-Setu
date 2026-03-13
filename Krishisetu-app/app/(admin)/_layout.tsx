@@ -2,7 +2,7 @@ import React from 'react';
 import { Stack, Redirect } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import { COLORS } from '../../constants/theme';
-import { useAuth } from '../../contexts/AuthContext';
+import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 
 export default function AdminLayout() {
   const { user, loading } = useAuth();
@@ -19,6 +19,16 @@ export default function AdminLayout() {
     return <Redirect href="/(auth)/landing" />;
   }
 
+  const isAdminAccount = user.email?.trim().toLowerCase() === ADMIN_EMAIL || user.role === 'admin';
+
+  if (isAdminAccount) {
+    return (
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="dashboard" />
+      </Stack>
+    );
+  }
+
   if (user.role === 'farmer') {
     return <Redirect href="/(farmer)/dashboard" />;
   }
@@ -27,9 +37,5 @@ export default function AdminLayout() {
     return <Redirect href="/(tabs)/home" />;
   }
 
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="dashboard" />
-    </Stack>
-  );
+  return <Redirect href="/(tabs)/home" />;
 }

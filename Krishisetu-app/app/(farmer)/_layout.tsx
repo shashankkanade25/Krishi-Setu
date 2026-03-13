@@ -3,7 +3,7 @@ import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { ActivityIndicator, View } from 'react-native';
-import { useAuth } from '../../contexts/AuthContext';
+import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 
 export default function FarmerLayout() {
   const { user, loading } = useAuth();
@@ -20,12 +20,14 @@ export default function FarmerLayout() {
     return <Redirect href="/(auth)/landing" />;
   }
 
-  if (user.role === 'customer') {
-    return <Redirect href="/(tabs)/home" />;
+  const isAdminAccount = user.email?.trim().toLowerCase() === ADMIN_EMAIL || user.role === 'admin';
+
+  if (isAdminAccount) {
+    return <Redirect href="/(admin)/dashboard" />;
   }
 
-  if (user.role === 'admin') {
-    return <Redirect href="/(admin)/dashboard" />;
+  if (user.role === 'customer') {
+    return <Redirect href="/(tabs)/home" />;
   }
 
   return (

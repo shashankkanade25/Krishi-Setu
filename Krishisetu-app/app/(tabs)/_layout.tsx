@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { useCart } from '../../contexts/CartContext';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useAuth } from '../../contexts/AuthContext';
+import { ADMIN_EMAIL, useAuth } from '../../contexts/AuthContext';
 
 function CartBadge() {
   const { getCount } = useCart();
@@ -32,12 +32,14 @@ export default function TabLayout() {
     return <Redirect href="/(auth)/landing" />;
   }
 
-  if (user.role === 'farmer') {
-    return <Redirect href="/(farmer)/dashboard" />;
+  const isAdminAccount = user.email?.trim().toLowerCase() === ADMIN_EMAIL || user.role === 'admin';
+
+  if (isAdminAccount) {
+    return <Redirect href="/(admin)/dashboard" />;
   }
 
-  if (user.role === 'admin') {
-    return <Redirect href="/(admin)/dashboard" />;
+  if (user.role === 'farmer') {
+    return <Redirect href="/(farmer)/dashboard" />;
   }
 
   return (

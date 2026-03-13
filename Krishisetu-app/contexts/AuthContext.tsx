@@ -37,6 +37,14 @@ const AuthContext = createContext<AuthState>({
 });
 
 export const useAuth = () => useContext(AuthContext);
+export const ADMIN_EMAIL = 'admin@krishisetu.com';
+
+const normalizeRole = (role: string | undefined, email?: string): User['role'] => {
+  const normalizedEmail = email?.trim().toLowerCase();
+  if (normalizedEmail === ADMIN_EMAIL) return 'admin';
+  if (role === 'admin' || role === 'farmer') return role;
+  return 'customer';
+};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -53,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const parsedUser = JSON.parse(storedUser);
           const normalizedUser: User = {
             ...parsedUser,
-            role: parsedUser?.role === 'farmer' || parsedUser?.role === 'admin' ? parsedUser.role : 'customer',
+            role: normalizeRole(parsedUser?.role, parsedUser?.email),
           };
           setToken(stored);
           setUser(normalizedUser);
@@ -69,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { token: tk, user: usr } = res.data;
     const normalizedUser: User = {
       ...usr,
-      role: usr?.role === 'farmer' || usr?.role === 'admin' ? usr.role : 'customer',
+      role: normalizeRole(usr?.role, usr?.email),
     };
     setToken(tk);
     setUser(normalizedUser);
@@ -81,10 +89,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = useCallback(async (name: string, email: string, password: string, role: string) => {
     const res = await api.post('/api/mobile/register', { name, email, password, role });
     const { token: tk, user: usr } = res.data;
+    const normalizedUser: User = {
+      ...usr,
+      role: normalizeRole(usr?.role, usr?.email),
+    };
     setToken(tk);
-    setUser(usr);
+    setUser(normalizedUser);
     await SecureStore.setItemAsync('authToken', tk);
-    await SecureStore.setItemAsync('userData', JSON.stringify(usr));
+    await SecureStore.setItemAsync('userData', JSON.stringify(normalizedUser));
   }, []);
 
   const logout = useCallback(async () => {
