@@ -36,12 +36,32 @@ app.use((req, res, next) => {
     next();
 });
 
+const IMAGE_EXTENSIONS = new Set(['.avif', '.bmp', '.gif', '.ico', '.jpeg', '.jpg', '.png', '.svg', '.webp']);
+const FONT_EXTENSIONS = new Set(['.eot', '.otf', '.ttf', '.woff', '.woff2']);
+
+function getStaticCacheControl(filepath) {
+    const extension = path.extname(filepath).toLowerCase();
+
+    if (IMAGE_EXTENSIONS.has(extension) || FONT_EXTENSIONS.has(extension)) {
+        return 'public, max-age=2592000, stale-while-revalidate=86400';
+    }
+
+    if (extension === '.css' || extension === '.js') {
+        return 'public, max-age=86400, stale-while-revalidate=3600';
+    }
+
+    return 'public, max-age=3600';
+}
+
 // Static files with caching headers
 app.use(express.static(path.join(__dirname, 'public'), {
     maxAge: '1d',
     etag: true,
     lastModified: true,
     setHeaders: (res, filepath) => {
+        res.setHeader('Cache-Control', getStaticCacheControl(filepath));
+        res.setHeader('Vary', 'Accept-Encoding');
+
         if (filepath.endsWith('.css')) {
             res.setHeader('Content-Type', 'text/css');
         } else if (filepath.endsWith('.js')) {
@@ -75,6 +95,40 @@ app.use(session({
 // View engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// Inject image optimizer script into all rendered HTML pages
+app.use((req, res, next) => {
+    const originalRender = res.render.bind(res);
+
+    res.render = (view, options, callback) => {
+        const hasOptionsFunction = typeof options === 'function';
+        const renderOptions = hasOptionsFunction ? {} : (options || {});
+        const renderCallback = hasOptionsFunction ? options : callback;
+
+        if (typeof renderCallback === 'function') {
+            return originalRender(view, renderOptions, renderCallback);
+        }
+
+        return originalRender(view, renderOptions, (error, html) => {
+            if (error) {
+                return res.status(500).send('Failed to render page');
+            }
+
+            const optimizerScript = '<script src="/js/image-optimizer.js" defer></script>';
+            if (typeof html !== 'string' || html.includes('/js/image-optimizer.js')) {
+                return res.send(html);
+            }
+
+            if (html.includes('</body>')) {
+                return res.send(html.replace('</body>', `    ${optimizerScript}\n</body>`));
+            }
+
+            return res.send(`${html}\n${optimizerScript}`);
+        });
+    };
+
+    next();
+});
 
 // Routes
 // Landing page - first page for new visitors

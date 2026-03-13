@@ -1,9 +1,33 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
+import { ActivityIndicator, View } from 'react-native';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function FarmerLayout() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background }}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
+  if (!user) {
+    return <Redirect href="/(auth)/landing" />;
+  }
+
+  if (user.role === 'customer') {
+    return <Redirect href="/(tabs)/home" />;
+  }
+
+  if (user.role === 'admin') {
+    return <Redirect href="/(admin)/dashboard" />;
+  }
+
   return (
     <Tabs
       screenOptions={{

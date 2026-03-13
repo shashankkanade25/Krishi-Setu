@@ -7,16 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
 import { useCart, CartItem } from '../../contexts/CartContext';
-import { BASE_URL } from '../../services/api';
+import { getCachedImageSource } from '../../utils/image';
 
 export default function CartScreen() {
   const { items, updateQuantity, removeItem, getTotal, getCount, clearCart } = useCart();
-
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
 
   const handleRemove = (name: string) => {
     Alert.alert('Remove Item', 'Remove this item from cart?', [
@@ -27,7 +21,7 @@ export default function CartScreen() {
 
   const renderItem = ({ item }: { item: CartItem }) => (
     <View style={styles.card}>
-      <Image source={{ uri: getImageUrl(item.image) }} style={styles.cardImage} resizeMode="cover" />
+      <Image source={getCachedImageSource(item.image)} style={styles.cardImage} resizeMode="cover" />
       <View style={styles.cardBody}>
         <Text style={styles.cardName} numberOfLines={1}>{item.productName}</Text>
         <Text style={styles.cardCategory}>{item.category}</Text>

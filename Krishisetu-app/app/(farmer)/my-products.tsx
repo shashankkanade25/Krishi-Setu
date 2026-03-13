@@ -6,7 +6,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SIZES } from '../../constants/theme';
-import api, { BASE_URL } from '../../services/api';
+import api from '../../services/api';
+import { getCachedImageSource } from '../../utils/image';
 
 const { width } = Dimensions.get('window');
 
@@ -45,12 +46,6 @@ export default function MyProductsScreen() {
 
   const onRefresh = () => { setRefreshing(true); fetchProducts(); };
 
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
-
   const handleDelete = (id: string, name: string) => {
     Alert.alert('Delete Product', `Are you sure you want to delete "${name}"?`, [
       { text: 'Cancel', style: 'cancel' },
@@ -71,7 +66,7 @@ export default function MyProductsScreen() {
 
   const renderProduct = ({ item }: { item: Product }) => (
     <View style={styles.card}>
-      <Image source={{ uri: getImageUrl(item.image) }} style={styles.cardImage} resizeMode="cover" />
+      <Image source={getCachedImageSource(item.image)} style={styles.cardImage} resizeMode="cover" />
       {item.discount > 0 && (
         <View style={styles.discountBadge}>
           <Text style={styles.discountText}>{item.discount}% OFF</Text>

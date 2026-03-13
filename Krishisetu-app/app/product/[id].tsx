@@ -7,9 +7,10 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
-import api, { BASE_URL } from '../../services/api';
+import api from '../../services/api';
 import { useCart } from '../../contexts/CartContext';
 import { STATIC_PRODUCTS } from '../../constants/products';
+import { getCachedImageSource } from '../../utils/image';
 
 interface Product {
   _id: string;
@@ -56,12 +57,6 @@ export default function ProductDetailScreen() {
       }
     })();
   }, [id]);
-
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -111,7 +106,7 @@ export default function ProductDetailScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <Image
-          source={{ uri: getImageUrl(product.image) }}
+          source={getCachedImageSource(product.image)}
           style={styles.image}
           resizeMode="cover"
         />

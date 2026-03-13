@@ -20,7 +20,7 @@ interface AuthState {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string, role: string) => Promise<void>;
+  login: (email: string, password: string, role: string) => Promise<User>;
   register: (name: string, email: string, password: string, role: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (data: Partial<User>) => void;
@@ -30,7 +30,7 @@ const AuthContext = createContext<AuthState>({
   user: null,
   token: null,
   loading: true,
-  login: async () => {},
+  login: async () => ({ _id: '', name: '', email: '', role: 'customer' }),
   register: async () => {},
   logout: async () => {},
   updateUser: () => {},
@@ -50,8 +50,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const stored = await SecureStore.getItemAsync('authToken');
         const storedUser = await SecureStore.getItemAsync('userData');
         if (stored && storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          const normalizedUser: User = {
+            ...parsedUser,
+            role: parsedUser?.role === 'farmer' || parsedUser?.role === 'admin' ? parsedUser.role : 'customer',
+          };
           setToken(stored);
-          setUser(JSON.parse(storedUser));
+          setUser(normalizedUser);
         }
       } catch {} finally {
         setLoading(false);
@@ -62,10 +67,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (email: string, password: string, role: string) => {
     const res = await api.post('/api/mobile/login', { email, password, role });
     const { token: tk, user: usr } = res.data;
+    const normalizedUser: User = {
+      ...usr,
+      role: usr?.role === 'farmer' || usr?.role === 'admin' ? usr.role : 'customer',
+    };
     setToken(tk);
-    setUser(usr);
+    setUser(normalizedUser);
     await SecureStore.setItemAsync('authToken', tk);
-    await SecureStore.setItemAsync('userData', JSON.stringify(usr));
+    await SecureStore.setItemAsync('userData', JSON.stringify(normalizedUser));
+    return normalizedUser;
   }, []);
 
   const register = useCallback(async (name: string, email: string, password: string, role: string) => {

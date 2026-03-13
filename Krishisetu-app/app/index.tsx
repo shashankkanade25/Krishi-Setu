@@ -19,6 +19,9 @@ export default function Index() {
     if (user.role === 'farmer') {
       return <Redirect href="/(farmer)/dashboard" />;
     }
+    if (user.role === 'admin') {
+      return <Redirect href="/(admin)/dashboard" />;
+    }
     return <Redirect href="/(tabs)/home" />;
   }
 

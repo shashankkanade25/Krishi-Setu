@@ -6,17 +6,16 @@ import {
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useAuth } from '../../contexts/AuthContext';
-import { COLORS, SIZES, FONTS } from '../../constants/theme';
+import { COLORS } from '../../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
-import { BASE_URL } from '../../services/api';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export default function LoginScreen() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'customer' | 'farmer'>('customer');
+  const [role, setRole] = useState<'customer' | 'farmer' | 'admin'>('customer');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,9 +26,11 @@ export default function LoginScreen() {
     }
     setLoading(true);
     try {
-      await login(email.trim().toLowerCase(), password, role);
-      if (role === 'farmer') {
+      const authenticatedUser = await login(email.trim().toLowerCase(), password, role);
+      if (authenticatedUser.role === 'farmer') {
         router.replace('/(farmer)/dashboard');
+      } else if (authenticatedUser.role === 'admin') {
+        router.replace('/(admin)/dashboard');
       } else {
         router.replace('/(tabs)/home');
       }
@@ -75,6 +76,13 @@ export default function LoginScreen() {
 
           {/* Role Selector - matching web */}
           <View style={styles.roleSelector}>
+            <TouchableOpacity
+              style={[styles.roleBtn, role === 'admin' && styles.roleBtnActive]}
+              onPress={() => setRole('admin')}
+            >
+              <Ionicons name="shield-checkmark" size={18} color={role === 'admin' ? COLORS.white : '#555'} />
+              <Text style={[styles.roleBtnText, role === 'admin' && styles.roleBtnTextActive]}>Admin</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.roleBtn, role === 'farmer' && styles.roleBtnActive]}
               onPress={() => setRole('farmer')}
@@ -209,19 +217,21 @@ const styles = StyleSheet.create({
 
   // Role selector - matching web
   roleSelector: {
-    flexDirection: 'row', gap: 12,
-    justifyContent: 'center', marginBottom: 18,
+    flexDirection: 'row', gap: 8,
+    justifyContent: 'space-between', marginBottom: 18,
   },
   roleBtn: {
+    flex: 1,
     flexDirection: 'row', alignItems: 'center', gap: 8,
-    paddingHorizontal: 24, paddingVertical: 12,
+    justifyContent: 'center',
+    paddingHorizontal: 12, paddingVertical: 12,
     borderWidth: 2, borderColor: '#e0e0e0',
     borderRadius: 12, backgroundColor: '#fff',
   },
   roleBtnActive: {
     borderColor: COLORS.primary, backgroundColor: COLORS.primary,
   },
-  roleBtnText: { fontSize: 14, fontWeight: '600', color: '#555' },
+  roleBtnText: { fontSize: 13, fontWeight: '600', color: '#555' },
   roleBtnTextActive: { color: COLORS.white },
 
   // Welcome text

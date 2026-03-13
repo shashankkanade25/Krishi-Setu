@@ -8,7 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../contexts/AuthContext';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
-import api, { BASE_URL } from '../../services/api';
+import api from '../../services/api';
+import { getCachedImageSource } from '../../utils/image';
 
 interface Product {
   _id: string;
@@ -61,12 +62,6 @@ export default function FarmerDashboard() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const onRefresh = () => { setRefreshing(true); fetchData(); };
-
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
 
   const activeProducts = products.filter(p => p.status === 'active').length;
   const lowStockProducts = products.filter(p => p.stock > 0 && p.stock <= 5).length;
@@ -202,7 +197,7 @@ export default function FarmerDashboard() {
             </View>
             {products.slice(0, 4).map((item) => (
               <View key={item._id} style={styles.productItem}>
-                <Image source={{ uri: getImageUrl(item.image) }} style={styles.productImage} />
+                <Image source={getCachedImageSource(item.image)} style={styles.productImage} />
                 <View style={styles.productInfo}>
                   <Text style={styles.productName}>{item.name}</Text>
                   <Text style={styles.productCategory}>{item.category}</Text>

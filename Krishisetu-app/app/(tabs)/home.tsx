@@ -9,8 +9,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
-import api, { BASE_URL } from '../../services/api';
+import api from '../../services/api';
 import { STATIC_PRODUCTS, StaticProduct } from '../../constants/products';
+import { getCachedImageSource, getImageUrl, prefetchImages } from '../../utils/image';
 
 const { width } = Dimensions.get('window');
 
@@ -71,10 +72,10 @@ export default function HomeScreen() {
   const autoScrollAnim = useRef(new Animated.Value(0)).current;
 
   const HERO_IMAGES = [
-    `${BASE_URL}/images/Fruit.jpg`,
-    `${BASE_URL}/images/organic-vegetables-f.jpg`,
-    `${BASE_URL}/images/dairy-productsNew.jpeg`,
-  ];
+    getImageUrl('/images/Fruit.jpg'),
+    getImageUrl('/images/organic-vegetables-f.jpg'),
+    getImageUrl('/images/dairy-productsNew.jpeg'),
+  ].filter((uri): uri is string => Boolean(uri));
 
   // Auto-rotate hero carousel
   useEffect(() => {
@@ -86,6 +87,18 @@ export default function HomeScreen() {
       setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
     }, 4000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    prefetchImages([
+      ...HERO_IMAGES,
+      ...CATEGORY_CARDS.map((card) => card.image),
+      ...REVIEWS.map((review) => review.image),
+      '/images/farmer1.jpg',
+      '/images/farmer2.jpg',
+      '/images/farmer4.jpg',
+      '/images/farmer5.jpg',
+    ]);
   }, []);
 
   const fetchProducts = useCallback(async () => {
@@ -142,12 +155,6 @@ export default function HomeScreen() {
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
   const onRefresh = () => { setRefreshing(true); fetchProducts(); };
-
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
 
   const handleAddToCart = (item: Product) => {
     addItem({
@@ -222,7 +229,7 @@ export default function HomeScreen() {
 
         {/* ===== Hero Carousel (matches web) ===== */}
         <Animated.View style={[styles.heroBanner, { opacity: fadeAnim }]}>
-          <Image source={{ uri: HERO_IMAGES[heroIndex] }} style={styles.heroImage} resizeMode="cover" />
+          <Image source={getCachedImageSource(HERO_IMAGES[heroIndex])} style={styles.heroImage} resizeMode="cover" />
           <View style={styles.heroOverlay} />
           <View style={styles.heroContent}>
             <Text style={styles.heroTagline}>🌿 Farm Fresh, Direct to You</Text>
@@ -281,7 +288,7 @@ export default function HomeScreen() {
                 onPress={() => router.push({ pathname: '/(tabs)/products', params: { category: cat.key } })}
                 activeOpacity={0.8}
               >
-                <Image source={{ uri: getImageUrl(cat.image) }} style={styles.categoryImage} resizeMode="cover" />
+                <Image source={getCachedImageSource(cat.image)} style={styles.categoryImage} resizeMode="cover" />
                 <View style={styles.categoryOverlay} />
                 <View style={styles.categoryContent}>
                   <Text style={styles.categoryLabel}>{cat.label}</Text>
@@ -319,7 +326,7 @@ export default function HomeScreen() {
                       activeOpacity={0.7}
                     >
                       <View style={styles.dealImageWrap}>
-                        <Image source={{ uri: getImageUrl(item.image) }} style={styles.dealImage} resizeMode="contain" />
+                        <Image source={getCachedImageSource(item.image)} style={styles.dealImage} resizeMode="contain" />
                       </View>
                       <View style={styles.dealInfo}>
                         <Text style={styles.dealName} numberOfLines={1}>{item.name}</Text>
@@ -369,7 +376,7 @@ export default function HomeScreen() {
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.farmersRow}>
             {['/images/farmer1.jpg', '/images/farmer2.jpg', '/images/farmer4.jpg', '/images/farmer5.jpg'].map((img, i) => (
-              <Image key={i} source={{ uri: getImageUrl(img) }} style={styles.farmerImg} resizeMode="cover" />
+              <Image key={i} source={getCachedImageSource(img)} style={styles.farmerImg} resizeMode="cover" />
             ))}
           </ScrollView>
         </View>
@@ -380,7 +387,7 @@ export default function HomeScreen() {
           <Text style={styles.sectionSubtitle}>Real stories from people who love farm-fresh produce</Text>
           {REVIEWS.map((review, i) => (
             <View key={i} style={styles.reviewCard}>
-              <Image source={{ uri: getImageUrl(review.image) }} style={styles.reviewAvatar} />
+              <Image source={getCachedImageSource(review.image)} style={styles.reviewAvatar} />
               <View style={styles.reviewContent}>
                 <Text style={styles.reviewText}>"{review.text}"</Text>
                 <Text style={styles.reviewAuthor}>{review.name}</Text>

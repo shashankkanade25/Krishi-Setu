@@ -1,9 +1,10 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { useCart } from '../../contexts/CartContext';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { useAuth } from '../../contexts/AuthContext';
 
 function CartBadge() {
   const { getCount } = useCart();
@@ -17,6 +18,24 @@ function CartBadge() {
 }
 
 export default function TabLayout() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <View style={styles.loadingWrap}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
+  if (!user) {
+    return <Redirect href="/(auth)/landing" />;
+  }
+
+  if (user.role === 'farmer') {
+    return <Redirect href="/(farmer)/dashboard" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -79,6 +98,12 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
+  loadingWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+  },
   badge: {
     position: 'absolute',
     top: -4,

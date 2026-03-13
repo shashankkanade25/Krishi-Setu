@@ -6,7 +6,7 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
-import { BASE_URL } from '../../services/api';
+import { getCachedImageSource, prefetchImages } from '../../utils/image';
 
 const { width } = Dimensions.get('window');
 
@@ -69,11 +69,12 @@ export default function LandingScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
+  useEffect(() => {
+    prefetchImages([
+      ...FARMERS.map((farmer) => farmer.image),
+      ...REVIEWS.map((review) => review.image),
+    ]);
+  }, []);
 
   const renderStars = (count: number) => {
     const stars = [];
@@ -222,7 +223,7 @@ export default function LandingScreen() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.farmersScroll}>
             {FARMERS.map((farmer, i) => (
               <View key={i} style={styles.farmerCard}>
-                <Image source={{ uri: getImageUrl(farmer.image) }} style={styles.farmerAvatar} />
+                <Image source={getCachedImageSource(farmer.image)} style={styles.farmerAvatar} />
                 <Text style={styles.farmerName}>{farmer.name}</Text>
                 <Text style={styles.farmName}>{farmer.farm}</Text>
                 <Text style={styles.farmerLocation}>({farmer.location})</Text>
@@ -248,7 +249,7 @@ export default function LandingScreen() {
             {/* Review card */}
             <View style={styles.reviewCardLarge}>
               <Ionicons name="chatbox-ellipses" size={24} color={COLORS.primaryLight} style={{ marginBottom: 8 }} />
-              <Image source={{ uri: getImageUrl(REVIEWS[currentReview].image) }} style={styles.reviewAvatarLarge} />
+              <Image source={getCachedImageSource(REVIEWS[currentReview].image)} style={styles.reviewAvatarLarge} />
               <Text style={styles.reviewTextLarge}>"{REVIEWS[currentReview].text}"</Text>
               <Text style={styles.reviewAuthorLarge}>{REVIEWS[currentReview].name}</Text>
               <Text style={styles.reviewRole}>Customer</Text>

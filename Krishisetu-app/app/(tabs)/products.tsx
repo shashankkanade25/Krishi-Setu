@@ -8,8 +8,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SIZES, FONTS } from '../../constants/theme';
 import { STATIC_PRODUCTS, PRODUCT_CATEGORIES, SORT_OPTIONS, StaticProduct } from '../../constants/products';
-import api, { BASE_URL } from '../../services/api';
+import api from '../../services/api';
 import { useCart } from '../../contexts/CartContext';
+import { getCachedImageSource } from '../../utils/image';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - SIZES.md * 2 - 12) / 2;
@@ -84,12 +85,6 @@ export default function ProductsScreen() {
 
   const onRefresh = () => { setRefreshing(true); fetchProducts(); };
 
-  const getImageUrl = (img: string) => {
-    if (!img) return undefined;
-    if (img.startsWith('http')) return img;
-    return `${BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
-  };
-
   const getCategoryTitle = () => {
     const cat = PRODUCT_CATEGORIES.find(c => c.key === category);
     return cat ? cat.label : 'All Products';
@@ -114,7 +109,7 @@ export default function ProductsScreen() {
         onPress={() => router.push(`/product/${item._id}`)}
         activeOpacity={0.7}
       >
-        <Image source={{ uri: getImageUrl(item.image) }} style={styles.cardImage} resizeMode="cover" />
+        <Image source={getCachedImageSource(item.image)} style={styles.cardImage} resizeMode="cover" />
         {item.discount > 0 && (
           <View style={styles.discountBadge}>
             <Text style={styles.discountText}>{item.discount}% Off</Text>
