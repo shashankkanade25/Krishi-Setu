@@ -85,22 +85,17 @@ KrishiSetu aims to solve this by creating a **direct farmer-to-customer digital 
 
 # 📱 Application Screenshots
 
-## Landing Page
-[![Landing Page][(./screenshots/landing.png](https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0)).](https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0)
+### Landing Page
+![Landing Page](https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0)
 
-## Customer Marketplace
-![Products][(./screenshots/products.png)
-](https://media.licdn.com/dms/image/v2/D4D22AQEIqv6N7Yci4Q/feedshare-shrink_1280/B4DZzpN1dvIkAM-/0/1773439244439?e=1775088000&v=beta&t=BYOORk-hOukve_94b7KbIo-yMkt1IbOJ9JjeaZ5sj64).
+### Customer Marketplace
+![Customer Marketplace](https://media.licdn.com/dms/image/v2/D4D22AQEIqv6N7Yci4Q/feedshare-shrink_1280/B4DZzpN1dvIkAM-/0/1773439244439?e=1775088000&v=beta&t=BYOORk-hOukve_94b7KbIo-yMkt1IbOJ9JjeaZ5sj64)
 
-## Cart System
-![Cart](./screenshots/cart.png)
+### Farmer Dashboard
+![Farmer Dashboard](https://media.licdn.com/dms/image/v2/D4D22AQFugPcggUhQwA/feedshare-shrink_1280/B4DZzpN1wEIkAM-/0/1773439245584?e=1775088000&v=beta&t=oUE19lSbWPtwQCMaO2vqpZGWEF7IkQ_50LK9ETDETv4)
 
-## Farmer Dashboard
-![Farmer Dashboard](./screenshots/farmer-dashboard.png)
-
-## Admin Dashboard
-![Admin Dashboard](./screenshots/admin-dashboard.png)
-
+### Admin Dashboard
+![Admin Dashboard](https://media.licdn.com/dms/image/v2/D4D22AQHKF6qHNuMJgg/feedshare-shrink_2048_1536/B4DZzpN1ddGsAk-/0/1773439244405?e=1775088000&v=beta&t=XoIED9_4vxAdLuNukq0ELSGGQiRgrFmeuXKDg-WdGzY)
 ---
 
 # 🏗️ Project Structure
