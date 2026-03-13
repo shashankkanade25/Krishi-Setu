@@ -19,6 +19,8 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const formatRole = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       Alert.alert('Error', 'Please fill in all fields');
@@ -35,7 +37,11 @@ export default function LoginScreen() {
         router.replace('/(tabs)/home');
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message ||
+      const backendMessage = err.response?.data?.message;
+      const correctRole = err.response?.data?.correctRole;
+      const msg = correctRole
+        ? `This account is registered as ${formatRole(correctRole)}. Please select ${formatRole(correctRole)} and try again.`
+        : backendMessage ||
         (err.message?.includes('Network') || err.code === 'ECONNABORTED'
           ? 'Cannot reach server. Make sure the app backend is running.'
           : 'Login failed. Please check your credentials.');

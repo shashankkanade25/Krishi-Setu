@@ -1597,8 +1597,21 @@ app.post('/api/mobile/login', async (req, res) => {
             console.log('Mobile login - password mismatch for:', email);
             return res.status(401).json({ success: false, message: 'Invalid email or password' });
         }
-        if (role && role !== 'any' && user.role !== role) {
-            return res.status(401).json({ success: false, message: `No ${role} account found with this email` });
+        const selectedRole = role || 'any';
+        if (selectedRole !== 'any' && user.role !== selectedRole) {
+            if (user.role !== 'admin') {
+                return res.status(401).json({
+                    success: false,
+                    error: 'role_mismatch',
+                    message: `This account is registered as a ${user.role}. Please select the correct role.`,
+                    correctRole: user.role
+                });
+            }
+            console.log('Mobile login - allowing admin despite selected role mismatch:', {
+                selectedRole,
+                actualRole: user.role,
+                email: user.email
+            });
         }
         const token = jwt.sign(
             { userId: user._id, email: user.email, role: user.role, name: user.name },
