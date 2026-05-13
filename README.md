@@ -18,7 +18,7 @@ The project includes:
 # 🚀 Live Demo
 
 ### 🌐 Web Application
-https://krishisetu-ten.vercel.app/
+https://krishisetu1.vercel.app/
 
 ### 📱 Mobile Application (Expo Build)
 https://expo.dev/accounts/shashankkanade25/projects/krishisetu/builds/c3efadb5-b18b-41b1-85a9-dec41f0c7e8b
