@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrishiSetu Blog | Agriculture & Biomass</title>
+    <%- include('partials/seo') %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Noto Sans Devanagari', sans-serif; background-color: #f9fafb; margin: 0; padding: 0; }
+        .blog-container { max-width: 800px; margin: 5rem auto; padding: 0 1rem; }
+        .blog-card { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .blog-title { color: #2e7d32; text-decoration: none; font-size: 1.5rem; display: block; margin-bottom: 1rem; }
+        .blog-desc { color: #666; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="blog-container">
+        <h1 style="text-align: center; color: #333; margin-bottom: 3rem;">KrishiSetu Agriculture & Sustainability Blog</h1>
+        <% posts.forEach(post => { %>
+            <div class="blog-card">
+                <a href="/blog/<%= post.slug %>" class="blog-title"><%= post.title %></a>
+                <p class="blog-desc"><%= post.description %></p>
+                <a href="/blog/<%= post.slug %>" style="color: #4CAF50; font-weight: bold; text-decoration: none; margin-top: 1rem; display: inline-block;">Read more &rarr;</a>
+            </div>
+        <% }) %>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

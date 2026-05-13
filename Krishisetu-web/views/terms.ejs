@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | KrishiSetu</title>
+    <%- include('partials/seo') %>
+    <link rel="stylesheet" href="/css/landing.css">
+    <style>
+        .legal-container { max-width: 800px; margin: 4rem auto; padding: 0 1rem; line-height: 1.6; }
+        .legal-container h1 { color: #2e7d32; margin-bottom: 2rem; }
+        .legal-container h2 { color: #333; margin-top: 2rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="legal-container">
+        <h1>Terms of Service</h1>
+        <p>Last updated: <%= new Date().toLocaleDateString() %></p>
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing and using KrishiSetu, you accept and agree to be bound by the terms and provision of this agreement.</p>
+        <h2>2. Use of Service</h2>
+        <p>KrishiSetu is an agricultural marketplace connecting farmers with consumers and industries for fresh produce and agricultural waste. You agree to use the service only for lawful purposes.</p>
+        <h2>3. Seller Responsibilities</h2>
+        <p>Farmers must ensure the quality and accuracy of the products and biomass listed on the platform.</p>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!-- SEO Meta Tags -->
+<meta name="description" content="<%= typeof seoDescription !== 'undefined' ? seoDescription : 'KrishiSetu is India\'s premier farming marketplace, agri waste management solution, and farmer-to-industry platform connecting sustainable agriculture directly with businesses.' %>">
+<meta name="keywords" content="agriculture, farming marketplace, agri waste management, farmer-to-industry platform, sustainable agriculture India, stubble burning solution, crop waste management, biomass marketplace, agricultural supply chain">
+<link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://krishisetu1.vercel.app/' %>" />
+
+<!-- OpenGraph Tags -->
+<meta property="og:title" content="<%= typeof seoTitle !== 'undefined' ? seoTitle : 'KrishiSetu - Sustainable Agriculture & Agri Waste Marketplace India' %>">
+<meta property="og:description" content="<%= typeof seoDescription !== 'undefined' ? seoDescription : 'Connect with farmers, manage agri waste, and build a sustainable agricultural supply chain in India.' %>">
+<meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://krishisetu1.vercel.app/images/og-image.jpg' %>">
+<meta property="og:url" content="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://krishisetu1.vercel.app/' %>">
+<meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'website' %>">
+<meta property="og:site_name" content="KrishiSetu">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= typeof seoTitle !== 'undefined' ? seoTitle : 'KrishiSetu - Sustainable Agriculture & Agri Waste Marketplace India' %>">
+<meta name="twitter:description" content="<%= typeof seoDescription !== 'undefined' ? seoDescription : 'Connect with farmers, manage agri waste, and build a sustainable agricultural supply chain in India.' %>">
+<meta name="twitter:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://krishisetu1.vercel.app/images/og-image.jpg' %>">
+
+<!-- Favicon & PWA -->
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta name="theme-color" content="#4CAF50">
+
+<!-- Preload important resources -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&display=swap">
+
+<!-- Structured Data / JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "KrishiSetu",
+  "url": "https://krishisetu1.vercel.app/",
+  "logo": "https://krishisetu1.vercel.app/images/logo.png",
+  "description": "India's premier platform for farmer-to-industry agricultural waste management and sustainable farming marketplace.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Pune",
+    "addressRegion": "Maharashtra",
+    "addressCountry": "IN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "support@krishisetu.com"
+  }
+}
+</script>

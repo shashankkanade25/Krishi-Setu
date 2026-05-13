@@ -14,6 +14,303 @@ const { isAuthenticated } = require('./middleware/auth');
 
 const app = express();
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'admin@krishisetu.com').trim().toLowerCase();
+const SITE_URL = (process.env.SITE_URL || 'https://krishisetu1.vercel.app').replace(/\/+$/, '');
+const SITE_NAME = 'कृषी-सेतू';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/krishi-setu-logo.png`;
+const GOOGLE_SITE_VERIFICATION = (process.env.GOOGLE_SITE_VERIFICATION || '').trim();
+const BING_SITE_VERIFICATION = (process.env.BING_SITE_VERIFICATION || '').trim();
+const YANDEX_SITE_VERIFICATION = (process.env.YANDEX_SITE_VERIFICATION || '').trim();
+const INDEXABLE_PATHS = new Set(['/', '/reviews', '/blog', '/blog/earn-from-crop-waste', '/blog/best-biomass-marketplace', '/blog/stubble-burning-alternatives', '/blog/sustainable-agri-supply-chains', '/blog/ai-helps-farmers-sell-waste', '/privacy', '/terms', '/contact']);
+const SITEMAP_ROUTES = [
+    { path: '/', changefreq: 'daily', priority: '1.0' },
+    { path: '/reviews', changefreq: 'weekly', priority: '0.8' },
+    { path: '/blog', changefreq: 'weekly', priority: '0.9' },
+    { path: '/blog/earn-from-crop-waste', changefreq: 'monthly', priority: '0.8' },
+    { path: '/blog/best-biomass-marketplace', changefreq: 'monthly', priority: '0.8' },
+    { path: '/blog/stubble-burning-alternatives', changefreq: 'monthly', priority: '0.8' },
+    { path: '/blog/sustainable-agri-supply-chains', changefreq: 'monthly', priority: '0.8' },
+    { path: '/blog/ai-helps-farmers-sell-waste', changefreq: 'monthly', priority: '0.8' },
+    { path: '/privacy', changefreq: 'yearly', priority: '0.5' },
+    { path: '/terms', changefreq: 'yearly', priority: '0.5' },
+    { path: '/contact', changefreq: 'monthly', priority: '0.7' }
+];
+const PAGE_SEO_OVERRIDES = {
+    '/': {
+        title: `${SITE_NAME} | Agriculture & Agri Waste Marketplace India`,
+        description: 'KrishiSetu connects customers with farmers for fresh produce and serves as a farmer-to-industry platform for agri waste management and sustainable agriculture.',
+        keywords: 'agriculture, farming marketplace, agri waste management, farmer-to-industry platform, sustainable agriculture India, crop waste management, stubble burning solution, biomass marketplace, agricultural supply chain, KrishiSetu, कृषी-सेतू',
+        type: 'website'
+    },
+    '/reviews': {
+        title: `Customer Reviews | ${SITE_NAME} Sustainable Farming Marketplace`,
+        description: 'Read customer reviews and ratings for KrishiSetu to see how farmers, buyers, and industries benefit from our direct farm-to-industry delivery and waste management solutions.',
+        keywords: 'KrishiSetu reviews, customer testimonials, farm delivery reviews, farmer marketplace ratings, sustainable farming feedback',
+        type: 'article'
+    },
+    '/blog': {
+        title: `Blog | ${SITE_NAME} - Agriculture & Biomass Insights`,
+        description: 'Read our latest insights on agriculture, stubble burning solutions, farmer-to-industry platforms, and sustainable farming in India.',
+        keywords: 'agriculture blog, biomass marketplace, crop waste management, sustainable farming India',
+        type: 'blog'
+    },
+    '/privacy': {
+        title: `Privacy Policy | ${SITE_NAME}`,
+        description: 'KrishiSetu Privacy Policy. Learn how we handle your data on our agricultural marketplace.',
+        keywords: 'privacy policy, KrishiSetu privacy',
+        type: 'website'
+    },
+    '/terms': {
+        title: `Terms of Service | ${SITE_NAME}`,
+        description: 'KrishiSetu Terms of Service. Understand the rules for using our farmer-to-industry platform.',
+        keywords: 'terms of service, KrishiSetu terms',
+        type: 'website'
+    },
+    '/contact': {
+        title: `Contact Us | ${SITE_NAME}`,
+        description: 'Contact KrishiSetu support for inquiries about fresh produce, biomass marketplace, and more.',
+        keywords: 'contact KrishiSetu, customer support, farmer support',
+        type: 'website'
+    },
+    '/login': {
+        title: `Login | ${SITE_NAME}`,
+        description: 'Login to your KrishiSetu account to order farm fresh products and manage your profile.',
+        noindex: true
+    },
+    '/register': {
+        title: `Register | ${SITE_NAME}`,
+        description: 'Create your KrishiSetu account to buy directly from farmers or sell as a farmer.',
+        noindex: true
+    }
+};
+const DEFAULT_TITLE = `${SITE_NAME} | Farming Marketplace & Agri Waste Platform`;
+const DEFAULT_DESCRIPTION = 'KrishiSetu is an agriculture marketplace and farmer-to-industry platform focusing on sustainable farming, fresh produce, and crop waste management solutions in India.';
+const DEFAULT_KEYWORDS = 'KrishiSetu, कृषी-सेतू, agriculture marketplace, agri waste management, farmer to industry, sustainable farming India';
+
+function escapeRegex(value = '') {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function escapeHtmlAttribute(value = '') {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function escapeXml(value = '') {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function normalizePathname(urlPath = '/') {
+    const [pathWithoutQuery] = String(urlPath || '/').split('?');
+    const [pathWithoutHash] = pathWithoutQuery.split('#');
+    let normalizedPath = pathWithoutHash || '/';
+
+    if (!normalizedPath.startsWith('/')) {
+        normalizedPath = `/${normalizedPath}`;
+    }
+
+    normalizedPath = normalizedPath.replace(/\/{2,}/g, '/');
+    if (normalizedPath.length > 1) {
+        normalizedPath = normalizedPath.replace(/\/+$/, '');
+    }
+
+    return normalizedPath || '/';
+}
+
+function buildSeoConfig(requestPath) {
+    const normalizedPath = normalizePathname(requestPath);
+    const pageOverride = PAGE_SEO_OVERRIDES[normalizedPath] || {};
+    const isIndexable = INDEXABLE_PATHS.has(normalizedPath) && !pageOverride.noindex;
+    const canonicalPath = normalizedPath === '/' ? '' : normalizedPath;
+
+    return {
+        path: normalizedPath,
+        title: pageOverride.title || DEFAULT_TITLE,
+        description: pageOverride.description || DEFAULT_DESCRIPTION,
+        keywords: pageOverride.keywords || DEFAULT_KEYWORDS,
+        type: pageOverride.type || 'website',
+        image: pageOverride.image || DEFAULT_OG_IMAGE,
+        canonicalUrl: `${SITE_URL}${canonicalPath}`,
+        robots: pageOverride.robots || (isIndexable
+            ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+            : 'noindex, nofollow')
+    };
+}
+
+function buildSeoJsonLd(seoConfig) {
+    const jsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: SITE_NAME,
+            url: SITE_URL,
+            logo: DEFAULT_OG_IMAGE,
+            contactPoint: {
+                '@type': 'ContactPoint',
+                telephone: '+91-9876543210',
+                contactType: 'customer service',
+                areaServed: 'IN',
+                availableLanguage: ['English', 'Hindi', 'Marathi']
+            }
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: SITE_NAME,
+            url: SITE_URL,
+            potentialAction: {
+                '@type': 'SearchAction',
+                target: `${SITE_URL}/products?search={search_term_string}`,
+                'query-input': 'required name=search_term_string'
+            }
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: seoConfig.title,
+            description: seoConfig.description,
+            url: seoConfig.canonicalUrl,
+            inLanguage: 'en-IN'
+        }
+    ];
+
+    // Add Breadcrumb Schema
+    const pathParts = seoConfig.path.split('/').filter(Boolean);
+    if (pathParts.length > 0) {
+        const itemListElement = [{
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: SITE_URL
+        }];
+        
+        let currentUrl = SITE_URL;
+        pathParts.forEach((part, index) => {
+            currentUrl += `/${part}`;
+            itemListElement.push({
+                '@type': 'ListItem',
+                position: index + 2,
+                name: part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, ' '),
+                item: currentUrl
+            });
+        });
+        
+        jsonLd.push({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement
+        });
+    }
+
+    return jsonLd;
+}
+
+function upsertTagByPattern(html, pattern, replacementMarkup) {
+    if (pattern.test(html)) {
+        return html.replace(pattern, replacementMarkup);
+    }
+
+    if (!/<\/head>/i.test(html)) {
+        return html;
+    }
+
+    return html.replace(/<\/head>/i, `    ${replacementMarkup}\n</head>`);
+}
+
+function applySeoToHtml(html, seoConfig) {
+    if (typeof html !== 'string' || !/<\/head>/i.test(html)) {
+        return html;
+    }
+
+    let updatedHtml = html;
+
+    updatedHtml = upsertTagByPattern(
+        updatedHtml,
+        /<title>[\s\S]*?<\/title>/i,
+        `<title>${escapeHtmlAttribute(seoConfig.title)}</title>`
+    );
+
+    const upsertMetaByName = (name, content) => {
+        const pattern = new RegExp(`<meta\\s+[^>]*name=["']${escapeRegex(name)}["'][^>]*>`, 'i');
+        updatedHtml = upsertTagByPattern(
+            updatedHtml,
+            pattern,
+            `<meta name="${name}" content="${escapeHtmlAttribute(content)}">`
+        );
+    };
+
+    const upsertMetaByProperty = (property, content) => {
+        const pattern = new RegExp(`<meta\\s+[^>]*property=["']${escapeRegex(property)}["'][^>]*>`, 'i');
+        updatedHtml = upsertTagByPattern(
+            updatedHtml,
+            pattern,
+            `<meta property="${property}" content="${escapeHtmlAttribute(content)}">`
+        );
+    };
+
+    upsertMetaByName('description', seoConfig.description);
+    upsertMetaByName('keywords', seoConfig.keywords);
+    upsertMetaByName('robots', seoConfig.robots);
+    upsertMetaByName('googlebot', seoConfig.robots);
+    upsertMetaByName('author', SITE_NAME);
+    upsertMetaByName('theme-color', '#2e7d32');
+    upsertMetaByName('application-name', SITE_NAME);
+    upsertMetaByName('apple-mobile-web-app-title', SITE_NAME);
+    upsertMetaByName('referrer', 'strict-origin-when-cross-origin');
+    upsertMetaByName('twitter:card', 'summary_large_image');
+    upsertMetaByName('twitter:title', seoConfig.title);
+    upsertMetaByName('twitter:description', seoConfig.description);
+    upsertMetaByName('twitter:image', seoConfig.image);
+
+    upsertMetaByProperty('og:type', seoConfig.type);
+    upsertMetaByProperty('og:site_name', SITE_NAME);
+    upsertMetaByProperty('og:title', seoConfig.title);
+    upsertMetaByProperty('og:description', seoConfig.description);
+    upsertMetaByProperty('og:url', seoConfig.canonicalUrl);
+    upsertMetaByProperty('og:image', seoConfig.image);
+    upsertMetaByProperty('og:image:alt', `${SITE_NAME} - Farm Fresh Produce`);
+    upsertMetaByProperty('og:locale', 'en_IN');
+
+    if (GOOGLE_SITE_VERIFICATION) {
+        upsertMetaByName('google-site-verification', GOOGLE_SITE_VERIFICATION);
+    }
+
+    if (BING_SITE_VERIFICATION) {
+        upsertMetaByName('msvalidate.01', BING_SITE_VERIFICATION);
+    }
+
+    if (YANDEX_SITE_VERIFICATION) {
+        upsertMetaByName('yandex-verification', YANDEX_SITE_VERIFICATION);
+    }
+
+    updatedHtml = upsertTagByPattern(
+        updatedHtml,
+        /<link\s+[^>]*rel=["']canonical["'][^>]*>/i,
+        `<link rel="canonical" href="${escapeHtmlAttribute(seoConfig.canonicalUrl)}">`
+    );
+
+    updatedHtml = upsertTagByPattern(
+        updatedHtml,
+        /<link\s+[^>]*rel=["']alternate["'][^>]*hreflang=["']en-IN["'][^>]*>/i,
+        `<link rel="alternate" hreflang="en-IN" href="${escapeHtmlAttribute(seoConfig.canonicalUrl)}">`
+    );
+
+    const jsonLdContent = JSON.stringify(buildSeoJsonLd(seoConfig)).replace(/</g, '\\u003c');
+    updatedHtml = upsertTagByPattern(
+        updatedHtml,
+        /<script\s+type=["']application\/ld\+json["'][^>]*data-seo=["']krishisetu["'][^>]*>[\s\S]*?<\/script>/i,
+        `<script type="application/ld+json" data-seo="krishisetu">${jsonLdContent}</script>`
+    );
+
+    return updatedHtml;
+}
 
 function normalizeRoleValue(role) {
     return role === 'user' ? 'customer' : role;
@@ -124,16 +421,25 @@ app.use((req, res, next) => {
                 return res.status(500).send('Failed to render page');
             }
 
-            const optimizerScript = '<script src="/js/image-optimizer.js" defer></script>';
-            if (typeof html !== 'string' || html.includes('/js/image-optimizer.js')) {
+            if (typeof html !== 'string') {
                 return res.send(html);
             }
 
-            if (html.includes('</body>')) {
-                return res.send(html.replace('</body>', `    ${optimizerScript}\n</body>`));
+            const seoConfig = buildSeoConfig(req.originalUrl || req.url || '/');
+            res.setHeader('X-Robots-Tag', seoConfig.robots);
+
+            let transformedHtml = applySeoToHtml(html, seoConfig);
+            const optimizerScript = '<script src="/js/image-optimizer.js" defer></script>';
+            if (transformedHtml.includes('/js/image-optimizer.js')) {
+                return res.send(transformedHtml);
             }
 
-            return res.send(`${html}\n${optimizerScript}`);
+            if (transformedHtml.includes('</body>')) {
+                transformedHtml = transformedHtml.replace('</body>', `    ${optimizerScript}\n</body>`);
+                return res.send(transformedHtml);
+            }
+
+            return res.send(`${transformedHtml}\n${optimizerScript}`);
         });
     };
 
@@ -141,6 +447,59 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.get('/robots.txt', (req, res) => {
+    const robotsLines = [
+        'User-agent: *',
+        'Allow: /',
+        'Disallow: /api/',
+        'Disallow: /mobile/',
+        'Disallow: /admin',
+        'Disallow: /dashboard',
+        'Disallow: /farmer-home',
+        'Disallow: /farmer-dashboard',
+        'Disallow: /customer-home',
+        'Disallow: /cart',
+        'Disallow: /checkout',
+        'Disallow: /orders',
+        'Disallow: /profile',
+        'Disallow: /settings',
+        'Disallow: /login',
+        'Disallow: /register',
+        `Sitemap: ${SITE_URL}/sitemap.xml`
+    ];
+
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(robotsLines.join('\n'));
+});
+
+app.get('/sitemap.xml', (req, res) => {
+    const lastModified = new Date().toISOString();
+    const urls = SITEMAP_ROUTES.map((route) => {
+        const sitemapPath = route.path === '/' ? '' : route.path;
+        const absoluteUrl = `${SITE_URL}${sitemapPath}`;
+        return [
+            '  <url>',
+            `    <loc>${escapeXml(absoluteUrl)}</loc>`,
+            `    <lastmod>${lastModified}</lastmod>`,
+            `    <changefreq>${route.changefreq}</changefreq>`,
+            `    <priority>${route.priority}</priority>`,
+            '  </url>'
+        ].join('\n');
+    }).join('\n');
+
+    const sitemapXml = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        urls,
+        '</urlset>'
+    ].join('\n');
+
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(sitemapXml);
+});
+
 // Landing page - first page for new visitors
 app.get('/', (req, res) => {
     if (req.session.userId) {
@@ -188,6 +547,72 @@ app.get('/customer-home', isAuthenticated, (req, res) => {
             role: req.session.userRole
         }
     });
+});
+
+// Static Pages
+app.get('/privacy', (req, res) => {
+    res.render('privacy');
+});
+
+app.get('/terms', (req, res) => {
+    res.render('terms');
+});
+
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+// Basic Blog Architecture for SEO
+const SAMPLE_BLOG_POSTS = {
+    'earn-from-crop-waste': {
+        title: 'How Farmers Can Earn From Crop Waste Instead of Burning It',
+        description: 'Discover how farmers in India are using farmer-to-industry platforms like KrishiSetu to turn crop waste and stubble into a profitable biomass business.',
+        keywords: 'crop waste management, stubble burning alternatives, biomass marketplace, sustainable agriculture',
+        content: '<p>Stubble burning is a major issue in Northern India...</p>'
+    },
+    'best-biomass-marketplace': {
+        title: 'Best Biomass Marketplace in India for Sustainable Supply Chains',
+        description: 'A deep dive into how KrishiSetu is revolutionizing the agricultural supply chain by connecting farmers with factories needing biomass.',
+        keywords: 'biomass marketplace India, agricultural supply chain, farm waste to industry',
+        content: '<p>The agricultural supply chain in India is evolving...</p>'
+    },
+    'stubble-burning-alternatives': {
+        title: 'Top Alternatives to Stubble Burning for Indian Farmers',
+        description: 'Explore sustainable alternatives to stubble burning that not only reduce pollution but also create additional income for farmers through waste management.',
+        keywords: 'stubble burning alternatives, stubble burning solution, crop residue management, sustainable farming',
+        content: '<p>Stubble burning has long been a challenge for air quality in India, but modern alternatives offer profitable solutions for farmers...</p>'
+    },
+    'sustainable-agri-supply-chains': {
+        title: 'Building Sustainable Agricultural Supply Chains in India',
+        description: 'How direct farmer-to-industry platforms are creating transparent, sustainable, and efficient agricultural supply chains.',
+        keywords: 'sustainable agri supply chains, sustainable agriculture India, transparent farming platform',
+        content: '<p>Sustainability in agriculture requires a transparent supply chain from the farm directly to the industry or consumer...</p>'
+    },
+    'ai-helps-farmers-sell-waste': {
+        title: 'How AI Helps Farmers Sell Agricultural Waste',
+        description: 'Learn how artificial intelligence and digital marketplaces are empowering farmers to connect with industries for efficient crop waste management.',
+        keywords: 'AI in agriculture, sell agricultural waste, farmer-to-industry platform, digital farming India',
+        content: '<p>Artificial intelligence is transforming how farmers manage their crop residue, connecting them instantly with industrial buyers...</p>'
+    }
+};
+
+app.get('/blog', (req, res) => {
+    res.render('blog-index', { posts: Object.keys(SAMPLE_BLOG_POSTS).map(slug => ({ slug, ...SAMPLE_BLOG_POSTS[slug] })) });
+});
+
+app.get('/blog/:slug', (req, res) => {
+    const post = SAMPLE_BLOG_POSTS[req.params.slug];
+    if (!post) return res.status(404).render('404');
+    
+    // Dynamically inject SEO for the blog post
+    PAGE_SEO_OVERRIDES[`/blog/${req.params.slug}`] = {
+        title: `${post.title} | ${SITE_NAME}`,
+        description: post.description,
+        keywords: post.keywords,
+        type: 'article'
+    };
+    
+    res.render('blog-post', { post });
 });
 
 // Products page
