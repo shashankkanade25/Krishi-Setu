@@ -38,12 +38,19 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy') {
             steps {
                 sh '''
-                docker compose down
-                docker compose pull
-                docker compose up -d
+                docker pull shashankkanade25/krishisetu:latest
+        
+                docker stop krishi-app || true
+                docker rm krishi-app || true
+        
+                docker run -d \
+                  --name krishi-app \
+                  -p 5000:5000 \
+                  shashankkanade25/krishisetu:latest
                 '''
             }
         }
