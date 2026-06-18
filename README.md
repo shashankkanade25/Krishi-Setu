@@ -1,189 +1,262 @@
-# 🌾 KrishiSetu
-### A Bridge Between Farmers and Customers
+# 🌾 KrishiSetu - Full Stack Agri-Commerce Platform with Cloud-Native DevOps Infrastructure
+<img width="2760" height="1304" alt="image" src="https://github.com/user-attachments/assets/f4e6e5b2-2074-4ea0-b39e-be4ef2469571" />
 
-KrishiSetu is a **digital marketplace that connects farmers directly with customers**, helping eliminate middlemen and ensuring fair pricing for farm produce.
 
-The platform allows **farmers to list their products**, **customers to purchase fresh produce**, and **admins to manage the ecosystem**.
+### Empowering Farmers Through Technology • From Research Paper to Production Deployment
 
-The project includes:
-
-- 🌐 Web Application
-- 📱 Mobile Application
-- 🧑‍🌾 Farmer Product Management
-- 🛒 Customer Marketplace
-- 🧑‍💼 Admin Dashboard
+> A production-grade agricultural marketplace that connects farmers directly with consumers through Web and Mobile Applications, powered by Cloud Infrastructure, Containerization, CI/CD Automation, and Modern DevOps Practices.
 
 ---
 
-# 🚀 Live Demo
+## 🚀 Project Vision
 
-### 🌐 Web Application
-https://krishisetu1.vercel.app/
+KrishiSetu is more than an e-commerce application.
 
-### 📱 Mobile Application (Expo Build)
+It began as a research initiative focused on solving one of India's most persistent agricultural challenges: the gap between farmers and consumers created by intermediaries.
+
+The project evolved into a complete digital ecosystem consisting of:
+
+🌐 Full Stack Web Application
+
+📱 Cross-Platform Mobile Application
+
+👨‍🌾 Farmer Management Portal
+
+🛒 Customer Marketplace
+
+👨‍💼 Administrative Dashboard
+
+☁️ Cloud Infrastructure
+
+⚙️ Automated CI/CD Pipeline
+
+🔒 Secure HTTPS Deployment
+
+The platform enables farmers to directly sell produce, manage inventory, update prices, and reach customers without relying on traditional middlemen.
+
+---
+
+# 🏆 Project Highlights
+
+### 🔬 Research to Real Product
+
+Published Research Paper: https://tinyurl.com/publish-paper
+
+**"Digital Agriculture in Action: Krishi-Setu as a Model for Farmer-to-Consumer Platforms"**
+
+Rather than stopping at theoretical research, the proposed solution was transformed into a fully functional software product and deployed on cloud infrastructure.
+
+---
+
+### 🌐 Full Stack Development
+
+Designed and developed a complete marketplace ecosystem featuring:
+
+* Farmer Dashboard
+* Customer Marketplace
+* Admin Dashboard
+* Authentication & User Management
+* Product Management System
+* Inventory Tracking
+* Search & Filtering Functionality
+
+---
+
+### 📱 Mobile Application Development
+
+Developed a React Native mobile application providing:
+
+* Cross-platform compatibility
+* Mobile marketplace experience
+* Farmer accessibility
+* Customer product browsing
+* Expo deployment workflow
+
+---
+
+### ☁️ Cloud & DevOps Engineering
+
+Implemented production-oriented DevOps practices including:
+
+* Docker Containerization
+* Multi-Container Architecture
+* Docker Compose Orchestration
+* Jenkins CI/CD Automation
+* Docker Hub Registry Management
+* AWS EC2 Deployment
+* Linux Server Administration
+* Nginx Reverse Proxy Configuration
+* HTTPS Enablement using Let's Encrypt
+
+---
+
+# 🌍 Live Deployments
+
+### Production Environment (AWS + Nginx + HTTPS)
+
+https://krishisetu.duckdns.org
+
+### Mobile Application
+
 https://expo.dev/accounts/shashankkanade25/projects/krishisetu/builds/c3efadb5-b18b-41b1-85a9-dec41f0c7e8b
 
-### 💻 Source Code
+### Source Code
+
 https://github.com/shashankkanade25/Krishi-Setu
 
 ---
 
-# 🎯 Problem Statement
+# 🏗️ Enterprise-Style Architecture
 
-In traditional agricultural markets:
-
-- Farmers often **earn less due to intermediaries**
-- Customers **pay higher prices**
-- Supply chains become **inefficient**
-
-KrishiSetu aims to solve this by creating a **direct farmer-to-customer digital marketplace**.
-
----
-
-# ✨ Key Features
-
-## 👨‍🌾 Farmer Dashboard
-- Add and manage farm products
-- Update product pricing
-- Track stock availability
-- Manage product listings
-
-## 🛒 Customer Marketplace
-- Browse fresh farm products
-- Search and filter items
-- Add products to cart
-- Checkout functionality
-
-## 🧑‍💼 Admin Panel
-- Manage users
-- Manage product listings
-- Monitor platform activity
-- Dashboard analytics
-
-## 📱 Mobile Experience
-- React Native mobile application
-- Smooth product browsing
-- Cross-platform support
+```
+                     Internet
+                          │
+                          ▼
+                 HTTPS (SSL/TLS)
+                          │
+                          ▼
+                 Nginx Reverse Proxy
+                          │
+                          ▼
+             KrishiSetu Application
+                (Docker Container)
+                          │
+                          ▼
+                MongoDB Container
+```
 
 ---
 
-# 🧑‍💻 Tech Stack
+## ⚙️ Automated CI/CD Pipeline
 
-### Frontend
-- React
-- React Native (Expo)
+GitHub Repository
+│
+▼
+Jenkins Pipeline
+│
+▼
+Docker Image Build
+│
+▼
+Docker Hub Registry
+│
+▼
+AWS EC2 Deployment
+│
+▼
+Production Environment
 
-### Deployment
-- Vercel (Web Application)
-- Expo Build (Mobile Application)
+This pipeline automates:
 
-### Version Control
-- Git
-- GitHub
+✔ Source Code Integration
+
+✔ Docker Image Creation
+
+✔ Docker Registry Publishing
+
+✔ Automated Deployment Workflow
+
+✔ Infrastructure Consistency
 
 ---
 
-# 📱 Application Screenshots
+# 🛠️ Technology Stack
 
-### Landing Page
-<p align="center">
-  <img src="https://media.licdn.com/dms/image/v2/D4D22AQFjNx__NJMb-Q/feedshare-shrink_2048_1536/B4DZzpN453JQAk-/0/1773439258807?e=1775088000&v=beta&t=ZIiUgryQQXw_bMNKS-mRFEknUvTCnpls9ITDi3iJhM0" width="800"/>
-</p>
+## Frontend
 
-### Customer Marketplace
-<p align="center">
-  <img src="https://media.licdn.com/dms/image/v2/D4D22AQEIqv6N7Yci4Q/feedshare-shrink_1280/B4DZzpN1dvIkAM-/0/1773439244439?e=1775088000&v=beta&t=BYOORk-hOukve_94b7KbIo-yMkt1IbOJ9JjeaZ5sj64" width="800"/>
-</p>
+* React.js
+* HTML5
+* CSS3
+* JavaScript
 
-### Farmer Dashboard
-<p align="center">
-  <img src="https://media.licdn.com/dms/image/v2/D4D22AQFugPcggUhQwA/feedshare-shrink_1280/B4DZzpN1wEIkAM-/0/1773439245584?e=1775088000&v=beta&t=oUE19lSbWPtwQCMaO2vqpZGWEF7IkQ_50LK9ETDETv4" width="800"/>
-</p>
+## Mobile Development
 
-### Admin Dashboard
-<p align="center">
-  <img src="https://media.licdn.com/dms/image/v2/D4D22AQHKF6qHNuMJgg/feedshare-shrink_2048_1536/B4DZzpN1ddGsAk-/0/1773439244405?e=1775088000&v=beta&t=XoIED9_4vxAdLuNukq0ELSGGQiRgrFmeuXKDg-WdGzY" width="800"/>
-</p>
+* React Native
+* Expo
 
-# 🏗️ Project Structure
+## Backend
 
+* Node.js
+* Express.js
+* REST APIs
 
-Krishi-Setu
-│
-├── mobile-app
-│ ├── components
-│ ├── screens
-│ ├── assets
-│ └── navigation
-│
-├── web-app
-│ ├── components
-│ ├── pages
-│ └── assets
-│
-├── admin-panel
-│ ├── dashboard
-│ ├── product-management
-│ └── analytics
-│
-└── README.md
+## Database
 
+* MongoDB
+* Mongoose
+
+## Cloud & DevOps
+
+* AWS EC2
+* Ubuntu Linux
+* Docker
+* Docker Compose
+* Jenkins
+* Docker Hub
+* Nginx
+* SSL/TLS
+* Let's Encrypt
+
+## Version Control
+
+* Git
+* GitHub
 
 ---
 
-# ⚙️ Installation & Setup
+# 💡 Engineering Challenges Solved
 
-### Clone the repository
+### Containerized Deployment
 
-```bash
-git clone https://github.com/shashankkanade25/Krishi-Setu.git
-Navigate into the project
-cd Krishi-Setu
-Install dependencies
-npm install
-Run the application
-npm start
-📦 Running the Mobile App
+Migrated application deployment from local execution to Docker-based infrastructure.
 
-The mobile application is built using Expo.
+### CI/CD Automation
 
-Start Expo locally:
+Designed Jenkins pipelines to automate image build, registry publishing, and deployment processes.
 
-npx expo start
+### Production Hosting
 
-You can also install the APK file generated from Expo builds.
+Configured cloud-hosted infrastructure using AWS EC2.
 
-🎯 Future Improvements
+### Secure Access
 
-Payment gateway integration
+Implemented HTTPS encryption using Nginx and Let's Encrypt SSL certificates.
 
-Order tracking system
+### Service Communication
 
-Farmer verification system
+Configured Docker networking for seamless communication between application and database containers.
 
-Delivery partner integration
+---
 
-Cloud backend deployment
+# 📈 Future Roadmap
 
-AI-based demand forecasting
+* Kubernetes (K3s)
+* Prometheus Monitoring
+* Grafana Dashboards
+* ArgoCD GitOps
+* Payment Gateway Integration
+* Order Tracking
+* Delivery Partner Module
+* Farmer Verification
+* AI-Based Demand Forecasting
+* Recommendation Engine
 
-🤝 Contributing
+---
 
-Contributions are welcome!
+# 👨‍💻 Developer
 
-Fork the repository
+### Shashank Kanade
 
-Create your feature branch
+Computer Engineering Student | Cloud & DevOps Enthusiast | Full Stack Developer
 
-Commit your changes
-
-Push the branch
-
-Open a Pull Request
-
-👨‍💻 Author
-
-Shashank Kanade
-
-GitHub
+GitHub:
 https://github.com/shashankkanade25
+
+LinkedIn:
+https://www.linkedin.com/in/shashank-kanade25
+
+---
+
+### Key Skills Demonstrated
+
+Full Stack Development • Mobile Development • Cloud Computing • DevOps • CI/CD • Docker • Linux • AWS • Nginx • System Design • Database Management • Deployment Automation
