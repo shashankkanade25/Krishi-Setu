@@ -108,22 +108,7 @@ https://github.com/shashankkanade25/Krishi-Setu
 
 # 🏗️ Enterprise-Style Architecture
 
-```
-                     Internet
-                          │
-                          ▼
-                 HTTPS (SSL/TLS)
-                          │
-                          ▼
-                 Nginx Reverse Proxy
-                          │
-                          ▼
-             KrishiSetu Application
-                (Docker Container)
-                          │
-                          ▼
-                MongoDB Container
-```
+<img src = "Krishisetu_architecture.png">
 
 ---
 
