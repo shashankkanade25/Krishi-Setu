@@ -4,7 +4,7 @@
 
 ### Empowering Farmers Through Technology • From Research Paper to Production Deployment
 
-> A production-grade agricultural marketplace that connects farmers directly with consumers through Web and Mobile Applications, powered by Cloud Infrastructure, Containerization, CI/CD Automation, and Modern DevOps Practices.
+KrishiSetu is a full-stack agri-commerce platform that connects farmers directly with customers, eliminating middlemen. Farmers can register, list and manage their products, while customers can browse, search, and purchase fresh produce through the web or mobile application. An admin panel is provided to manage users, products, and platform activities. The application is deployed on AWS using Docker, Docker Compose, Jenkins CI/CD, Nginx, and HTTPS, making it production-ready.
 
 ---
 
