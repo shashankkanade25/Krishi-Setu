@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
@@ -8,6 +8,8 @@ RUN npm ci --omit=dev && \
     npm cache clean --force
 
 COPY . .
+
+USER node
 
 EXPOSE 5000
 
