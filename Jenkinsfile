@@ -5,9 +5,6 @@ pipeline {
         IMAGE_NAME = "shashankkanade25/krishisetu"
         SONAR_HOME = tool "SonarScanner"
     }
-    tools {
-        nodejs 'NodeJS-20'
-    }
 
     stages {
 
@@ -23,6 +20,7 @@ pipeline {
                 dir('Krishisetu-web') {
                     withSonarQubeEnv('SonarQube') {
                         sh '''
+                        which node
                         node -v
                         npm -v
                         $SONAR_HOME/bin/sonar-scanner \
