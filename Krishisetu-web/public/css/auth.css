@@ -255,7 +255,6 @@ form {
     }
 
     .auth-form {
-        flex: 1;
         padding: 2rem;
         flex: 0 0 auto;
     }

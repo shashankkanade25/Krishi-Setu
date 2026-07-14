@@ -2320,7 +2320,7 @@ app.post('/api/mobile/place-order', authenticateMobile, async (req, res) => {
                 pincode: address.pincode,
             },
             paymentMethod: paymentMethod || 'cod',
-            paymentStatus: paymentMethod === 'cod' ? 'pending' : 'pending',
+            paymentStatus: 'pending',
             status: 'pending',
             specialInstructions: instructions || '',
         });
