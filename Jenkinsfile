@@ -18,7 +18,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('Krishisetu-web') {
-                    withSonarQubeEnv('SonarQube') {
+                    withSonarQubeEnv([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
                         sh '''
                         $SONAR_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=krishisetu \
