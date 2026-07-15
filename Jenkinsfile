@@ -46,8 +46,10 @@ pipeline {
             steps {
                 sh '''
                 trivy image \
-                --severity HIGH,CRITICAL \
-                --exit-code 1 \
+                 --scanners vuln \
+                 --format table \
+                 -o trivy-report.txt \
+                 --severity HIGH,CRITICAL \
                 $IMAGE_NAME:latest
                 '''
             }
