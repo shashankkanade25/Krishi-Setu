@@ -4,7 +4,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const multer = require('multer');
 const path = require('path');
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const connectDB = require('./config/db');
 const User = require('./models/User');
