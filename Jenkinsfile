@@ -150,21 +150,5 @@ pipeline {
                 '''
             }
         }
-
-        stage('Deploy') {
-            steps {
-                sh '''
-                docker pull $IMAGE_NAME:$IMAGE_TAG
-
-                docker stop krishi-app || true
-                docker rm krishi-app || true
-
-                docker run -d \
-                    --name krishi-app \
-                    -p 5000:5000 \
-                    $IMAGE_NAME:$IMAGE_TAG
-                '''
-            }
-        }
     }
 }
