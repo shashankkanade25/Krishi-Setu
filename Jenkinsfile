@@ -110,8 +110,30 @@ pipeline {
 
                     git config user.email "jenkins@krishisetu.local"
 
-                    git status
+                    git add .
+
+                    git commit -m "Update image tag to ${IMAGE_TAG}" || true
                     '''
+                }
+            }
+        }
+
+        stage('Push GitOps Repo') {
+            steps {
+                dir('gitops') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'github-token',
+                            usernameVariable: 'GIT_USER',
+                            passwordVariable: 'GIT_TOKEN'
+                        )
+                    ]) {
+                        sh '''
+                        git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/shashankkanade25/krishisetu-gitops.git
+
+                        git push origin main
+                        '''
+                    }
                 }
             }
         }
