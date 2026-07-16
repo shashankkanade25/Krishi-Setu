@@ -68,7 +68,7 @@ pipeline {
                 ]) {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker push $IMAGE_NAME:latest
+                    docker push $IMAGE_NAME:$IMAGE_TAG
                     '''
                 }
             }
@@ -84,6 +84,37 @@ pipeline {
             }
         }
 
+        stage('Update Image Tag') {
+            steps {
+                dir('gitops/charts/krishisetu') {
+
+                    sh '''
+                    echo "Before:"
+                    cat values.yaml
+
+                    sed -i "s/tag:.*/tag: \\"${IMAGE_TAG}\\"/" values.yaml
+
+                    echo "After:"
+                    cat values.yaml
+                    '''
+                }
+            }
+        }
+
+        stage('Commit Changes') {
+            steps {
+                dir('gitops') {
+
+                    sh '''
+                    git config user.name "Jenkins"
+
+                    git config user.email "jenkins@krishisetu.local"
+
+                    git status
+                    '''
+                }
+            }
+        }
         stage('Verify GitOps Repo') {
             steps {
                 sh '''
@@ -101,7 +132,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                docker pull $IMAGE_NAME:latest
+                docker pull $IMAGE_NAME:$IMAGE_TAG
 
                 docker stop krishi-app || true
                 docker rm krishi-app || true
