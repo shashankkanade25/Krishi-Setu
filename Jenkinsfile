@@ -2,7 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "shashankkanade25/krishisetu"
+        DOCKER_USERNAME = "shashankkanade25"
+        IMAGE_NAME = "${DOCKER_USERNAME}/krishisetu"
+        IMAGE_TAG  = "${BUILD_NUMBER}"
         SONAR_HOME = tool "SonarScanner"
     }
 
@@ -37,7 +39,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t $IMAGE_NAME:latest ./Krishisetu-web
+                docker build -t $IMAGE_NAME:$IMAGE_TAG ./Krishisetu-web
                 '''
             }
         }
@@ -50,7 +52,7 @@ pipeline {
                  --format table \
                  -o trivy-report.txt \
                  --severity HIGH,CRITICAL \
-                $IMAGE_NAME:latest
+                $IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
@@ -83,7 +85,7 @@ pipeline {
                 docker run -d \
                     --name krishi-app \
                     -p 5000:5000 \
-                    $IMAGE_NAME:latest
+                    $IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
