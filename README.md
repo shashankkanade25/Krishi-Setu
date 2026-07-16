@@ -1,38 +1,10 @@
-# 🌾 KrishiSetu - Full Stack Agri-Commerce Platform with Cloud-Native DevOps Infrastructure
+# 🌾 KrishiSetu - Full Stack Agri-Commerce Platform with DevSecOps, GitOps & Kubernetes
 <img width="2760" height="1304" alt="image" src="https://github.com/user-attachments/assets/f4e6e5b2-2074-4ea0-b39e-be4ef2469571" />
 
 
 ### Empowering Farmers Through Technology • From Research Paper to Production Deployment
 
 KrishiSetu is a full-stack agri-commerce platform that connects farmers directly with customers, eliminating middlemen. Farmers can register, list and manage their products, while customers can browse, search, and purchase fresh produce through the web or mobile application. An admin panel is provided to manage users, products, and platform activities. The application is deployed on AWS using Docker, Docker Compose, Jenkins CI/CD, Nginx, and HTTPS, making it production-ready.
-
----
-
-## 🚀 Project Vision
-
-KrishiSetu is more than an e-commerce application.
-
-It began as a research initiative focused on solving one of India's most persistent agricultural challenges: the gap between farmers and consumers created by intermediaries.
-
-The project evolved into a complete digital ecosystem consisting of:
-
-🌐 Full Stack Web Application
-
-📱 Cross-Platform Mobile Application
-
-👨‍🌾 Farmer Management Portal
-
-🛒 Customer Marketplace
-
-👨‍💼 Administrative Dashboard
-
-☁️ Cloud Infrastructure
-
-⚙️ Automated CI/CD Pipeline
-
-🔒 Secure HTTPS Deployment
-
-The platform enables farmers to directly sell produce, manage inventory, update prices, and reach customers without relying on traditional middlemen.
 
 ---
 
@@ -48,46 +20,36 @@ Rather than stopping at theoretical research, the proposed solution was transfor
 
 ---
 
-### 🌐 Full Stack Development
+# ✨ Project Highlights
 
-Designed and developed a complete marketplace ecosystem featuring:
+### 🌐 Full Stack Platform
 
-* Farmer Dashboard
-* Customer Marketplace
-* Admin Dashboard
-* Authentication & User Management
-* Product Management System
-* Inventory Tracking
-* Search & Filtering Functionality
-
----
-
-### 📱 Mobile Application Development
-
-Developed a React Native mobile application providing:
-
-* Cross-platform compatibility
-* Mobile marketplace experience
-* Farmer accessibility
-* Customer product browsing
-* Expo deployment workflow
+- 👨‍🌾 Farmer Dashboard
+- 🛒 Customer Marketplace
+- 👨‍💼 Admin Dashboard
+- 🔐 Authentication & Authorization
+- 📦 Product & Inventory Management
+- 🔍 Search & Filtering
 
 ---
 
-### ☁️ Cloud & DevOps Engineering
+### 📱 Mobile Application
 
-Implemented production-oriented DevOps practices including:
+- ⚛️ Built with React Native & Expo
+- 📱 Cross-platform Experience
+- 🛍️ Mobile Marketplace
+- 🌾 Farmer Accessibility
 
-* Docker Containerization
-* Multi-Container Architecture
-* Docker Compose Orchestration
-* Jenkins CI/CD Automation
-* Docker Hub Registry Management
-* AWS EC2 Deployment
-* Linux Server Administration
-* Nginx Reverse Proxy Configuration
-* HTTPS Enablement using Let's Encrypt
+---
 
+### ☁️ Cloud & DevOps
+
+- 🐳 Docker & Docker Compose
+- ☁️ AWS EC2 Deployment
+- ⚙️ Jenkins CI Pipeline
+- 📦 Docker Hub Registry
+- 🌐 Nginx Reverse Proxy
+- 🔒 HTTPS with Let's Encrypt
 ---
 
 # 🌍 Live Deployments
@@ -108,7 +70,8 @@ https://github.com/shashankkanade25/Krishi-Setu
 
 # 🏗️ Enterprise-Style Architecture
 
-<img src = "Krishisetu_architecture.png">
+<img width="1536" height="1024" alt="Krishisetu_architecture 12" src="https://github.com/user-attachments/assets/a16aa1c2-33fb-4ee0-aab2-5ef006ea836b" />
+
 
 ---
 
@@ -147,101 +110,271 @@ This pipeline automates:
 
 # 🛠️ Technology Stack
 
-## Frontend
+<div align="center">
 
-* React.js
-* HTML5
-* CSS3
-* JavaScript
+| Category | Technologies |
+|:---------|:-------------|
+| 🎨 **Frontend** | <p align="center"><img src="https://skillicons.dev/icons?i=react,html,css,js" /><br><sub><b>React • HTML5 • CSS3 • JavaScript</b></sub></p> |
+| 📱 **Mobile** | <p align="center"><img src="https://skillicons.dev/icons?i=react" height="48"/><br><sub><b>React Native • Expo</b></sub></p> |
+| ⚙️ **Backend** | <p align="center"><img src="https://skillicons.dev/icons?i=nodejs,express" /><br><sub><b>Node.js • Express.js • REST APIs</b></sub></p> |
+| 🗄️ **Database** | <p align="center"><img src="https://skillicons.dev/icons?i=mongodb" /><br><sub><b>MongoDB • Mongoose</b></sub></p> |
+| ☁️ **Cloud & DevOps** | <p align="center"><img src="https://skillicons.dev/icons?i=aws,docker,linux,nginx" /><br><sub><b>AWS EC2 • Docker • Ubuntu • Nginx</b></sub><br><sub><b>Docker Compose • SSL/TLS • Let's Encrypt</b></sub></p> |
+| 🚀 **CI/CD** | <p align="center"><img src="https://skillicons.dev/icons?i=jenkins,docker" /><br><sub><b>Jenkins • Docker Hub</b></sub></p> |
+| 🌿 **Version Control** | <p align="center"><img src="https://skillicons.dev/icons?i=git,github" /><br><sub><b>Git • GitHub</b></sub></p> |
 
-## Mobile Development
-
-* React Native
-* Expo
-
-## Backend
-
-* Node.js
-* Express.js
-* REST APIs
-
-## Database
-
-* MongoDB
-* Mongoose
-
-## Cloud & DevOps
-
-* AWS EC2
-* Ubuntu Linux
-* Docker
-* Docker Compose
-* Jenkins
-* Docker Hub
-* Nginx
-* SSL/TLS
-* Let's Encrypt
-
-## Version Control
-
-* Git
-* GitHub
+</div>
 
 ---
 
-# 💡 Engineering Challenges Solved
+# 🚀 Evolution to Production DevSecOps & GitOps Platform
 
-### Containerized Deployment
+KrishiSetu evolved beyond a traditional Docker deployment into a production-inspired **Cloud Native DevSecOps & GitOps platform**.
 
-Migrated application deployment from local execution to Docker-based infrastructure.
-
-### CI/CD Automation
-
-Designed Jenkins pipelines to automate image build, registry publishing, and deployment processes.
-
-### Production Hosting
-
-Configured cloud-hosted infrastructure using AWS EC2.
-
-### Secure Access
-
-Implemented HTTPS encryption using Nginx and Let's Encrypt SSL certificates.
-
-### Service Communication
-
-Configured Docker networking for seamless communication between application and database containers.
+Instead of manually deploying containers, the project now follows an automated software delivery workflow where **every Git commit is validated, secured, versioned, and deployed through GitOps**.
 
 ---
 
-# 📈 Future Roadmap
+# 🔐 DevSecOps Pipeline
 
-* Kubernetes (K3s)
-* Prometheus Monitoring
-* Grafana Dashboards
-* ArgoCD GitOps
-* Payment Gateway Integration
-* Order Tracking
-* Delivery Partner Module
-* Farmer Verification
-* AI-Based Demand Forecasting
-* Recommendation Engine
+The CI pipeline was redesigned following modern DevSecOps principles where security checks are integrated directly into the software delivery lifecycle.
+
+## Pipeline Workflow
+
+```text
+Developer
+    │
+Git Push
+    │
+    ▼
+GitHub Repository
+    │
+GitHub Webhook
+    │
+    ▼
+Jenkins Pipeline
+    │
+    ├── Source Code Checkout
+    ├── SonarQube Static Code Analysis
+    ├── Docker Image Build
+    ├── Trivy Vulnerability Scan
+    ├── Docker Image Versioning
+    └── Docker Hub Push
+```
+---
+
+# 📸 DevSecOps Pipeline Screenshots
+
+## Jenkins CI Pipeline
+
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/5f723910-9cd0-47d4-ada6-0b1b441eea18" width="2836" height="1716" />
+</p>
 
 ---
 
-# 👨‍💻 Developer
+## SonarQube Code Quality Analysis
 
-### Shashank Kanade
 
-Computer Engineering Student | Cloud & DevOps Enthusiast | Full Stack Developer
+<p align="center">
+<img src="https://github.com/user-attachments/assets/6dd61a38-e5f3-44a5-a438-1e9ce9a6951c"  width="2862" height="1628"/>
 
-GitHub:
-https://github.com/shashankkanade25
+</p>
 
-LinkedIn:
-https://www.linkedin.com/in/shashank-kanade25
 
 ---
 
-### Key Skills Demonstrated
+# ☸️ GitOps Continuous Deployment
 
-Full Stack Development • Mobile Development • Cloud Computing • DevOps • CI/CD • Docker • Linux • AWS • Nginx • System Design • Database Management • Deployment Automation
+After completing the CI pipeline, the deployment architecture was redesigned using **GitOps principles**.
+
+Rather than allowing Jenkins to deploy directly into Kubernetes, Git became the **single source of truth**, while **Argo CD continuously synchronized the cluster with the desired state stored in Git.**
+
+---
+
+# ⚙️ GitOps Workflow
+
+Every source code change automatically follows the workflow below:
+
+<img width="1758" height="388" alt="image" src="https://github.com/user-attachments/assets/d04ceb7a-19ee-4606-a1e9-510d5470c0ba" />
+
+
+No manual deployment commands are required.
+
+The Kubernetes cluster is always synchronized with the desired state defined in Git.
+
+---
+
+# ☸️ Kubernetes & GitOps Deployment
+
+KrishiSetu is deployed on a **Kind Kubernetes Cluster** using a production-inspired GitOps workflow. Deployment is fully automated through **Helm** and **Argo CD**, enabling consistent, declarative, and version-controlled application releases.
+
+---
+
+## 🚀 Kubernetes Implementation
+
+| Feature | Implementation |
+|:--------|:---------------|
+| ☸️ Workload Management | Deployments, ReplicaSets & Pods |
+| 🌐 Networking | Services & Ingress |
+| ⚙️ Configuration | ConfigMaps & Secrets |
+| ❤️ Reliability | Liveness & Readiness Probes |
+| 📈 Resource Management | CPU & Memory Requests/Limits |
+| 🔄 Deployment Strategy | Rolling Updates & Rollbacks |
+| ♻️ Resiliency | Self-Healing Deployments |
+
+---
+
+## 📦 Helm
+
+Helm is used to package and manage Kubernetes resources through reusable and parameterized charts.
+
+**Highlights**
+
+- 📦 Reusable Helm Charts
+- ⚙️ Centralized Configuration
+- 🏷️ Image Tag Management
+- 🔄 Simplified Application Releases
+- 📁 Version-Controlled Deployments
+
+---
+
+## 🚀 GitOps with Argo CD
+
+Argo CD continuously monitors the GitOps repository and synchronizes the Kubernetes cluster with the desired state defined in Git.
+
+**GitOps Features**
+
+- 🔄 Automatic Synchronization
+- ♻️ Self-Healing
+- 🔍 Drift Detection
+- 🚀 Rolling Deployments
+- 📂 Declarative Infrastructure
+
+---
+
+# 📸 GitOps Platform Screenshots
+
+## Argo CD Dashboard
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/31d8dc7b-e53a-451d-a30d-0c971c85a369" />
+</p>
+
+---
+
+# 🏗️ Engineering Challenges Solved
+
+<div align="center">
+
+| ☁️ Cloud & Linux | ⚙️ CI/CD | 🔐 DevSecOps | ☸️ Kubernetes & GitOps |
+|:----------------:|:--------:|:------------:|:----------------------:|
+| AWS EC2 Memory Optimization | Jenkins Pipeline Debugging | SonarQube Integration | Helm Chart Development |
+| OOM Killer Resolution | GitHub Webhooks | Trivy Security Scanning | Kubernetes Networking |
+| Docker Permission Issues | Docker Hub Authentication | Secure Image Workflow | Ingress Configuration |
+| Linux Administration | CI Pipeline Automation | | Argo CD Synchronization |
+| | | | GitOps Automation |
+| | | | Rolling Deployments |
+| | | | Resource Troubleshooting |
+
+</div>
+
+<p align="center">
+<i>Resolved through hands-on debugging, infrastructure optimization, and production-style DevSecOps & GitOps practices.</i>
+</p>
+
+---
+
+# 🎯 Skills Demonstrated
+
+<table>
+<tr>
+<td>
+
+### Cloud
+
+- AWS EC2
+- Ubuntu Linux
+- Docker
+- Docker Hub
+
+</td>
+
+<td>
+
+### DevOps
+
+- Jenkins
+- CI/CD
+- Shell Scripting
+- GitHub Webhooks
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### DevSecOps
+
+- SonarQube
+- Trivy
+- Secure Pipelines
+- Docker Security
+
+</td>
+
+<td>
+
+### GitOps
+
+- Kubernetes
+- Helm
+- Argo CD
+- Declarative Deployments
+
+</td>
+</tr>
+</table>
+
+---
+
+# ⭐ Project Outcome
+
+KrishiSetu demonstrates the complete software delivery lifecycle—from research and application development to production-inspired DevSecOps and GitOps deployment.
+
+The project showcases practical experience with building secure CI pipelines, automating container delivery, implementing GitOps workflows, managing Kubernetes deployments, and troubleshooting real infrastructure issues encountered during development.
+
+
+---
+
+# 👨‍💻 About the Developer
+
+<div align="center">
+
+## Shashank Kanade
+
+**Computer Engineering Student • Full Stack Developer • Cloud & DevOps Enthusiast • SRE Aspirant**
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github)](https://github.com/shashankkanade25)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/shashank-kanade25)
+
+</div>
+
+---
+
+## 💡 Skills Demonstrated
+
+<div align="center">
+
+`Full Stack Development` • `React Native` • `Cloud Computing` • `DevOps` • `DevSecOps` • `GitOps` • `CI/CD` • `Docker` • `Kubernetes` • `Helm` • `Jenkins` • `Linux` • `AWS` • `Nginx` • `MongoDB` • `System Design` • `Deployment Automation`
+
+</div>
+
+---
+
+<p align="center">
+
+Made with ❤️ by **Shashank Kanade**
+
+</p>
