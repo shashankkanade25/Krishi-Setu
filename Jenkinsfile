@@ -74,6 +74,30 @@ pipeline {
             }
         }
 
+        stage('Clone GitOps Repo') {
+            steps {
+                dir('gitops') {
+                    git branch: 'main',
+                        credentialsId: 'github-token',
+                        url: 'https://github.com/shashankkanade25/krishisetu-gitops.git'
+                }
+            }
+        }
+
+        stage('Verify GitOps Repo') {
+            steps {
+                sh '''
+                pwd
+
+                ls -la
+
+                ls -la gitops
+
+                ls -la gitops/charts
+                '''
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh '''
